@@ -1,0 +1,205 @@
+<!--author:mahaoxiang
+    time:2019-3-20
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>template of jsplumb</title>
+    <script type="text/javascript" src="../resources/jquery-3.3.1.js"></script>
+    <script type="text/javascript" src="../resources/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../resources/jquery-ui.js"></script>
+    <link href="../resources/bootstrap.min.css" rel="stylesheet">
+    <link href="../resources/jquery-ui.css" rel="stylesheet">
+    <link href="../resources/jquery-ui.structure.css" rel="stylesheet">
+    <link href="../resources/jquery-ui.theme.css" rel="stylesheet">
+    <script type="text/javascript" src="../resources/jsplumb.min.js"></script>
+    <style>
+        .node {
+            box-shadow: 2px 2px 19px #aaa;
+            -o-box-shadow: 2px 2px 19px #aaa;
+            -webkit-box-shadow: 2px 2px 19px #aaa;
+            -moz-box-shadow: 2px 2px 19px #aaa;
+            -moz-border-radius: 0.5em;
+            border-radius: 0.5em;
+            opacity: 0.8;
+            filter: alpha(opacity=80);
+            border: 1px solid #346789;
+            width: 150px;
+            /*line-height: 40px;*/
+            text-align: center;
+            z-index: 20;
+            position: absolute;
+            background-color: #eeeeef;
+            color: black;
+            padding: 10px;
+            font-size: 9pt;
+            cursor: pointer;
+            height: 50px;
+            line-height: 50px;
+
+        }
+
+        .radius {
+            border-radius: 25em;
+        }
+
+        .node:hover {
+            box-shadow: 2px 2px 19px #444;
+            -o-box-shadow: 2px 2px 19px #444;
+            -webkit-box-shadow: 2px 2px 19px #444;
+            -moz-box-shadow: 2px 2px 19px #444;
+            opacity: 0.8;
+            filter: alpha(opacity=80);
+        }
+
+        .ele_in_list {
+            position: relative;
+            padding-top: 50px;
+            padding-bottom: 50px;
+        }
+    </style>
+</head>
+<body>
+<div id="content" class="row-fluid">
+    <div class="col-md-3" id="element_list">
+        <div class="panel-group" id="left_ele_collapse">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#left_ele_collapse"
+                           href="#collapseOne">
+                            elements_group_1
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseOne" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <div class="ele_in_list">
+                            <div class="node" id="node_style_1"></div>
+                        </div>
+                        <div class="ele_in_list">
+                            <div class="node radius" id="node_style_2"></div>
+                        </div>
+                        <div class="ele_in_list">
+                            <div class="node" id="node_style_3"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#left_ele_collapse"
+                           href="#collapseTwo">
+                            elements_group_2
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseTwo" class="panel-collapse collapse">
+                    <div class="panel-body">
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#left_ele_collapse"
+                           href="#collapseThree">
+                            elements_group_3
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseThree" class="panel-collapse collapse">
+                    <div class="panel-body">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-md-9" id="canvas">
+        <div style="height: 600px; border:2px solid #fc2f49">
+
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    /* global jsPlumb */
+    jsPlumb.ready(function () {
+
+    });
+</script>
+<script>
+    //https://www.cnblogs.com/liangqihui/p/8559672.html
+    var my_end_point = {
+        endpoint: ["Dot", {radius: 5}],
+        connectorStyle: {
+            stroke: "#fc2f49",
+            strokeWidth: 3,
+
+        },
+        isSource: true,
+        isTarget: true,
+        maxConnections: -1,
+        connector: ["Flowchart", {stub: [40, 60], gap: 5, cornerRadius: 5, alwaysRespectStubs: true}],
+        connectorOverlays: [["Arrow", {width: 10, length: 10, location: 1}]],
+        connectionsDetachable: true,
+
+    };
+
+</script>
+<script>
+    var canvas_cnt = 0;
+    $("#node_style_1").draggable(
+        {
+            helper: "clone",
+            scope: "ss",
+        }
+    );
+    $("#node_style_2").draggable(
+        {
+            helper: "clone",
+            scope: "ss",
+        }
+    );
+    $("#node_style_3").draggable(
+        {
+            helper: "clone",
+            scope: "ss",
+        }
+    );
+    $("#canvas").droppable({
+        scope: "ss",
+        drop: function (event, ui) {
+            var left = parseInt(ui.offset.left - $(this).offset().left);
+            var top = parseInt(ui.offset.top - $(this).offset().top);
+            var name = ui.draggable[0].id;
+            canvas_cnt++;
+            id = "canvas_" + canvas_cnt;
+            $(this).append("<div class='" + $("#" + name).attr("class") + "' id='" + id + "'>" + $(ui.helper).html() + "</div>");
+            $("#" + id).css("left", left).css("top", top);
+            jsPlumb.draggable(id);
+            $("#" + id).draggable({containment: "parent"});
+            jsPlumb.addEndpoint(id, {anchor: 'Top'}, my_end_point);
+            jsPlumb.addEndpoint(id, {anchor: 'Left'}, my_end_point);
+            jsPlumb.addEndpoint(id, {anchor: 'Right'}, my_end_point);
+            jsPlumb.addEndpoint(id, {anchor: 'Bottom'}, my_end_point);
+            /*doubleclick("#" + id);*/
+            jsPlumb.bind('click', function (conn, originalEvent) {
+
+                jsPlumb.deleteConnection(conn);
+
+            });
+            $("#" + id).on("click", function () {
+                if (confirm("确定要删除吗?")) {
+                    jsPlumb.removeAllEndpoints($(this).attr("id"));
+                    $(this).remove();
+                }
+            });
+        }
+    });
+
+</script>
+</html>
