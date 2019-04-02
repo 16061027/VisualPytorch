@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'corsheaders',
     #pip install djangorestframework
     'rest_framework',
+    'NeuralNetwork.apps.NeuralnetworkConfig'
 ]
 
 MIDDLEWARE = [
