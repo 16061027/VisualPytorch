@@ -1,10 +1,12 @@
 from django.shortcuts import render
+from django.shortcuts import render_to_response
 from NeuralNetwork.models import Network
 from NeuralNetwork.serializers import NetworkSerializer
 from rest_framework.views import APIView
 from django.http import Http404
 from rest_framework.response import Response
 from rest_framework import status
+
 # Create your views here.
 
 class NetworkList(APIView):
@@ -16,7 +18,12 @@ class NetworkList(APIView):
 
     def post(self,request):
 
-        serializer = NetworkSerializer(data=request.data)
+        data = {
+            "creator":-1,
+            "structure":str(request.data)
+        }
+
+        serializer = NetworkSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data,status = status.HTTP_201_CREATED)

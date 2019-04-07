@@ -15,6 +15,7 @@ from config import config
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+FONT_DIR = os.path.dirname(BASE_DIR)+r"\font"
 
 
 # Quick-start development settings - unsuitable for production
@@ -100,7 +101,7 @@ ROOT_URLCONF = 'VisualPytorch.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'html')]
+        'DIRS': [os.path.join(FONT_DIR, 'static')]
         ,
         'APP_DIRS': True,
         'OPTIONS': {

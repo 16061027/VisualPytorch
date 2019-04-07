@@ -14,6 +14,7 @@
     <link href="../resources/jquery-ui.structure.css" rel="stylesheet">
     <link href="../resources/jquery-ui.theme.css" rel="stylesheet">
     <script type="text/javascript" src="../resources/jsplumb.min.js"></script>
+    <script type="text/javascript" src="../javascript/graph_action.js"></script>
     <style>
         .node {
             box-shadow: 2px 2px 19px #aaa;
@@ -116,7 +117,7 @@
                 </div>
             </div>
         </div>
-
+        <button type="button" class="btn btn-warning" id="submit" onclick="save_network()">save</button>
     </div>
     <div class="col-md-9" id="canvas">
         <div style="height: 600px; border:2px solid #fc2f49">
@@ -178,7 +179,7 @@
             var name = ui.draggable[0].id;
             canvas_cnt++;
             id = "canvas_" + canvas_cnt;
-            $(this).append("<div class='" + $("#" + name).attr("class") + "' id='" + id + "'>" + $(ui.helper).html() + "</div>");
+            $(this).append("<div class='" + $("#" + name).attr("class") + "' id='" + id + "' name='"+name+"'>" + $(ui.helper).html() + "</div>");
             $("#" + id).css("left", left).css("top", top);
             jsPlumb.draggable(id);
             $("#" + id).draggable({containment: "parent"});
@@ -187,19 +188,19 @@
             jsPlumb.addEndpoint(id, {anchor: 'Right'}, my_end_point);
             jsPlumb.addEndpoint(id, {anchor: 'Bottom'}, my_end_point);
             /*doubleclick("#" + id);*/
-            jsPlumb.bind('click', function (conn, originalEvent) {
-
-                jsPlumb.deleteConnection(conn);
-
-            });
             $("#" + id).on("click", function () {
                 if (confirm("确定要删除吗?")) {
                     jsPlumb.removeAllEndpoints($(this).attr("id"));
                     $(this).remove();
                 }
             });
+
         }
     });
 
+    jsPlumb.bind('click', function (conn, originalEvent) {
+        jsPlumb.deleteConnection(conn);
+
+    });
 </script>
 </html>

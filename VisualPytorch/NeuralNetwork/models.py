@@ -6,6 +6,6 @@ class Network(models.Model):
 
     creator = models.IntegerField(default=-1)
     structure = models.TextField()
-    time = models.DateTimeField()
+    time = models.DateTimeField(auto_now=True)
 
 
