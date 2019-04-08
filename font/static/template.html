@@ -2,7 +2,7 @@
     time:2019-3-20
 -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>template of jsplumb</title>
@@ -13,56 +13,18 @@
     <link href="../resources/jquery-ui.css" rel="stylesheet">
     <link href="../resources/jquery-ui.structure.css" rel="stylesheet">
     <link href="../resources/jquery-ui.theme.css" rel="stylesheet">
+    <link href="../css/layer.css" rel="stylesheet">
     <script type="text/javascript" src="../resources/jsplumb.min.js"></script>
     <script type="text/javascript" src="../javascript/graph_action.js"></script>
-    <style>
-        .node {
-            box-shadow: 2px 2px 19px #aaa;
-            -o-box-shadow: 2px 2px 19px #aaa;
-            -webkit-box-shadow: 2px 2px 19px #aaa;
-            -moz-box-shadow: 2px 2px 19px #aaa;
-            -moz-border-radius: 0.5em;
-            border-radius: 0.5em;
-            opacity: 0.8;
-            filter: alpha(opacity=80);
-            border: 1px solid #346789;
-            width: 150px;
-            /*line-height: 40px;*/
-            text-align: center;
-            z-index: 20;
-            position: absolute;
-            background-color: #eeeeef;
-            color: black;
-            padding: 10px;
-            font-size: 9pt;
-            cursor: pointer;
-            height: 50px;
-            line-height: 50px;
 
-        }
-
-        .radius {
-            border-radius: 25em;
-        }
-
-        .node:hover {
-            box-shadow: 2px 2px 19px #444;
-            -o-box-shadow: 2px 2px 19px #444;
-            -webkit-box-shadow: 2px 2px 19px #444;
-            -moz-box-shadow: 2px 2px 19px #444;
-            opacity: 0.8;
-            filter: alpha(opacity=80);
-        }
-
-        .ele_in_list {
-            position: relative;
-            padding-top: 50px;
-            padding-bottom: 50px;
-        }
-    </style>
 </head>
+<nav style="font-size:20px;text-align: center; top: 0; height: 50px" id="header"></nav>
+<script>
+    $("#header").load("../static/header.html")
+</script>
 <body>
 <div id="content" class="row-fluid">
+
     <div class="col-md-3" id="element_list">
         <div class="panel-group" id="left_ele_collapse">
             <div class="panel panel-default">
@@ -70,25 +32,32 @@
                     <h4 class="panel-title">
                         <a data-toggle="collapse" data-parent="#left_ele_collapse"
                            href="#collapseOne">
-                            elements_group_1
+                            可选用网络层
                         </a>
                     </h4>
                 </div>
                 <div id="collapseOne" class="panel-collapse collapse in">
                     <div class="panel-body">
                         <div class="ele_in_list">
-                            <div class="node" id="node_style_1"></div>
+                            <div class="node orange" id="view_layer" type="button"
+                                 data-container="body" data-toggle="popover" data-placement="right"
+                                 data-content="<form class=&quot;form-horizontal&quot; role=&quot;form&quot;><div class=&quot;form-group&quot;>
+                    <label class=&quot;col-sm-5 control-label&quot;>shape</label>
+                            <div class=&quot;col-sm-5&quot;>
+                        <input type=&quot;text&quot; class=&quot;form-control&quot; placeholder=&quot;1&quot;>
+                    </div>
+                </div>
+                </form>">
+                                reshape层
+                            </div>
                         </div>
                         <div class="ele_in_list">
-                            <div class="node radius" id="node_style_2"></div>
-                        </div>
-                        <div class="ele_in_list">
-                            <div class="node" id="node_style_3"></div>
+                            <div class="node orange" id="linear_layer">全连接层</div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="panel panel-default">
+            <!--<div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title">
                         <a data-toggle="collapse" data-parent="#left_ele_collapse"
@@ -115,23 +84,51 @@
                     <div class="panel-body">
                     </div>
                 </div>
-            </div>
+            </div>-->
         </div>
-        <button type="button" class="btn btn-warning" id="submit" onclick="save_network()">save</button>
+        <div>
+            <h4>训练参数配置</h4>
+            <form class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label class="col-sm-5 control-label">epoch(训练轮次)</label>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" placeholder="1">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-5 control-label">optimizer(优化器)</label>
+                    <div class="col-sm-5">
+                        <select id="disabledSelect" class="form-control">
+                            <option value="torch.optim.Adam">Adam</option>
+                            <option value="torch.optim.Optimizer">Optimizer</option>
+                            <option value="torch.optim.Adamax">Adamax</option>
+                            <option value="torch.optim.ASGD">ASGD</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-5 control-label">learing_rate(学习率)</label>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" placeholder="0.5">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-5 control-label">batch_size</label>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!--<button type="button" class="btn btn-warning" id="submit" onclick="save_network()">save</button>-->
     </div>
     <div class="col-md-9" id="canvas">
-        <div style="height: 600px; border:2px solid #fc2f49">
+        <div style="height:1000px;border:0.5px solid black;background:url(../img/grid.png) no-repeat;background-size:100%;opacity: .6">
 
         </div>
     </div>
 </div>
 </body>
-<script>
-    /* global jsPlumb */
-    jsPlumb.ready(function () {
-
-    });
-</script>
 <script>
     //https://www.cnblogs.com/liangqihui/p/8559672.html
     var my_end_point = {
@@ -153,19 +150,13 @@
 </script>
 <script>
     var canvas_cnt = 0;
-    $("#node_style_1").draggable(
+    $("#view_layer").draggable(
         {
             helper: "clone",
             scope: "ss",
         }
     );
-    $("#node_style_2").draggable(
-        {
-            helper: "clone",
-            scope: "ss",
-        }
-    );
-    $("#node_style_3").draggable(
+    $("#linear_layer").draggable(
         {
             helper: "clone",
             scope: "ss",
@@ -179,7 +170,9 @@
             var name = ui.draggable[0].id;
             canvas_cnt++;
             id = "canvas_" + canvas_cnt;
-            $(this).append("<div class='" + $("#" + name).attr("class") + "' id='" + id + "' name='"+name+"'>" + $(ui.helper).html() + "</div>");
+            $(this).append("<div class='" + $("#" + name).attr("class") + "' id='" + id + "' name='" + name + "' type='" + $("#" + name).attr("type") + "' " +
+                " data-container='" + $("#" + name).attr("data-container") + "' data-toggle='" + $("#" + name).attr("data-toggle") + "' " +
+                "data-placement='" + $("#" + name).attr("data-placement") + "' data-content='" + $("#" + name).attr("data-content") + "'>" + $(ui.helper).html() + "</div>");
             $("#" + id).css("left", left).css("top", top);
             jsPlumb.draggable(id);
             $("#" + id).draggable({containment: "parent"});
@@ -188,12 +181,13 @@
             jsPlumb.addEndpoint(id, {anchor: 'Right'}, my_end_point);
             jsPlumb.addEndpoint(id, {anchor: 'Bottom'}, my_end_point);
             /*doubleclick("#" + id);*/
-            $("#" + id).on("click", function () {
+            /*$("#" + id).on("click", function () {
                 if (confirm("确定要删除吗?")) {
                     jsPlumb.removeAllEndpoints($(this).attr("id"));
                     $(this).remove();
                 }
-            });
+            });*/
+            $("#" + id).popover({html: true});
 
         }
     });
