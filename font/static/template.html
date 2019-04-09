@@ -16,6 +16,7 @@
     <link href="../css/layer.css" rel="stylesheet">
     <script type="text/javascript" src="../resources/jsplumb.min.js"></script>
     <script type="text/javascript" src="../javascript/graph_action.js"></script>
+    <script type="text/javascript" src="../javascript/layer_popover.js"></script>
 
 </head>
 <nav style="font-size:20px;text-align: center; top: 0; height: 50px" id="header"></nav>
@@ -40,32 +41,20 @@
                     <div class="panel-body">
                         <div class="ele_in_list">
                             <div class="node orange" id="view_layer" type="button"
-                                 data-container="body" data-toggle="popover" data-placement="right"
-                                 data-content="<form class=&quot;form-horizontal&quot; role=&quot;form&quot;><div class=&quot;form-group&quot;>
-                    <label class=&quot;col-sm-5 control-label&quot;>shape</label>
-                            <div class=&quot;col-sm-5&quot;>
-                        <input type=&quot;text&quot; class=&quot;form-control&quot; placeholder=&quot;1&quot;>
-                    </div>
-                </div>
-                </form>">
+                                 data-container="body" data-toggle="popover">
                                 reshape层
                             </div>
                         </div>
                         <div class="ele_in_list">
                             <div class="node orange" id="linear_layer" type="button"
-                                 data-container="body" data-toggle="popover" data-placement="right"
-                                 data-content="<form class=&quot;form-horizontal&quot; role=&quot;form&quot;><div class=&quot;form-group&quot;>
-                    <label class=&quot;col-sm-5 control-label&quot;>in_channel</label>
-                            <div class=&quot;col-sm-5&quot;>
-                        <input type=&quot;text&quot; class=&quot;form-control&quot;>
-                    </div>
-                    <label class=&quot;col-sm-5 control-label&quot;>out_channel</label>
-                            <div class=&quot;col-sm-5&quot;>
-                        <input type=&quot;text&quot; class=&quot;form-control&quot;>
-                    </div>
-                </div>
-                </form>">
+                                 data-container="body" data-toggle="popover">
                                 全连接层
+                            </div>
+                        </div>
+
+                        <div class="ele_in_list">
+                            <div class="node start little_green" id="start">
+                                开始
                             </div>
                         </div>
                     </div>
@@ -176,6 +165,12 @@
             scope: "ss",
         }
     );
+    $("#start").draggable(
+        {
+            helper: "clone",
+            scope: "ss",
+        }
+    );
     $("#canvas").droppable({
         scope: "ss",
         drop: function (event, ui) {
@@ -185,8 +180,7 @@
             canvas_cnt++;
             id = "canvas_" + canvas_cnt;
             $(this).append("<div class='" + $("#" + name).attr("class") + "' id='" + id + "' name='" + name + "' type='" + $("#" + name).attr("type") + "' " +
-                " data-container='" + $("#" + name).attr("data-container") + "' data-toggle='" + $("#" + name).attr("data-toggle") + "' " +
-                "data-placement='" + $("#" + name).attr("data-placement") + "' data-content='" + $("#" + name).attr("data-content") + "'>" + $(ui.helper).html() + "</div>");
+                " data-container='" + $("#" + name).attr("data-container") + "' data-toggle='" + $("#" + name).attr("data-toggle") + "' " + ">" + $(ui.helper).html() + "</div>");
             $("#" + id).css("left", left).css("top", top);
             jsPlumb.draggable(id);
             $("#" + id).draggable({containment: "parent"});
@@ -201,20 +195,24 @@
                     $(this).remove();
                 }
             });*/
-            $("#"+id).bind("contextmenu", function () {
+            $("#" + id).bind("contextmenu", function () {
                 return false;
             });
-            $("#"+id).mousedown(function (e) {
+            $("#" + id).mousedown(function (e) {
                 //右键为3
                 if (3 == e.which) {
                     if (confirm("确定要删除吗?")) {
-                    jsPlumb.removeAllEndpoints($(this).attr("id"));
-                    $(this).remove();
-                }
+                        jsPlumb.removeAllEndpoints($(this).attr("id"));
+                        $(this).remove();
+                    }
                 }
             });
 
-            $("#" + id).popover({html: true});
+            $("#" + id).popover({
+                placement: right,
+                content: searh_layer[name],
+                html: true
+            });
 
         }
     });

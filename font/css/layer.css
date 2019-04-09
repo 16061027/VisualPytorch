@@ -7,6 +7,15 @@
     filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#faa51a', endColorstr='#f47a20');
 }
 
+.little_green {
+    color: #fef4e9;
+    border: solid 1px #75ff81;
+    background: #75ff81;
+    background: -webkit-gradient(linear, left top, left bottom, from(#75ff81), to(#00af11));
+    background: -moz-linear-gradient(top,  #75ff81,  #00af11);
+    filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#75ff81', endColorstr='#00af11');
+}
+
 .node {
     box-shadow: 2px 2px 19px #aaa;
     -o-box-shadow: 2px 2px 19px #aaa;
@@ -26,6 +35,12 @@
     height: 50px;
     line-height: 50px;
 
+}
+
+.start {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
 }
 
 .radius {
