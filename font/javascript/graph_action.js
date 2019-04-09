@@ -57,9 +57,13 @@ function save_network() {
     });
 }
 
-function save_attr(id) {
-    console.log(id);
-    console.log($("#canvas_1").attr("class"));
+function save_attr_linear_layer(button) {
+    //这里是硬编码，考虑在b版本优化
+    var id = button["id"].split("popover_")[1];
+    var form = $("#"+button["id"]).parent();
+    var in_channel = form.find("[name = \"in_channel\"]").val();
+    var out_channel = form.find("[name = \"out_channel\"]").val();
+    window.localStorage.setItem(id,"{\"in_channel\":"+in_channel+", \"out_channel\":"+out_channel+"}");
 }
 
 

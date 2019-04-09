@@ -41,13 +41,13 @@
                     <div class="panel-body">
                         <div class="ele_in_list">
                             <div class="node orange" id="view_layer" type="button"
-                                 data-container="body" data-toggle="popover" >
+                                 data-container="body" data-toggle="popover">
                                 reshape层
                             </div>
                         </div>
                         <div class="ele_in_list">
                             <div class="node orange" id="linear_layer" type="button"
-                                 data-container="body" data-toggle="popover">
+                                 data-container="body" data-toggle="popover" in_channel="" out_channel="">
                                 全连接层
                             </div>
                         </div>
@@ -139,7 +139,8 @@
 
             </form>
         </div>
-        <button type="button" class="btn btn-warning" style="width: 150px" id="submit" onclick="save_network()">save</button>
+        <button type="button" class="btn btn-warning" style="width: 150px" id="submit" onclick="save_network()">save
+        </button>
     </div>
     <div class="col-md-9" id="canvas">
         <div style="height:1000px;border:0.5px solid black;background:url(../img/grid.png) no-repeat;background-size:100%;opacity: .6">
@@ -205,9 +206,9 @@
             var top = parseInt(ui.offset.top - $(this).offset().top);
             var name = ui.draggable[0].id;
             canvas_cnt++;
-            id = "canvas_" + canvas_cnt;
+            var id = "canvas_" + canvas_cnt;
             $(this).append("<div class='" + $("#" + name).attr("class") + "' id='" + id + "' name='" + name + "' type='" + $("#" + name).attr("type") + "' " +
-                " data-container='" + $("#" + name).attr("data-container") + "' data-toggle='" + $("#" + name).attr("data-toggle") + "' " + ">" + $(ui.helper).html() + "</div>");
+                "onclick='popover_show(\"" + id + "\",\"" + name + "\")'" + " data-container='" + $("#" + name).attr("data-container") + "' data-toggle='" + $("#" + name).attr("data-toggle") + "' " + ">" + $(ui.helper).html() + "</div>");
             $("#" + id).css("left", left).css("top", top);
             jsPlumb.draggable(id);
             $("#" + id).draggable({containment: "parent"});
@@ -222,6 +223,9 @@
                     $(this).remove();
                 }
             });*/
+            if (name == "linear_layer") {
+                window.localStorage.setItem(id, "{\"in_channel\":\"\",\"out_channel\":\"\"}");
+            }
             $("#" + id).bind("contextmenu", function () {
                 return false;
             });
@@ -235,13 +239,9 @@
                 }
             });
 
-            var tmp_list = searh_layer[name].split("id_anchor");
-            var popover_content= tmp_list[0]+"popover_"+id+tmp_list[1];
-            $("#" + id).popover({
-                placement:"right",
-                content: popover_content,
-                html: true
-            });
+            /*var tmp_list = searh_layer[name].split("id_anchor");
+            var popover_content= tmp_list[0]+"popover_"+id+tmp_list[1];*/
+
 
         }
     });
@@ -250,5 +250,21 @@
         jsPlumb.deleteConnection(conn);
 
     });
+
+    function popover_show(id, name) {
+        popover_restart(name, id);
+        $("#" + id).popover('show')
+    }
+
+    function popover_restart(name, id) {
+        $("#" + id).popover({
+            placement: "right",
+            content: get_content(name, id),
+            html: true
+        });
+        $("#" + id).on('hidden.bs.popover', function () {
+            $("#" + id).popover('destroy');
+        });
+    }
 </script>
 </html>
