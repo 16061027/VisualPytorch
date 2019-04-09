@@ -41,7 +41,7 @@
                     <div class="panel-body">
                         <div class="ele_in_list">
                             <div class="node orange" id="view_layer" type="button"
-                                 data-container="body" data-toggle="popover">
+                                 data-container="body" data-toggle="popover" >
                                 reshape层
                             </div>
                         </div>
@@ -122,9 +122,10 @@
                         <input type="text" class="form-control">
                     </div>
                 </div>
+
             </form>
         </div>
-        <!--<button type="button" class="btn btn-warning" id="submit" onclick="save_network()">save</button>-->
+        <button type="button" class="btn btn-warning" style="width: 150px" id="submit" onclick="save_network()">save</button>
     </div>
     <div class="col-md-9" id="canvas">
         <div style="height:1000px;border:0.5px solid black;background:url(../img/grid.png) no-repeat;background-size:100%;opacity: .6">
@@ -208,9 +209,11 @@
                 }
             });
 
+            var tmp_list = searh_layer[name].split("id_anchor");
+            var popover_content= tmp_list[0]+"popover_"+id+tmp_list[1];
             $("#" + id).popover({
                 placement:"right",
-                content: searh_layer[name],
+                content: popover_content,
                 html: true
             });
 

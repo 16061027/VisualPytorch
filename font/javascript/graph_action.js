@@ -34,9 +34,11 @@ function save_network() {
     var network = [];
     conn_list = jsPlumb.getAllConnections();
     console.log(conn_list);
+
     for (var i = 0; i < conn_list.length; i++) {
         var source_id = conn_list[i]["sourceId"];
         var target_id = conn_list[i]["targetId"];
+
         var conn = {
             "source": $("#" + source_id).attr("name"),
             "target": $("#" + target_id).attr("name")
@@ -53,6 +55,11 @@ function save_network() {
             alert(data_return);
         }
     });
+}
+
+function save_attr(id) {
+    console.log(id);
+    console.log($("#canvas_1").attr("class"));
 }
 
 
