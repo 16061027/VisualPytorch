@@ -62,8 +62,10 @@ function save_attr_linear_layer(button) {
     var id = button["id"].split("popover_")[1];
     var form = $("#"+button["id"]).parent();
     var in_channel = form.find("[name = \"in_channel\"]").val();
+    console.log(in_channel)
     var out_channel = form.find("[name = \"out_channel\"]").val();
-    window.localStorage.setItem(id,"{\"in_channel\":"+in_channel+", \"out_channel\":"+out_channel+"}");
+    console.log(out_channel)
+    window.localStorage.setItem(id,"{\"in_channel\":\""+in_channel+"\", \"out_channel\":\""+out_channel+"\"}");
 }
 
 
