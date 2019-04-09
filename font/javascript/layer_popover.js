@@ -4,10 +4,10 @@ function get_content(name,parid) {
         return "<form class=\"form-horizontal\" role=\"form\"><div class=\"form-group\">" +
     "                    <label class=\"col-sm-5 control-label\">shape</label>" +
     "                            <div class=\"col-sm-5\">" +
-    "                        <input type=\"text\"; class=\"form-control\" placeholder=\"1\">" +
+    "                        <input type=\"text\" name='shape' class=\"form-control\" value=\""+eval('('+window.localStorage.getItem(parid)+')')["shape"]+"\" placeholder=\"1\">" +
     "                    </div>" +
     "                </div>" +
-    "<button type=\"button\" class=\"btn btn-success\" style=\"width: 150px\" id=\"popover_"+parid+"\">确认</button>"+
+    "<button type=\"button\" class=\"btn btn-success\" style=\"width: 150px\" id=\"popover_"+parid+"\" onclick=\"save_attr_view_layer(this)\">确认</button>"+
     "                </form>";
     }
 
@@ -31,23 +31,23 @@ function get_content(name,parid) {
         return "<form class=\"form-horizontal\" role=\"form\"><div class=\"form-group\">" +
     "                    <label class=\"col-sm-5 control-label\">in_channel</label>" +
     "                            <div class=\"col-sm-5\">" +
-    "                        <input type=\"text\" class=\"form-control\">" +
+    "                        <input type=\"text\" name='in_channel' class=\"form-control\" value=\""+eval('('+window.localStorage.getItem(parid)+')')["in_channel"]+"\">" +
     "                    </div>" +
     "                    <label class=\"col-sm-5 control-label\">out_channel</label>" +
     "                            <div class=\"col-sm-5\">" +
-    "                        <input type=\"text\" class=\"form-control\">" +
+    "                        <input type=\"text\" name='out_channel' class=\"form-control\" value=\""+eval('('+window.localStorage.getItem(parid)+')')["out_channel"]+"\">" +
     "                    </div>" +
     "                    <label class=\"col-sm-5 control-label\">kernel_size</label>" +
     "                            <div class=\"col-sm-5\">" +
-    "                        <input type=\"text\" class=\"form-control\">" +
+    "                        <input type=\"text\" name='kernel_size' class=\"form-control\" value=\""+eval('('+window.localStorage.getItem(parid)+')')["kernel_size"]+"\">" +
     "                    </div>" +
     "                    <label class=\"col-sm-5 control-label\">stride</label>" +
     "                            <div class=\"col-sm-5\">" +
-    "                        <input type=\"text\" class=\"form-control\">" +
+    "                        <input type=\"text\" name='stride' class=\"form-control\" value=\""+eval('('+window.localStorage.getItem(parid)+')')["stride"]+"\">" +
     "                    </div>" +
     "                    <label class=\"col-sm-5 control-label\">padding</label>" +
     "                            <div class=\"col-sm-5\">" +
-    "                        <input type=\"text\" class=\"form-control\">" +
+    "                        <input type=\"text\" name='padding' class=\"form-control\" value=\""+eval('('+window.localStorage.getItem(parid)+')')["padding"]+"\">" +
     "                    </div>" +
     "                    <label class=\"col-sm-5 control-label\">activity</label>" +
     "                            <div class=\"col-sm-5\">" +
@@ -73,6 +73,7 @@ function get_content(name,parid) {
     "                        </select>" +
     "                    </div>" +
     "                </div>" +
+    "<button type=\"button\" class=\"btn btn-success\" style=\"width: 150px\" id=\"popover_"+parid+"\" onclick=\"save_attr_conv1d_layer(this)\">确认</button>"+
     "                </form>";
     }
 
@@ -80,23 +81,23 @@ function get_content(name,parid) {
         return "<form class=\"form-horizontal\" role=\"form\"><div class=\"form-group\">" +
     "                    <label class=\"col-sm-5 control-label\">in_channel</label>" +
     "                            <div class=\"col-sm-5\">" +
-    "                        <input type=\"text\" class=\"form-control\">" +
+    "                        <input type=\"text\" name='in_channel' class=\"form-control\" value=\""+eval('('+window.localStorage.getItem(parid)+')')["in_channel"]+"\">" +
     "                    </div>" +
     "                    <label class=\"col-sm-5 control-label\">out_channel</label>" +
     "                            <div class=\"col-sm-5\">" +
-    "                        <input type=\"text\" class=\"form-control\">" +
+    "                        <input type=\"text\" name='out_channel' class=\"form-control\" value=\""+eval('('+window.localStorage.getItem(parid)+')')["out_channel"]+"\">" +
     "                    </div>" +
     "                    <label class=\"col-sm-5 control-label\">kernel_size</label>" +
     "                            <div class=\"col-sm-5\">" +
-    "                        <input type=\"text\" class=\"form-control\">" +
+    "                        <input type=\"text\" name='kernel_size' class=\"form-control\" value=\""+eval('('+window.localStorage.getItem(parid)+')')["kernel_size"]+"\">" +
     "                    </div>" +
     "                    <label class=\"col-sm-5 control-label\">stride</label>" +
     "                            <div class=\"col-sm-5\">" +
-    "                        <input type=\"text\" class=\"form-control\">" +
+    "                        <input type=\"text\" name='stride' class=\"form-control\" value=\""+eval('('+window.localStorage.getItem(parid)+')')["stride"]+"\">" +
     "                    </div>" +
     "                    <label class=\"col-sm-5 control-label\">padding</label>" +
     "                            <div class=\"col-sm-5\">" +
-    "                        <input type=\"text\" class=\"form-control\">" +
+    "                        <input type=\"text\" name='padding' class=\"form-control\" value=\""+eval('('+window.localStorage.getItem(parid)+')')["padding"]+"\">" +
     "                    </div>" +
     "                    <label class=\"col-sm-5 control-label\">activity</label>" +
     "                            <div class=\"col-sm-5\">" +
@@ -122,6 +123,7 @@ function get_content(name,parid) {
     "                        </select>" +
     "                    </div>" +
     "                </div>" +
+    "<button type=\"button\" class=\"btn btn-success\" style=\"width: 150px\" id=\"popover_"+parid+"\" onclick=\"save_attr_conv2d_layer(this)\">确认</button>"+
     "                </form>";
     }
 

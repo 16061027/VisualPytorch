@@ -223,8 +223,17 @@
                     $(this).remove();
                 }
             });*/
+            if (name == "view_layer") {
+                window.localStorage.setItem(id, "{\"shape\":\"\"}");
+            }
             if (name == "linear_layer") {
                 window.localStorage.setItem(id, "{\"in_channel\":\"\",\"out_channel\":\"\"}");
+            }
+            if (name == "conv1d_layer") {
+                window.localStorage.setItem(id, "{\"in_channel\":\"\",\"out_channel\":\"\",\"kernel_size\":\"\",\"stride\":\"\",\"padding\":\"\"}");
+            }
+            if (name == "conv2d_layer") {
+                window.localStorage.setItem(id, "{\"in_channel\":\"\",\"out_channel\":\"\",\"kernel_size\":\"\",\"stride\":\"\",\"padding\":\"\"}");
             }
             $("#" + id).bind("contextmenu", function () {
                 return false;
