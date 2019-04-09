@@ -53,6 +53,20 @@
                         </div>
 
                         <div class="ele_in_list">
+                            <div class="node orange" id="conv1d_layer" type="button"
+                                 data-container="body" data-toggle="popover">
+                                一维卷积层
+                            </div>
+                        </div>
+
+                        <div class="ele_in_list">
+                            <div class="node orange" id="conv2d_layer" type="button"
+                                 data-container="body" data-toggle="popover">
+                                二维卷积层
+                            </div>
+                        </div>
+
+                        <div class="ele_in_list">
                             <div class="node start little_green" id="start">
                                 开始
                             </div>
@@ -161,6 +175,18 @@
         }
     );
     $("#linear_layer").draggable(
+        {
+            helper: "clone",
+            scope: "ss",
+        }
+    );
+    $("#conv1d_layer").draggable(
+        {
+            helper: "clone",
+            scope: "ss",
+        }
+    );
+    $("#conv2d_layer").draggable(
         {
             helper: "clone",
             scope: "ss",
