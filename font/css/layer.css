@@ -1,0 +1,55 @@
+.orange {
+    color: #fef4e9;
+    border: solid 1px #ffd267;
+    background: #ffd267;
+    background: -webkit-gradient(linear, left top, left bottom, from(#ffd267), to(#faa51a));
+    background: -moz-linear-gradient(top,  #ffd267,  #faa51a);
+    filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#faa51a', endColorstr='#f47a20');
+}
+
+.node {
+    box-shadow: 2px 2px 19px #aaa;
+    -o-box-shadow: 2px 2px 19px #aaa;
+    -webkit-box-shadow: 2px 2px 19px #aaa;
+    -moz-box-shadow: 2px 2px 19px #aaa;
+    -moz-border-radius: 0.5em;
+    border-radius: 0.5em;
+    opacity: 0.8;
+    filter: alpha(opacity=80);
+    width: 150px;
+    /*line-height: 40px;*/
+    text-align: center;
+    z-index: 20;
+    position: absolute;
+    color: black;
+    cursor: pointer;
+    height: 50px;
+    line-height: 50px;
+
+}
+
+.radius {
+    border-radius: 25em;
+}
+
+.node:hover {
+    box-shadow: 2px 2px 19px #444;
+    -o-box-shadow: 2px 2px 19px #444;
+    -webkit-box-shadow: 2px 2px 19px #444;
+    -moz-box-shadow: 2px 2px 19px #444;
+    opacity: 0.8;
+    filter: alpha(opacity=80);
+}
+
+.ele_in_list {
+    position: relative;
+    padding-top: 0px;
+    padding-bottom: 25px;
+    height: 60px;
+}
+
+.ele_delete{
+    text-align: center;
+}
+
+

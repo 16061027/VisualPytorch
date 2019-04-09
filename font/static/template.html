@@ -52,7 +52,21 @@
                             </div>
                         </div>
                         <div class="ele_in_list">
-                            <div class="node orange" id="linear_layer">全连接层</div>
+                            <div class="node orange" id="linear_layer" type="button"
+                                 data-container="body" data-toggle="popover" data-placement="right"
+                                 data-content="<form class=&quot;form-horizontal&quot; role=&quot;form&quot;><div class=&quot;form-group&quot;>
+                    <label class=&quot;col-sm-5 control-label&quot;>in_channel</label>
+                            <div class=&quot;col-sm-5&quot;>
+                        <input type=&quot;text&quot; class=&quot;form-control&quot;>
+                    </div>
+                    <label class=&quot;col-sm-5 control-label&quot;>out_channel</label>
+                            <div class=&quot;col-sm-5&quot;>
+                        <input type=&quot;text&quot; class=&quot;form-control&quot;>
+                    </div>
+                </div>
+                </form>">
+                                全连接层
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -187,6 +201,19 @@
                     $(this).remove();
                 }
             });*/
+            $("#"+id).bind("contextmenu", function () {
+                return false;
+            });
+            $("#"+id).mousedown(function (e) {
+                console.log(e.which);
+                //右键为3
+                if (3 == e.which) {
+                    $(this).css({
+                        "font-size": "-=2px"
+                    });
+                }
+            });
+
             $("#" + id).popover({html: true});
 
         }
