@@ -85,9 +85,12 @@ function save_attr_conv1d_layer(button) {
     var kernel_size = form.find("[name = \"kernel_size\"]").val();
     var stride = form.find("[name = \"stride\"]").val();
     var padding = form.find("[name = \"padding\"]").val();
+    var activity = form.find("[id=\""+id+"activity\"]").find("option:selected").val();
+    var pool_way = form.find("[id=\""+id+"pool_way\"]").find("option:selected").val();
     //var activity = form.find("[name = \"activity\"]").val();
     //var pool_way = form.find("[name = \"pool_way\"]").val();
-    window.localStorage.setItem(id,"{\"in_channel\":\""+in_channel+ "\", \"out_channel\":\""+out_channel+ "\", \"kernel_size\":\""+kernel_size+ "\", \"stride\":\""+stride+ "\", \"padding\":\""+padding+ "\"}");
+    window.localStorage.setItem(id,"{\"in_channel\":\""+in_channel+ "\", \"out_channel\":\""+out_channel+ "\", \"kernel_size\":\""+kernel_size+ "\", " +
+        "\"stride\":\""+stride+ "\", \"padding\":\""+padding+ "\",\"activity\":\""+activity+ "\",\"pool_way\":\""+pool_way+"\"}");
 }
 
 function save_attr_conv2d_layer(button) {
@@ -99,7 +102,10 @@ function save_attr_conv2d_layer(button) {
     var kernel_size = form.find("[name = \"kernel_size\"]").val();
     var stride = form.find("[name = \"stride\"]").val();
     var padding = form.find("[name = \"padding\"]").val();
+    var activity = form.find("[id=\""+id+"activity\"]").find("option:selected").val();
+    var pool_way = form.find("[id=\""+id+"pool_way\"]").find("option:selected").val();
     //var activity = form.find("[name = \"activity\"]").val();
     //var pool_way = form.find("[name = \"pool_way\"]").val();
-    window.localStorage.setItem(id,"{\"in_channel\":\""+in_channel+ "\", \"out_channel\":\""+out_channel+ "\", \"kernel_size\":\""+kernel_size+ "\", \"stride\":\""+stride+ "\", \"padding\":\""+padding+ "\"}");
+    window.localStorage.setItem(id,"{\"in_channel\":\""+in_channel+ "\", \"out_channel\":\""+out_channel+ "\", \"kernel_size\":\""+kernel_size+ "\", " +
+        "\"stride\":\""+stride+ "\", \"padding\":\""+padding+ "\",\"activity\":\""+activity+ "\",\"pool_way\":\""+pool_way+"\"}");
 }

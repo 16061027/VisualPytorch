@@ -51,7 +51,7 @@ function get_content(name,parid) {
     "                    </div>" +
     "                    <label class=\"col-sm-5 control-label\">activity</label>" +
     "                            <div class=\"col-sm-5\">" +
-    "                        <select id=\"disabledSelect\" class=\"form-control\">\n" +
+    "                        <select id=\""+parid+"activity\" class=\"form-control\">\n" +
     "                            <option value=\"None\">None</option>\n" +
     "                            <option value=\"torch.nn.functional.relu\">relu</option>\n" +
     "                            <option value=\"torch.nn.functional.leaky_relu\">leaky_relu</option>\n" +
@@ -62,7 +62,7 @@ function get_content(name,parid) {
     "                    </div>" +
     "                    <label class=\"col-sm-5 control-label\">pool_way</label>" +
     "                            <div class=\"col-sm-5\">" +
-    "                        <select id=\"disabledSelect\" class=\"form-control\">\n" +
+    "                        <select id=\""+parid+"pool_way\" class=\"form-control\">\n" +
     "                            <option value=\"None\">None</option>\n" +
     "                            <option value=\"torch.nn.functional.max_pool1d\">max_pool1d</option>\n" +
     "                            <option value=\"torch.nn.functional.max_pool2d\">max_pool2d</option>\n" +
@@ -101,9 +101,9 @@ function get_content(name,parid) {
     "                    </div>" +
     "                    <label class=\"col-sm-5 control-label\">activity</label>" +
     "                            <div class=\"col-sm-5\">" +
-    "                        <select id=\"disabledSelect\" class=\"form-control\">\n" +
+    "                        <select id=\""+parid+"activity\" class=\"form-control\">\n" +
     "                            <option value=\"None\">None</option>\n" +
-    "                            <option value=\"torch.nn.functional.relu\">relu</option>\n" +
+    "                            <option value=\"torch.nn.functional.relu\" >relu</option>\n" +
     "                            <option value=\"torch.nn.functional.leaky_relu\">leaky_relu</option>\n" +
     "                            <option value=\"torch.nn.functional.sigmoid\">sigmoid</option>\n" +
     "                            <option value=\"torch.nn.functional.tanh\">tanh</option>\n" +
@@ -112,7 +112,7 @@ function get_content(name,parid) {
     "                    </div>" +
     "                    <label class=\"col-sm-5 control-label\">pool_way</label>" +
     "                            <div class=\"col-sm-5\">" +
-    "                        <select id=\"disabledSelect\" class=\"form-control\">\n" +
+    "                        <select id=\""+parid+"pool_way\" class=\"form-control\">\n" +
     "                            <option value=\"None\">None</option>\n" +
     "                            <option value=\"torch.nn.functional.max_pool1d\">max_pool1d</option>\n" +
     "                            <option value=\"torch.nn.functional.max_pool2d\">max_pool2d</option>\n" +
