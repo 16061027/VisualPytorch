@@ -110,7 +110,7 @@
                 <div class="form-group">
                     <label class="col-sm-5 control-label">epoch(训练轮次)</label>
                     <div class="col-sm-5">
-                        <input type="text" class="form-control" placeholder="1" id = "epoch">
+                        <input type="text" class="form-control" placeholder="1" id="epoch">
                     </div>
                 </div>
                 <div class="form-group">
@@ -127,13 +127,13 @@
                 <div class="form-group">
                     <label class="col-sm-5 control-label">learing_rate(学习率)</label>
                     <div class="col-sm-5">
-                        <input type="text" id = "learning_rate" class="form-control" placeholder="0.5">
+                        <input type="text" id="learning_rate" class="form-control" placeholder="0.5">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-5 control-label">batch_size</label>
                     <div class="col-sm-5">
-                        <input type="text" id = "batch_size" class="form-control">
+                        <input type="text" id="batch_size" class="form-control">
                     </div>
                 </div>
 
@@ -199,6 +199,7 @@
             scope: "ss",
         }
     );
+
     $("#canvas").droppable({
         scope: "ss",
         drop: function (event, ui) {
@@ -207,8 +208,10 @@
             var name = ui.draggable[0].id;
             canvas_cnt++;
             var id = "canvas_" + canvas_cnt;
+            /*$(this).append("<div class='" + $("#" + name).attr("class") + "' id='" + id + "' name='" + name + "' type='" + $("#" + name).attr("type") + "' " +
+                "onclick='popover_show(\"" + id + "\",\"" + name + "\")'" + " data-container='" + $("#" + name).attr("data-container") + "' data-toggle='" + $("#" + name).attr("data-toggle") + "' " + ">" + $(ui.helper).html() + "</div>");*/
             $(this).append("<div class='" + $("#" + name).attr("class") + "' id='" + id + "' name='" + name + "' type='" + $("#" + name).attr("type") + "' " +
-                "onclick='popover_show(\"" + id + "\",\"" + name + "\")'" + " data-container='" + $("#" + name).attr("data-container") + "' data-toggle='" + $("#" + name).attr("data-toggle") + "' " + ">" + $(ui.helper).html() + "</div>");
+                " data-container='" + $("#" + name).attr("data-container") + "' data-toggle='" + $("#" + name).attr("data-toggle") + "' " + ">" + $(ui.helper).html() + "</div>");
             $("#" + id).css("left", left).css("top", top);
             jsPlumb.draggable(id);
             $("#" + id).draggable({containment: "parent"});
@@ -247,11 +250,31 @@
                     }
                 }
             });
+            var flag = -1;
+            $("#" + id).bind({
+                mousedown: function (e) {
+                    flag = 0;
+                    return;
+                },
+                mousemove:function(e){
+                    if(flag==0){
+                        $("#" + id).popover('hide');
+                    }
+                    flag=1;
 
+                    return;
+                },
+                mouseup: function (e) {
+
+                    if(flag==0) {
+                        popover_show(id, name);
+                    }
+                    flag = -1;
+                    return;
+                }
+            });
             /*var tmp_list = searh_layer[name].split("id_anchor");
             var popover_content= tmp_list[0]+"popover_"+id+tmp_list[1];*/
-
-
         }
     });
 
@@ -263,15 +286,15 @@
     function popover_show(id, name) {
         popover_restart(name, id);
         $("#" + id).popover('show');
-        if(name=="conv1d_layer"){
-            var data = eval('('+window.localStorage.getItem(id)+')');
-            $("#"+id+"activity").find("[value = \""+data["activity"]+"\"]").attr("selected","selected");
-            $("#"+id+"pool_way").find("[value = \""+data["pool_way"]+"\"]").attr("selected","selected");
+        if (name == "conv1d_layer") {
+            var data = eval('(' + window.localStorage.getItem(id) + ')');
+            $("#" + id + "activity").find("[value = \"" + data["activity"] + "\"]").attr("selected", "selected");
+            $("#" + id + "pool_way").find("[value = \"" + data["pool_way"] + "\"]").attr("selected", "selected");
         }
-        if(name == "conv2d_layer"){
-            var data = eval('('+window.localStorage.getItem(id)+')');
-            $("#"+id+"activity").find("[value = \""+data["activity"]+"\"]").attr("selected","selected");
-            $("#"+id+"pool_way").find("[value = \""+data["pool_way"]+"\"]").attr("selected","selected");
+        if (name == "conv2d_layer") {
+            var data = eval('(' + window.localStorage.getItem(id) + ')');
+            $("#" + id + "activity").find("[value = \"" + data["activity"] + "\"]").attr("selected", "selected");
+            $("#" + id + "pool_way").find("[value = \"" + data["pool_way"] + "\"]").attr("selected", "selected");
         }
 
     }

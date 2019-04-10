@@ -41,11 +41,11 @@ function save_network() {
 
         var source = {
           "name": $("#" + source_id).attr("name"),
-          "attribute": window.localStorage.getItem(source_id)
+          "attribute": eval('('+window.localStorage.getItem(source_id)+')')
         };
         var target = {
           "name": $("#" + target_id).attr("name"),
-          "attribute": window.localStorage.getItem(target_id)
+          "attribute": eval('('+window.localStorage.getItem(target_id)+')')
         };
         var conn = {
             "source": source,
