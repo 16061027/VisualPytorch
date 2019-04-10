@@ -110,13 +110,13 @@
                 <div class="form-group">
                     <label class="col-sm-5 control-label">epoch(训练轮次)</label>
                     <div class="col-sm-5">
-                        <input type="text" class="form-control" placeholder="1">
+                        <input type="text" class="form-control" placeholder="1" id = "epoch">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-5 control-label">optimizer(优化器)</label>
                     <div class="col-sm-5">
-                        <select id="disabledSelect" class="form-control">
+                        <select id="optimizer" class="form-control">
                             <option value="torch.optim.Adam">Adam</option>
                             <option value="torch.optim.Optimizer">Optimizer</option>
                             <option value="torch.optim.Adamax">Adamax</option>
@@ -127,13 +127,13 @@
                 <div class="form-group">
                     <label class="col-sm-5 control-label">learing_rate(学习率)</label>
                     <div class="col-sm-5">
-                        <input type="text" class="form-control" placeholder="0.5">
+                        <input type="text" id = "learning_rate" class="form-control" placeholder="0.5">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-5 control-label">batch_size</label>
                     <div class="col-sm-5">
-                        <input type="text" class="form-control">
+                        <input type="text" id = "batch_size" class="form-control">
                     </div>
                 </div>
 

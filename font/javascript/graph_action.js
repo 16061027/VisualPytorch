@@ -39,17 +39,34 @@ function save_network() {
         var source_id = conn_list[i]["sourceId"];
         var target_id = conn_list[i]["targetId"];
 
+        var source = {
+          "name": $("#" + source_id).attr("name"),
+          "attribute": window.localStorage.getItem(source_id)
+        };
+        var target = {
+          "name": $("#" + target_id).attr("name"),
+          "attribute": window.localStorage.getItem(target_id)
+        };
         var conn = {
-            "source": $("#" + source_id).attr("name"),
-            "target": $("#" + target_id).attr("name")
-        }
+            "source": source,
+            "target": target
+        };
         network.push(conn);
     }
-
+    var static = {
+        "epoch":$("#epoch").val(),
+        "optimizer":$("#optimzier").find("option:selected").val(),
+        "learning_rate":$("#learning_rate").val(),
+        "batch_size":$("#batch_size").val()
+    };
+    var data={
+      "network":network,
+      "static":static
+    };
     $.ajax({
         type: 'POST',
         url: gobalConfig.base_url + 'NeuralNetwork/network/',
-        data: JSON.stringify(network),
+        data: JSON.stringify(data),
         contentType: 'application/json; charset=UTF-8',
         success: function (data_return) {
             alert(data_return);
@@ -62,9 +79,9 @@ function save_attr_linear_layer(button) {
     var id = button["id"].split("popover_")[1];
     var form = $("#"+button["id"]).parent();
     var in_channel = form.find("[name = \"in_channel\"]").val();
-    console.log(in_channel)
+    console.log(in_channel);
     var out_channel = form.find("[name = \"out_channel\"]").val();
-    console.log(out_channel)
+    console.log(out_channel);
     window.localStorage.setItem(id,"{\"in_channel\":\""+in_channel+"\", \"out_channel\":\""+out_channel+"\"}");
 }
 
