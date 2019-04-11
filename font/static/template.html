@@ -226,6 +226,9 @@
                     $(this).remove();
                 }
             });*/
+            if(name == "start"){
+                window.localStorage.setItem(id, "{\"start\":\"true\"}");
+            }
             if (name == "view_layer") {
                 window.localStorage.setItem(id, "{\"shape\":\"\"}");
             }
