@@ -72,8 +72,44 @@ function save_network() {
         data: JSON.stringify(data),
         contentType: 'application/json; charset=UTF-8',
         success: function (data_return) {
-            alert(data_return);
         }
+    });
+    $.ajax({
+        type: 'POST',
+        url: gobalConfig.base_url + 'NeuralNetwork/getcode/',
+        data: JSON.stringify(data),
+        contentType: 'application/json; charset=UTF-8',
+        success: function (data_return,status,xhr) {
+            console.log(data_return,status,xhr);
+            if(xhr.status==200){
+                var main="";
+                var model="";
+                var ops = "";
+                for(var i=0;i<data_return["Main"].length;i++){
+                    main = main+data_return["Main"][i]+"<br>";
+                }
+                for(var i=0;i<data_return["Model"].length;i++){
+                    model = main+data_return["Model"][i]+"<br>";
+                }
+                for(var i=0;i<data_return["Ops"].length;i++){
+                    ops = main+data_return["Ops"][i]+"<br>";
+                }
+                var code = {
+                  "model":model,
+                  "main":main,
+                  "ops":ops
+                };
+                window.localStorage.setItem("code",JSON.stringify(data_return));
+                window.location.href="show_code.html";
+
+            }
+            else{
+                alert(JSON.stringify(data_return));
+            }
+
+        }
+
+
     });
 }
 

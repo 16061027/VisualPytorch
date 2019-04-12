@@ -1,0 +1,67 @@
+<!--author:mahaoxiang
+    time:2019-3-20
+-->
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>template of jsplumb</title>
+    <script type="text/javascript" src="../resources/jquery-3.3.1.js"></script>
+    <script type="text/javascript" src="../resources/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../resources/jquery-ui.js"></script>
+    <link href="../resources/bootstrap.min.css" rel="stylesheet">
+    <link href="../resources/jquery-ui.css" rel="stylesheet">
+    <link href="../resources/jquery-ui.structure.css" rel="stylesheet">
+    <link href="../resources/jquery-ui.theme.css" rel="stylesheet">
+    <link href="../css/layer.css" rel="stylesheet">
+    <script type="text/javascript" src="../resources/jsplumb.min.js"></script>
+    <script type="text/javascript" src="../javascript/graph_action.js"></script>
+    <script type="text/javascript" src="../javascript/layer_popover.js"></script>
+
+</head>
+<nav style="font-size:20px;text-align: center; top: 0; height: 50px" id="header"></nav>
+<script>
+    $("#header").load("../static/header.html")
+</script>
+<body>
+
+<ul class="nav nav-tabs" id="codeTab" style="margin: 0 auto;margin-top: 30px; width: 80%">
+  <li class="active"><a href="#Main" data-toggle="tab">Main.py</a></li>
+  <li><a href="#Model" data-toggle="tab">Model.py</a></li>
+  <li><a href="#Ops" data-toggle="tab">Ops.py</a></li>
+</ul>
+
+<div id="code_content" class="tab-content" style="width: 80%;margin: 0 auto">
+	<div class="tab-pane fade in active" id="Main">
+	    <pre id="main_code"></pre>
+	</div>
+	<div class="tab-pane fade" id="Model">
+        <pre id = "model_code"></pre>
+	</div>
+	<div class="tab-pane fade" id="Ops">
+        <pre id="ops_code"></pre>
+	</div>
+</div>
+</body>
+
+<script>
+    $('#codeTab a').click(function (e) {
+  e.preventDefault();
+  $(this).tab('show');
+  $("#"+$(this).attr("href"))
+})
+</script>
+<script>
+    $(document).ready(function () {
+        var code = eval('('+window.localStorage.getItem("code")+')');
+                for(var i=0;i<code["Main"].length;i++){
+                    $("#main_code").append(code["Main"][i]+"<br>");
+                }
+                for(var i=0;i<code["Model"].length;i++){
+                    $("#model_code").append(code["Model"][i]+"<br>");
+                }
+                for(var i=0;i<code["Ops"].length;i++){
+                   $("#ops_code").append(code["Ops"][i]+"<br>");
+                }
+    })
+</script>
