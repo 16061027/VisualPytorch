@@ -11,6 +11,13 @@ nn_view = '.view'
 nn_sequential = 'torch.nn.Sequential'
 
 
+def init():
+	layer_used_time['view_layer'] = 0
+	layer_used_time['linear_layer'] = 0
+	layer_used_time['conv1d_layer'] = 0
+	layer_used_time['conv2d_layer'] = 0
+
+
 def generate_n_blanks(n):
     ans = ''
     n = n * 4
@@ -164,12 +171,12 @@ def add_convlayer_to_init_forward(init, forward, in_data, out_data, node):
     init = np.append(init, init_tmp)
 
     # activity
-    if node['attribute']['activity'] is not None:
+    if node['attribute']['activity'] != 'None':
         init_tmp = generate_n_blanks(3) + node['attribute']['activity'] + '(),'
         init = np.append(init, init_tmp)
 
     # pooling
-    if node['attribute']['pool_way'] is not None:
+    if node['attribute']['pool_way'] != 'None':
         init_tmp = generate_n_blanks(3) + node['attribute']['pool_way'] + '(),'
         init = np.append(init, init_tmp)
 
@@ -242,6 +249,7 @@ def add_net_info(network):
 
 def main_func(edge_record):
     # add import information
+    init()
     Main, Model, Ops = add_import_info()
 
     # Main
