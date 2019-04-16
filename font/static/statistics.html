@@ -57,7 +57,7 @@
 
         $.ajax({
             type: 'GET',
-            url: gobalConfig.base_url + 'journal/',
+            url: 'journal/',
             contentType: 'application/json; charset=UTF-8',
             success: function (data) {
                 $("#visit_count").text(data["visit_count"]);
