@@ -122,6 +122,7 @@ function save_attr_linear_layer(button) {
     var out_channel = form.find("[name = \"out_channel\"]").val();
     console.log(out_channel);
     window.localStorage.setItem(id, "{\"in_channel\":\"" + in_channel + "\", \"out_channel\":\"" + out_channel + "\"}");
+    $("#" + id).popover('hide');
 }
 
 function save_attr_view_layer(button) {
@@ -130,6 +131,7 @@ function save_attr_view_layer(button) {
     var form = $("#" + button["id"]).parent();
     var shape = form.find("[name = \"shape\"]").val();
     window.localStorage.setItem(id, "{\"shape\":\"" + shape + "\"}");
+    $("#" + id).popover('hide');
 }
 
 function save_attr_conv1d_layer(button) {
@@ -147,6 +149,7 @@ function save_attr_conv1d_layer(button) {
     //var pool_way = form.find("[name = \"pool_way\"]").val();
     window.localStorage.setItem(id, "{\"in_channel\":\"" + in_channel + "\", \"out_channel\":\"" + out_channel + "\", \"kernel_size\":\"" + kernel_size + "\", " +
         "\"stride\":\"" + stride + "\", \"padding\":\"" + padding + "\",\"activity\":\"" + activity + "\",\"pool_way\":\"" + pool_way + "\"}");
+    $("#" + id).popover('hide');
 }
 
 function save_attr_conv2d_layer(button) {
@@ -164,4 +167,5 @@ function save_attr_conv2d_layer(button) {
     //var pool_way = form.find("[name = \"pool_way\"]").val();
     window.localStorage.setItem(id, "{\"in_channel\":\"" + in_channel + "\", \"out_channel\":\"" + out_channel + "\", \"kernel_size\":\"" + kernel_size + "\", " +
         "\"stride\":\"" + stride + "\", \"padding\":\"" + padding + "\",\"activity\":\"" + activity + "\",\"pool_way\":\"" + pool_way + "\"}");
+    $("#" + id).popover('hide');
 }
