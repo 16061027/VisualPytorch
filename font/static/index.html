@@ -2,10 +2,11 @@
     time:2019-3-20
 -->
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/html">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>template of jsplumb</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <script type="text/javascript" src="../resources/jquery-3.3.1.js"></script>
     <script type="text/javascript" src="../resources/bootstrap.min.js"></script>
     <script type="text/javascript" src="../resources/jquery-ui.js"></script>
@@ -17,15 +18,16 @@
     <script type="text/javascript" src="../resources/jsplumb.min.js"></script>
     <script type="text/javascript" src="../javascript/graph_action.js"></script>
     <script type="text/javascript" src="../javascript/layer_popover.js"></script>
-
 </head>
+
+<body>
 <nav style="font-size:20px;text-align: center; top: 0; height: 50px" id="header"></nav>
 <script>
-    $("#header").load("../static/header.html")
+    $("#header").load("header.html")
 </script>
-<body>
+<!--解决在ie火狐浏览器等中不兼容出现布局错误的问题，暂时性解决方案-->
+<div class="container-fluid" style="margin-top: 20px">
 <div id="content" class="row-fluid">
-
     <div class="col-md-3" id="element_list">
         <div class="panel-group" id="left_ele_collapse">
             <div class="panel panel-default">
@@ -148,6 +150,7 @@
         </div>
     </div>
 </div>
+</div>
 </body>
 <script>
     var my_end_point = {
@@ -246,7 +249,9 @@
             });
             $("#" + id).mousedown(function (e) {
                 //右键为3
+
                 if (3 == e.which) {
+
                     if (confirm("确定要删除吗?")) {
                         jsPlumb.removeAllEndpoints($(this).attr("id"));
                         $(this).remove();
@@ -312,5 +317,15 @@
             $("#" + id).popover('destroy');
         });
     }
+</script>
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            type:'POST',
+            data:"{\"name\":\"index\"}",
+            url:gobalConfig.base_url + 'journal/',
+            contentType: 'application/json; charset=UTF-8',
+        })
+    })
 </script>
 </html>

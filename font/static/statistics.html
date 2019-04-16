@@ -1,0 +1,78 @@
+<!--author:mahaoxiang
+    time:2019-4-16
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>template of jsplumb</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <script type="text/javascript" src="../resources/jquery-3.3.1.js"></script>
+    <script type="text/javascript" src="../resources/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../resources/jquery-ui.js"></script>
+    <script type="text/javascript" src="../javascript/graph_action.js"></script>
+    <link href="../resources/bootstrap.min.css" rel="stylesheet">
+    <link href="../resources/jquery-ui.css" rel="stylesheet">
+    <link href="../resources/jquery-ui.structure.css" rel="stylesheet">
+</head>
+
+<body>
+<nav style="font-size:20px;text-align: center; top: 0; height: 50px" id="header"></nav>
+<script>
+    $("#header").load("header.html")
+</script>
+<div class="container" style="margin-top: 20px">
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">历史访问量</label>
+            <div class="col-sm-10">
+                <p class="form-control-static" id="visit_count"></p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">生成模型数</label>
+            <div class="col-sm-10">
+                <p class="form-control-static" id="network_api_count"></p>
+            </div>
+        </div>
+    </form>
+    <h3>单日访问量统计</h3>
+   <table class="table">
+       <thead>
+       <tr>
+           <th>序号</th>
+           <th>日期</th>
+           <th>访问量</th>
+       </tr>
+       </thead>
+       <tbody id = "day_count">
+       </tbody>
+
+   </table>
+</div>
+
+</body>
+<script>
+    $(document).ready(function () {
+
+        $.ajax({
+            type: 'GET',
+            url: gobalConfig.base_url + 'journal/',
+            contentType: 'application/json; charset=UTF-8',
+            success: function (data) {
+                $("#visit_count").text(data["visit_count"]);
+                $("#network_api_count").text(data["network_api_count"]);
+                var list = data["date_count_list"];
+                for(var i=0;i<list.length;i++){
+                     $("#day_count").append(
+                         "<th scope=\"row\">"+(i+1).toString()+"</th>" +
+                         "<td>"+list[i]["day"]+"</td>" +
+                         "<td>"+list[i]["count"].toString()+"</td>"
+                     )
+                }
+            }
+        })
+
+    })
+</script>
+</html>

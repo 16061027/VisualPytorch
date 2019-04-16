@@ -19,5 +19,6 @@ from NeuralNetwork import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('NeuralNetwork/',include('NeuralNetwork.urls'))
+    path('NeuralNetwork/',include('NeuralNetwork.urls')),
+    path('journal/',include('journal.urls'))
 ]

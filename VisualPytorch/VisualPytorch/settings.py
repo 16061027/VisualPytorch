@@ -39,11 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    #pip install django-cors-headers
     'corsheaders',
-    #pip install djangorestframework
     'rest_framework',
-    'NeuralNetwork.apps.NeuralnetworkConfig'
+    'NeuralNetwork.apps.NeuralnetworkConfig',
+    'journal.apps.JournalConfig',
 ]
 
 MIDDLEWARE = [
