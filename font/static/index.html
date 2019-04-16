@@ -18,7 +18,6 @@
     <script type="text/javascript" src="../resources/jsplumb.min.js"></script>
     <script type="text/javascript" src="../javascript/graph_action.js"></script>
     <script type="text/javascript" src="../javascript/layer_popover.js"></script>
-
 </head>
 
 <body>
@@ -318,5 +317,15 @@
             $("#" + id).popover('destroy');
         });
     }
+</script>
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            type:'POST',
+            data:"{\"name\":\"index\"}",
+            url:gobalConfig.base_url + 'journal/',
+            contentType: 'application/json; charset=UTF-8',
+        })
+    })
 </script>
 </html>
