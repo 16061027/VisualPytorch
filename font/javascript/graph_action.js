@@ -68,7 +68,7 @@ function save_network() {
     console.log(data);
     $.ajax({
         type: 'POST',
-        url: gobalConfig.base_url + 'NeuralNetwork/network/',
+        url: 'NeuralNetwork/network/',
         data: JSON.stringify(data),
         contentType: 'application/json; charset=UTF-8',
         success: function (data_return) {
@@ -76,7 +76,7 @@ function save_network() {
     });
     $.ajax({
         type: 'POST',
-        url: gobalConfig.base_url + 'NeuralNetwork/getcode/',
+        url: 'NeuralNetwork/getcode/',
         data: JSON.stringify(data),
         contentType: 'application/json; charset=UTF-8',
         success: function (data_return,status,xhr) {
