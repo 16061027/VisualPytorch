@@ -70,7 +70,10 @@
                          "<td>"+list[i]["count"].toString()+"</td>"
                      )
                 }
-            }
+            },
+            error:function (data_return) {
+            alert(data_return["responseText"])
+        }
         })
 
     })

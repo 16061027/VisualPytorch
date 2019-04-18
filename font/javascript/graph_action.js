@@ -72,6 +72,9 @@ function save_network() {
         data: JSON.stringify(data),
         contentType: 'application/json; charset=UTF-8',
         success: function (data_return) {
+        },
+        error:function (data_return) {
+            alert(data_return["responseText"])
         }
     });
     $.ajax({
@@ -107,6 +110,9 @@ function save_network() {
                 alert(JSON.stringify(data_return));
             }
 
+        },
+        error:function (data_return) {
+            alert(data_return["responseText"])
         }
 
 
