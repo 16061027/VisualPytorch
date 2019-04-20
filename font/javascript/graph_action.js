@@ -115,7 +115,8 @@ function save_network() {
                   "ops":ops
                 };
                 window.localStorage.setItem("code",JSON.stringify(data_return));
-                window.location.href="show_code.html";
+                window.open("show_code.html");
+                //window.location.href="show_code.html";
 
             }
             else{
