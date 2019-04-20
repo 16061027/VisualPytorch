@@ -256,7 +256,9 @@
 
                     if (confirm("确定要删除吗?")) {
                         jsPlumb.removeAllEndpoints($(this).attr("id"));
+                        $("#" + id).popover('destroy');
                         $(this).remove();
+
                     }
                 }
             });
