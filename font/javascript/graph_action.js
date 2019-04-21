@@ -55,11 +55,23 @@ function save_network() {
         };
         network.push(conn);
     }
+    var epoch=$("#epoch").val();
+    if(epoch==""){
+        epoch= "1";
+    }
+    var learning_rate = $("#learning_rate").val();
+    if(learning_rate==""){
+        learning_rate="0.5";
+    }
+    var batch_size = $("#batch_size").val();
+    if(batch_size==""){
+        batch_size="1";
+    }
     var static = {
-        "epoch": $("#epoch").val(),
+        "epoch": epoch,
         "optimizer": $("#optimzier").find("option:selected").val(),
-        "learning_rate": $("#learning_rate").val(),
-        "batch_size": $("#batch_size").val()
+        "learning_rate": learning_rate,
+        "batch_size": batch_size
     };
     var data = {
         "network": network,
@@ -103,7 +115,8 @@ function save_network() {
                   "ops":ops
                 };
                 window.localStorage.setItem("code",JSON.stringify(data_return));
-                window.location.href="show_code.html";
+                window.open("show_code.html");
+                //window.location.href="show_code.html";
 
             }
             else{

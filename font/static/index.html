@@ -130,7 +130,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-5 control-label">learing_rate(学习率)</label>
+                        <label class="col-sm-5 control-label">learning_rate(学习率)</label>
                         <div class="col-sm-5">
                             <input type="text" id="learning_rate" class="form-control" placeholder="0.5">
                         </div>
@@ -138,7 +138,7 @@
                     <div class="form-group">
                         <label class="col-sm-5 control-label">batch_size</label>
                         <div class="col-sm-5">
-                            <input type="text" id="batch_size" class="form-control">
+                            <input type="text" id="batch_size" class="form-control" placeholder="1">
                         </div>
                     </div>
 
@@ -256,7 +256,9 @@
 
                     if (confirm("确定要删除吗?")) {
                         jsPlumb.removeAllEndpoints($(this).attr("id"));
+                        $("#" + id).popover('destroy');
                         $(this).remove();
+
                     }
                 }
             });

@@ -65,9 +65,9 @@
                 var list = data["date_count_list"];
                 for(var i=0;i<list.length;i++){
                      $("#day_count").append(
-                         "<th scope=\"row\">"+(i+1).toString()+"</th>" +
+                         "<tr><th scope=\"row\">"+(i+1).toString()+"</th>" +
                          "<td>"+list[i]["day"]+"</td>" +
-                         "<td>"+list[i]["count"].toString()+"</td>"
+                         "<td>"+list[i]["count"].toString()+"</td></tr>"
                      )
                 }
             },
