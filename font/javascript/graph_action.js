@@ -136,11 +136,23 @@ function save_attr_linear_layer(button) {
     //这里是硬编码，考虑在b版本优化
     var id = button["id"].split("popover_")[1];
     var form = $("#" + button["id"]).parent();
-    var in_channel = form.find("[name = \"in_channel\"]").val();
-    console.log(in_channel);
-    var out_channel = form.find("[name = \"out_channel\"]").val();
-    console.log(out_channel);
-    window.localStorage.setItem(id, "{\"in_channel\":\"" + in_channel + "\", \"out_channel\":\"" + out_channel + "\"}");
+    var in_channel = form.find("[name = \"in_channel\"]");
+    var out_channel = form.find("[name = \"out_channel\"]");
+    //todo:加入更精确的正则判断
+    form.find("[name='input_error']").remove();
+    var reg = /^[0-9]+$/ ;
+    var flag = true;
+    var check_array = [in_channel,out_channel];
+    check_array.forEach(function (value,index,array) {
+       if(!reg.test(value.val())){
+           value.after("<p name='input_error' class='alert_font'>输入不合法</p>");
+           flag = false;
+       }
+    });
+    if(!flag){
+        return;
+    }
+    window.localStorage.setItem(id, "{\"in_channel\":\"" + in_channel.val() + "\", \"out_channel\":\"" + out_channel.val() + "\"}");
     $("#" + id).popover('hide');
 }
 
@@ -148,8 +160,13 @@ function save_attr_view_layer(button) {
     //这里是硬编码，考虑在b版本优化
     var id = button["id"].split("popover_")[1];
     var form = $("#" + button["id"]).parent();
-    var shape = form.find("[name = \"shape\"]").val();
-    window.localStorage.setItem(id, "{\"shape\":\"" + shape + "\"}");
+    var shape = form.find("[name = \"shape\"]");
+    form.find("[name='input_error']").remove();
+    if(shape.val().replace(" ","")==""){
+        shape.after("<p name='input_error' class='alert_font'>输入不合法</p>");
+        return;
+    }
+    window.localStorage.setItem(id, "{\"shape\":\"" + shape.val() + "\"}");
     $("#" + id).popover('hide');
 }
 
@@ -157,17 +174,31 @@ function save_attr_conv1d_layer(button) {
     //这里是硬编码，考虑在b版本优化
     var id = button["id"].split("popover_")[1];
     var form = $("#" + button["id"]).parent();
-    var in_channel = form.find("[name = \"in_channel\"]").val();
-    var out_channel = form.find("[name = \"out_channel\"]").val();
-    var kernel_size = form.find("[name = \"kernel_size\"]").val();
-    var stride = form.find("[name = \"stride\"]").val();
-    var padding = form.find("[name = \"padding\"]").val();
+    var in_channel = form.find("[name = \"in_channel\"]");
+    var out_channel = form.find("[name = \"out_channel\"]");
+    var kernel_size = form.find("[name = \"kernel_size\"]");
+    var stride = form.find("[name = \"stride\"]");
+    var padding = form.find("[name = \"padding\"]");
     var activity = form.find("[id=\"" + id + "activity\"]").find("option:selected").val();
     var pool_way = form.find("[id=\"" + id + "pool_way\"]").find("option:selected").val();
+    //todo:加入更精确的正则判断
+    form.find("[name='input_error']").remove();
+    var reg = /^[0-9]+$/ ;
+    var flag = true;
+    var check_array = [in_channel,out_channel,kernel_size,stride,padding];
+    check_array.forEach(function (value,index,array) {
+       if(!reg.test(value.val())){
+           value.after("<p name='input_error' class='alert_font'>输入不合法</p>");
+           flag = false;
+       }
+    });
+    if(!flag){
+        return;
+    }
     //var activity = form.find("[name = \"activity\"]").val();
     //var pool_way = form.find("[name = \"pool_way\"]").val();
-    window.localStorage.setItem(id, "{\"in_channel\":\"" + in_channel + "\", \"out_channel\":\"" + out_channel + "\", \"kernel_size\":\"" + kernel_size + "\", " +
-        "\"stride\":\"" + stride + "\", \"padding\":\"" + padding + "\",\"activity\":\"" + activity + "\",\"pool_way\":\"" + pool_way + "\"}");
+    window.localStorage.setItem(id, "{\"in_channel\":\"" + in_channel.val() + "\", \"out_channel\":\"" + out_channel.val() + "\", \"kernel_size\":\"" + kernel_size.val() + "\", " +
+        "\"stride\":\"" + stride.val() + "\", \"padding\":\"" + padding.val() + "\",\"activity\":\"" + activity + "\",\"pool_way\":\"" + pool_way + "\"}");
     $("#" + id).popover('hide');
 }
 
@@ -175,16 +206,30 @@ function save_attr_conv2d_layer(button) {
     //这里是硬编码，考虑在b版本优化
     var id = button["id"].split("popover_")[1];
     var form = $("#" + button["id"]).parent();
-    var in_channel = form.find("[name = \"in_channel\"]").val();
-    var out_channel = form.find("[name = \"out_channel\"]").val();
-    var kernel_size = form.find("[name = \"kernel_size\"]").val();
-    var stride = form.find("[name = \"stride\"]").val();
-    var padding = form.find("[name = \"padding\"]").val();
+    var in_channel = form.find("[name = \"in_channel\"]");
+    var out_channel = form.find("[name = \"out_channel\"]");
+    var kernel_size = form.find("[name = \"kernel_size\"]");
+    var stride = form.find("[name = \"stride\"]");
+    var padding = form.find("[name = \"padding\"]");
     var activity = form.find("[id=\"" + id + "activity\"]").find("option:selected").val();
     var pool_way = form.find("[id=\"" + id + "pool_way\"]").find("option:selected").val();
+    //todo:加入更精确的正则判断
+    form.find("[name='input_error']").remove();
+    var reg = /^[0-9]+$/ ;
+    var flag = true;
+    var check_array = [in_channel,out_channel,kernel_size,stride,padding];
+    check_array.forEach(function (value,index,array) {
+       if(!reg.test(value.val())){
+           value.after("<p name='input_error' class='alert_font'>输入不合法</p>");
+           flag = false;
+       }
+    });
+    if(!flag){
+        return;
+    }
     //var activity = form.find("[name = \"activity\"]").val();
     //var pool_way = form.find("[name = \"pool_way\"]").val();
-    window.localStorage.setItem(id, "{\"in_channel\":\"" + in_channel + "\", \"out_channel\":\"" + out_channel + "\", \"kernel_size\":\"" + kernel_size + "\", " +
-        "\"stride\":\"" + stride + "\", \"padding\":\"" + padding + "\",\"activity\":\"" + activity + "\",\"pool_way\":\"" + pool_way + "\"}");
+    window.localStorage.setItem(id, "{\"in_channel\":\"" + in_channel.val() + "\", \"out_channel\":\"" + out_channel.val() + "\", \"kernel_size\":\"" + kernel_size.val() + "\", " +
+        "\"stride\":\"" + stride.val() + "\", \"padding\":\"" + padding.val() + "\",\"activity\":\"" + activity + "\",\"pool_way\":\"" + pool_way + "\"}");
     $("#" + id).popover('hide');
 }
