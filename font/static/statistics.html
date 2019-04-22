@@ -57,7 +57,7 @@
 
         $.ajax({
             type: 'GET',
-            url: 'journal/',
+            url: 'api/journal/',
             contentType: 'application/json; charset=UTF-8',
             success: function (data) {
                 $("#visit_count").text(data["visit_count"]);
