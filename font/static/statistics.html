@@ -5,7 +5,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>template of jsplumb</title>
+    <title>statistics</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <script type="text/javascript" src="../resources/jquery-3.3.1.js"></script>
     <script type="text/javascript" src="../resources/bootstrap.min.js"></script>
@@ -57,7 +57,7 @@
 
         $.ajax({
             type: 'GET',
-            url: gobalConfig.base_url + 'journal/',
+            url: gobalConfig.base_url + 'api/journal/',
             contentType: 'application/json; charset=UTF-8',
             success: function (data) {
                 $("#visit_count").text(data["visit_count"]);
