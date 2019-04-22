@@ -18,7 +18,7 @@ from django.urls import path,include
 from NeuralNetwork import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('NeuralNetwork/',include('NeuralNetwork.urls')),
-    path('journal/',include('journal.urls'))
+    path('api/admin/', admin.site.urls),
+    path('api/NeuralNetwork/',include('NeuralNetwork.urls')),
+    path('api/journal/',include('journal.urls'))
 ]
