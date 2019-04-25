@@ -179,3 +179,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'user.User'
+
+AUTHENTICATION_BACKENDS = [
+    'user.utils.UserAuthBackend',  # 修改auth认证后端类
+]
