@@ -1,7 +1,8 @@
 import numpy as np
 import sys
 
-# init
+
+#global parameters
 layer_used_time = {'view_layer': 0, 'linear_layer': 0, 'conv1d_layer': 0, 'conv2d_layer': 0}
 nn = 'torch.nn.'
 nn_linear = 'torch.nn.Linear'
@@ -9,6 +10,9 @@ nn_conv1d = 'torch.nn.Conv1d'
 nn_conv2d = 'torch.nn.Conv2d'
 nn_view = '.view'
 nn_sequential = 'torch.nn.Sequential'
+
+conv_layer_para = ['in_channels', 'out_channels', 'kernel_size', 'stride', 'padding']
+
 
 
 def init():
@@ -132,6 +136,18 @@ def add_view_to_init_forward(init, forward, in_data, out_data, node):
 
     return init, forward
 
+def generate_one_conv_layer_para(para_name, para_val):
+	ans = generate_n_tap(4) + para_name + ' = ' + para_val + ','
+
+	return ans
+
+
+def add_conv_layer_para(init, node):
+
+	for para in conv_layer_para:
+		init = np.append(init, generate_one_conv_layer_para(para, node['attribute'][para]))
+
+	return init
 
 def add_convlayer_to_init_forward(init, forward, in_data, out_data, node):
     self_layer = generate_layer_name(node['name'])
@@ -152,20 +168,23 @@ def add_convlayer_to_init_forward(init, forward, in_data, out_data, node):
         sys.exit(1)
     init = np.append(init, init_tmp)
 
-    init_tmp = generate_n_tap(4) + 'in_channels = ' + node['attribute']['in_channel'] + ','
-    init = np.append(init, init_tmp)
+    #change here
+    init = add_conv_layer_para(init, node)
 
-    init_tmp = generate_n_tap(4) + 'out_channels = ' + node['attribute']['out_channel'] + ','
-    init = np.append(init, init_tmp)
+    # init_tmp = generate_n_tap(4) + 'in_channels = ' + node['attribute']['in_channel'] + ','
+    # init = np.append(init, init_tmp)
 
-    init_tmp = generate_n_tap(4) + 'kernel_size = ' + node['attribute']['kernel_size'] + ','
-    init = np.append(init, init_tmp)
+    # init_tmp = generate_n_tap(4) + 'out_channels = ' + node['attribute']['out_channel'] + ','
+    # init = np.append(init, init_tmp)
 
-    init_tmp = generate_n_tap(4) + 'stride = ' + node['attribute']['stride'] + ','
-    init = np.append(init, init_tmp)
+    # init_tmp = generate_n_tap(4) + 'kernel_size = ' + node['attribute']['kernel_size'] + ','
+    # init = np.append(init, init_tmp)
 
-    init_tmp = generate_n_tap(4) + 'padding = ' + node['attribute']['padding'] + ','
-    init = np.append(init, init_tmp)
+    # init_tmp = generate_n_tap(4) + 'stride = ' + node['attribute']['stride'] + ','
+    # init = np.append(init, init_tmp)
+
+    # init_tmp = generate_n_tap(4) + 'padding = ' + node['attribute']['padding'] + ','
+    # init = np.append(init, init_tmp)
 
     init_tmp = generate_n_tap(3) + '),'
     init = np.append(init, init_tmp)
