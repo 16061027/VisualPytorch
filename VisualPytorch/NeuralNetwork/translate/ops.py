@@ -18,7 +18,7 @@ def init():
 	layer_used_time['conv2d_layer'] = 0
 
 
-def generate_n_blanks(n):
+def generate_n_tap(n):
     ans = ''
     n = n * 4
     for i in range(n):
@@ -62,8 +62,8 @@ def add_import_info():
 
 
 def add_init_info():
-    ans = np.array(['class NET(torch.nn.Module):', generate_n_blanks(1) + 'def __init__(self):',
-                    generate_n_blanks(2) + 'super(NET, self).__init__()'])
+    ans = np.array(['class NET(torch.nn.Module):', generate_n_tap(1) + 'def __init__(self):',
+                    generate_n_tap(2) + 'super(NET, self).__init__()'])
 
     return ans
 
@@ -101,12 +101,12 @@ def generate_layer_name(layer_name):
 def add_linear_to_init_forward(init, forward, in_data, out_data, node):
     self_layer = generate_layer_name(node['name'])
 
-    forward_tmp = generate_n_blanks(2) + out_data + ' = ' + self_layer + '(' + in_data + ')'
+    forward_tmp = generate_n_tap(2) + out_data + ' = ' + self_layer + '(' + in_data + ')'
     forward = np.append(forward, forward_tmp)
 
     in_c = str(node['attribute']['in_channel'])
     out_c = str(node['attribute']['out_channel'])
-    init_tmp = generate_n_blanks(2) + self_layer + ' = ' + nn_linear + '(' + in_c + ', ' + out_c + ')'
+    init_tmp = generate_n_tap(2) + self_layer + ' = ' + nn_linear + '(' + in_c + ', ' + out_c + ')'
     init = np.append(init, init_tmp)
 
     return init, forward
@@ -127,7 +127,7 @@ def parse_shape(str_shape):
 
 def add_view_to_init_forward(init, forward, in_data, out_data, node):
     shape = parse_shape(node['attribute']['shape'])
-    forward_tmp = generate_n_blanks(2) + out_data + ' = ' + in_data + nn_view + '(' + shape + ')'
+    forward_tmp = generate_n_tap(2) + out_data + ' = ' + in_data + nn_view + '(' + shape + ')'
     forward = np.append(forward, forward_tmp)
 
     return init, forward
@@ -136,13 +136,13 @@ def add_view_to_init_forward(init, forward, in_data, out_data, node):
 def add_convlayer_to_init_forward(init, forward, in_data, out_data, node):
     self_layer = generate_layer_name(node['name'])
     # add forward
-    forward_tmp = generate_n_blanks(2) + out_data + ' = ' + self_layer + '(' + in_data + ')'
+    forward_tmp = generate_n_tap(2) + out_data + ' = ' + self_layer + '(' + in_data + ')'
     forward = np.append(forward, forward_tmp)
     # add init
-    init_tmp = generate_n_blanks(2) + self_layer + ' = ' + nn_sequential + '('
+    init_tmp = generate_n_tap(2) + self_layer + ' = ' + nn_sequential + '('
     init = np.append(init, init_tmp)
 
-    init_tmp = generate_n_blanks(3)
+    init_tmp = generate_n_tap(3)
     if node['name'] == 'conv1d_layer':
         init_tmp = init_tmp + nn_conv1d + '('
     elif node['name'] == 'conv2d_layer':
@@ -152,35 +152,35 @@ def add_convlayer_to_init_forward(init, forward, in_data, out_data, node):
         sys.exit(1)
     init = np.append(init, init_tmp)
 
-    init_tmp = generate_n_blanks(4) + 'in_channels = ' + node['attribute']['in_channel'] + ','
+    init_tmp = generate_n_tap(4) + 'in_channels = ' + node['attribute']['in_channel'] + ','
     init = np.append(init, init_tmp)
 
-    init_tmp = generate_n_blanks(4) + 'out_channels = ' + node['attribute']['out_channel'] + ','
+    init_tmp = generate_n_tap(4) + 'out_channels = ' + node['attribute']['out_channel'] + ','
     init = np.append(init, init_tmp)
 
-    init_tmp = generate_n_blanks(4) + 'kernel_size = ' + node['attribute']['kernel_size'] + ','
+    init_tmp = generate_n_tap(4) + 'kernel_size = ' + node['attribute']['kernel_size'] + ','
     init = np.append(init, init_tmp)
 
-    init_tmp = generate_n_blanks(4) + 'stride = ' + node['attribute']['stride'] + ','
+    init_tmp = generate_n_tap(4) + 'stride = ' + node['attribute']['stride'] + ','
     init = np.append(init, init_tmp)
 
-    init_tmp = generate_n_blanks(4) + 'padding = ' + node['attribute']['padding'] + ','
+    init_tmp = generate_n_tap(4) + 'padding = ' + node['attribute']['padding'] + ','
     init = np.append(init, init_tmp)
 
-    init_tmp = generate_n_blanks(3) + '),'
+    init_tmp = generate_n_tap(3) + '),'
     init = np.append(init, init_tmp)
 
     # activity
     if node['attribute']['activity'] != 'None':
-        init_tmp = generate_n_blanks(3) + node['attribute']['activity'] + '(),'
+        init_tmp = generate_n_tap(3) + node['attribute']['activity'] + '(),'
         init = np.append(init, init_tmp)
 
     # pooling
     if node['attribute']['pool_way'] != 'None':
-        init_tmp = generate_n_blanks(3) + node['attribute']['pool_way'] + '(),'
+        init_tmp = generate_n_tap(3) + node['attribute']['pool_way'] + '(),'
         init = np.append(init, init_tmp)
 
-    init_tmp = generate_n_blanks(2) + ')'
+    init_tmp = generate_n_tap(2) + ')'
     init = np.append(init, init_tmp)
 
     return init, forward
@@ -216,7 +216,7 @@ def add_net_info(network):
     # NET declaration and the head of init()
     init_func = add_init_info()
     # head of forword()
-    forward_func = np.array([generate_n_blanks(1) + 'def forward(self, x_data):'])
+    forward_func = np.array([generate_n_tap(1) + 'def forward(self, x_data):'])
 
     in_data = ''
     out_data = 'x_data'
@@ -243,7 +243,7 @@ def add_net_info(network):
         edge_name = edge['target']['id']
         edge = find_next_edge(network, edge_name)
 
-    forward_func = np.append(forward_func, generate_n_blanks(2) + 'return ' + out_data)
+    forward_func = np.append(forward_func, generate_n_tap(2) + 'return ' + out_data)
     return np.concatenate((init_func, forward_func))
 
 
