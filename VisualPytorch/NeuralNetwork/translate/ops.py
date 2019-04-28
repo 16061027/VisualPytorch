@@ -1,5 +1,14 @@
+
+'''
+step:
+	make_graph
+	BFS and get ans
+	return
+'''
+
 import numpy as np
 import sys
+
 
 
 #global parameters
@@ -13,6 +22,10 @@ nn_sequential = 'torch.nn.Sequential'
 
 conv_layer_para = ['in_channels', 'out_channels', 'kernel_size', 'stride', 'padding']
 
+
+
+
+def make_graph():
 
 
 def init():
@@ -171,21 +184,6 @@ def add_convlayer_to_init_forward(init, forward, in_data, out_data, node):
     #change here
     init = add_conv_layer_para(init, node)
 
-    # init_tmp = generate_n_tap(4) + 'in_channels = ' + node['attribute']['in_channel'] + ','
-    # init = np.append(init, init_tmp)
-
-    # init_tmp = generate_n_tap(4) + 'out_channels = ' + node['attribute']['out_channel'] + ','
-    # init = np.append(init, init_tmp)
-
-    # init_tmp = generate_n_tap(4) + 'kernel_size = ' + node['attribute']['kernel_size'] + ','
-    # init = np.append(init, init_tmp)
-
-    # init_tmp = generate_n_tap(4) + 'stride = ' + node['attribute']['stride'] + ','
-    # init = np.append(init, init_tmp)
-
-    # init_tmp = generate_n_tap(4) + 'padding = ' + node['attribute']['padding'] + ','
-    # init = np.append(init, init_tmp)
-
     init_tmp = generate_n_tap(3) + '),'
     init = np.append(init, init_tmp)
 
@@ -245,13 +243,6 @@ def add_net_info(network):
     init_name = edge_name
     edge = find_next_edge(network, edge_name)
     while edge is not None:
-        # if edge_name != init_name:
-        # 	in_data = out_data
-        # 	out_data = generate_variable_name(edge['source']['name'])
-        # #
-        # 	init_func, forward_func = add_one_layer(init_func, forward_func, in_data, out_data, edge['source'])
-        # 	update_layer_used_time(edge['source']['name'])
-        # #
         in_data = out_data
         out_data = generate_variable_name(edge['target']['name'])
         #
@@ -264,6 +255,7 @@ def add_net_info(network):
 
     forward_func = np.append(forward_func, generate_n_tap(2) + 'return ' + out_data)
     return np.concatenate((init_func, forward_func))
+
 
 
 def main_func(edge_record):
@@ -280,3 +272,7 @@ def main_func(edge_record):
     # Ops
 
     return Main, Model, Ops
+
+
+
+
