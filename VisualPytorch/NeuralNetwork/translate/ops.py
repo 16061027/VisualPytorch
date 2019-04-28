@@ -8,7 +8,7 @@ step:
 
 import numpy as np
 import sys
-
+from model import Node, Vector
 
 
 #global parameters
@@ -26,7 +26,7 @@ conv_layer_para = ['in_channels', 'out_channels', 'kernel_size', 'stride', 'padd
 
 
 def make_graph():
-
+	return None	
 
 def init():
 	layer_used_time['view_layer'] = 0
@@ -161,6 +161,13 @@ def add_conv_layer_para(init, node):
 		init = np.append(init, generate_one_conv_layer_para(para, node['attribute'][para]))
 
 	return init
+def add_activity_pooling(init, node):
+	activity_pooling = ['activity', 'pooling']
+	for attr in activity_pooling:
+			if node['attribute'][attr] != 'None':
+				init_tmp = generate_n_tap(3) + node['attribute'][attr] + '(),'
+				init = np.append(init, init_tmp)
+	return init
 
 def add_convlayer_to_init_forward(init, forward, in_data, out_data, node):
     self_layer = generate_layer_name(node['name'])
@@ -187,15 +194,7 @@ def add_convlayer_to_init_forward(init, forward, in_data, out_data, node):
     init_tmp = generate_n_tap(3) + '),'
     init = np.append(init, init_tmp)
 
-    # activity
-    if node['attribute']['activity'] != 'None':
-        init_tmp = generate_n_tap(3) + node['attribute']['activity'] + '(),'
-        init = np.append(init, init_tmp)
-
-    # pooling
-    if node['attribute']['pool_way'] != 'None':
-        init_tmp = generate_n_tap(3) + node['attribute']['pool_way'] + '(),'
-        init = np.append(init, init_tmp)
+	init = add_activity_pooling(init, node)
 
     init_tmp = generate_n_tap(2) + ')'
     init = np.append(init, init_tmp)
@@ -220,7 +219,7 @@ def add_one_layer(init_func, forward_func, in_data, out_data, node):
     return np.concatenate((init_func, init)), np.concatenate((forward_func, forward))
 
 
-def find_start(network, start):
+def find_and_check_start(network, start):
     for edge in network:
         if edge['source']['name'] == start:
             ans = edge['source']['id']
@@ -239,7 +238,7 @@ def add_net_info(network):
     out_data = 'x_data'
 
     # replace name with id
-    edge_name = find_start(network, 'start')
+    edge_name = find_and_check_start(network, 'start')
     init_name = edge_name
     edge = find_next_edge(network, edge_name)
     while edge is not None:
