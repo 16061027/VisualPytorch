@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'NeuralNetwork.apps.NeuralnetworkConfig',
     'journal.apps.JournalConfig',
     'user.apps.UserConfig',
-    'social_django',
 ]
 
 MIDDLEWARE = [
