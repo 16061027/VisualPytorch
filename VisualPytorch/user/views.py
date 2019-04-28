@@ -13,8 +13,7 @@ from rest_framework_jwt.serializers import jwt_payload_handler,jwt_encode_handle
 class UserRegister(APIView):
 
     def post(self, request):
-        data = JSONParser().parse(request)
-        serializer = UserSerializer(data=data)
+        serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
 
