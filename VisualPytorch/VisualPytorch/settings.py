@@ -106,8 +106,7 @@ ROOT_URLCONF = 'VisualPytorch.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(FONT_DIR, 'static')]
-        ,
+        'DIRS': [os.path.join(FONT_DIR, 'static')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
