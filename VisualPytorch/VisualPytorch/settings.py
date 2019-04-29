@@ -178,8 +178,5 @@ AUTH_USER_MODEL = 'user.User'
 
 AUTHENTICATION_BACKENDS = [
     'user.utils.UserAuthBackend',  # 修改auth认证后端类
-    'social_core.backends.weibo.WeiboOAuth2',  # 使用第三方库  配置 第三方登录
-    'social_core.backends.qq.QQOAuth2',
-    'social_core.backends.weixin.WeixinOAuth2',
 ]
 

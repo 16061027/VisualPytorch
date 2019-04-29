@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
 from .translate import ops
+import json
 
 
 # Create your views here.
@@ -21,11 +22,16 @@ class NetworkList(APIView):
 
     def post(self, request):
 
-        data = {
-            "creator": -1,
-            "structure": str(request.data)
-        }
-
+        if request.successful_authenticator is None:
+            data = {
+                "structure": json.dumps(request.data)
+            }
+        else:
+            creator = request.user.id
+            data = {
+                "creator": creator,
+                "structure": json.dumps(request.data)
+            }
         serializer = NetworkSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
@@ -59,6 +65,7 @@ class NetworkDetail(APIView):
         net = self.get_object(pk)
         net.delete()
         return Response(status=status.HTTP_200_OK)
+
 
 @api_view(['POST'])
 def gen_code(request):

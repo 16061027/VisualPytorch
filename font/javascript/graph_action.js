@@ -29,31 +29,40 @@ var gobalConfig = {
         });
     });
 });*/
+
+function get_all_layer() {
+
+}
 function save_network() {
     var conn_list;
-    var network = [];
+    var nets_conn = [];
+    var nets={};
+     $("#canvas").find(".node").each(function (index,element) {
+         var id = $(element).attr('id');
+       nets[id]={
+           "name":$(element).attr('name'),
+           "attribute": eval('(' + window.localStorage.getItem(id) + ')'),
+           "left":$(element).css('left'),
+           "top":$(element).css('top')
+       }
+    });
     conn_list = jsPlumb.getAllConnections();
     console.log(conn_list);
 
     for (var i = 0; i < conn_list.length; i++) {
         var source_id = conn_list[i]["sourceId"];
         var target_id = conn_list[i]["targetId"];
-
-        var source = {
-            "id": source_id,
-            "name": $("#" + source_id).attr("name"),
-            "attribute": eval('(' + window.localStorage.getItem(source_id) + ')')
-        };
-        var target = {
-            "id": target_id,
-            "name": $("#" + target_id).attr("name"),
-            "attribute": eval('(' + window.localStorage.getItem(target_id) + ')')
-        };
         var conn = {
-            "source": source,
-            "target": target
+            "source": {
+                "id":source_id,
+                "anchor_position":conn_list[i]["endpoints"][0]["anchor"]["type"]
+            },
+            "target": {
+                "id":target_id,
+                "anchor_position":conn_list[i]["endpoints"][1]["anchor"]["type"]
+            }
         };
-        network.push(conn);
+        nets_conn.push(conn);
     }
     var epoch=$("#epoch").val();
     if(epoch==""){
@@ -74,8 +83,9 @@ function save_network() {
         "batch_size": batch_size
     };
     var data = {
-        "network": network,
-        "static": static
+            "nets":nets,
+            "nets_conn": nets_conn,
+            "static": static
     };
     console.log(data);
     $.ajax({
@@ -83,6 +93,12 @@ function save_network() {
         url: gobalConfig.base_url + 'api/NeuralNetwork/network/',
         data: JSON.stringify(data),
         contentType: 'application/json; charset=UTF-8',
+        beforeSend:function (XMLHttpRequest){
+            var token = window.sessionStorage.getItem('token');
+            if(token!=null) {
+                XMLHttpRequest.setRequestHeader("Authorization", "JWT " + token)
+            }
+        },
         success: function (data_return) {
         },
         error:function (data_return) {
