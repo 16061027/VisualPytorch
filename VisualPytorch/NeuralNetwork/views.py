@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.shortcuts import render_to_response
 from NeuralNetwork.models import Network
 from NeuralNetwork.serializers import NetworkSerializer
-from rest_framework.views import APIView
+from BaseApiView.views import APIView
 from django.http import Http404
 from rest_framework.response import Response
 from rest_framework import status
@@ -24,13 +24,15 @@ class NetworkList(APIView):
 
         if request.successful_authenticator is None:
             data = {
-                "structure": json.dumps(request.data)
+                "name":request.data["name"],
+                "structure": json.dumps(request.data["structure"])
             }
         else:
             creator = request.user.id
             data = {
+                "name": request.data["name"],
                 "creator": creator,
-                "structure": json.dumps(request.data)
+                "structure": json.dumps(request.data["structure"])
             }
         serializer = NetworkSerializer(data=data)
         if serializer.is_valid():
@@ -55,7 +57,11 @@ class NetworkDetail(APIView):
 
     def put(self, request, pk):
         net = self.get_object(pk)
-        serializer = NetworkSerializer(net, data=request.data)
+        data = {
+            "name": request.data["name"],
+            "structure": json.dumps(request.data["structure"])
+        }
+        serializer = NetworkSerializer(net, data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
