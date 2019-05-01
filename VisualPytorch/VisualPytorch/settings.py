@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'NeuralNetwork.apps.NeuralnetworkConfig',
     'journal.apps.JournalConfig',
     'user.apps.UserConfig',
+    'social_django',
 ]
 
 MIDDLEWARE = [
@@ -103,11 +104,11 @@ ALLOWED_HOSTS = ['*']
 
 ROOT_URLCONF = 'VisualPytorch.urls'
 
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(FONT_DIR, 'static')]
-        ,
+        'DIRS': [os.path.join(FONT_DIR, 'static')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

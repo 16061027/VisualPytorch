@@ -11,9 +11,203 @@
     <script type="text/javascript" src="../resources/bootstrap.min.js"></script>
     <script type="text/javascript" src="../resources/jquery-ui.js"></script>
     <script type="text/javascript" src="../javascript/graph_action.js"></script>
-    <link href="../resources/bootstrap.min.css" rel="stylesheet">
+     <link href="../resources/bootstrap.min.css" rel="stylesheet">
     <link href="../resources/jquery-ui.css" rel="stylesheet">
     <link href="../resources/jquery-ui.structure.css" rel="stylesheet">
+
+<style type="text/css">
+.Content-Main{
+   position:relative;
+    width: 33%;
+    max-width: 500px;
+    margin: auto;
+    margin-top: 50px;
+    padding: 20px 30px 20px 30px;
+    font: 12px "Helvetica Neue", Helvetica, Arial, sans-serif;
+    text-shadow: 1px 1px 1px #FFF;
+    border: 1px solid #DDD;
+    border-radius: 5px;
+    color: #888;
+    background: #FFF;
+
+    float: right;
+    width: 33%;
+    text-align: center;
+    background-color: #fff;
+    min-height: 368px;
+    padding-top: 62px;
+}
+.Content-Main h1{
+    display: block;
+    padding: 0px 0px 10px 40px;
+    margin: -10px -30px 30px -30px;
+    font: 25px "Helvetica Neue", Helvetica, Arial, sans-serif;
+    border-bottom: 1px solid #DADADA;
+    color: #888;
+}
+.Content-Main h1>span{
+    display: block;
+    font-size: 11px;
+}
+.Content-Main label{
+    display: block;
+    margin: 0px 0px 5px;
+}
+.Content-Main label>span{
+    float: left;
+    width: 20%;
+    padding-right: 10px;
+    margin-top: 10px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: bold;
+    text-align: right;
+    color: #333;
+}
+.Content-Main input[type="text"],.Content-Main textarea{
+    width: 70%;
+    height: 20px;
+    padding: 5px 0px 5px 5px;
+    margin-bottom: 16px;
+    margin-right: 6px;
+    margin-top: 2px;
+    line-height: 15px;
+    border-radius: 4px;
+    border: 1px solid #CCC;
+    color: #888;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+.select1{
+    width: 71%;
+    height: 35px;
+    margin-bottom: 16px;
+    margin-right: 6px;
+    margin-top: 2px;
+    line-height: 15px;
+    padding: 5px 0px 5px 5px;
+    border-radius: 4px;
+    border: 1px solid #CCC;
+    color: #888;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+.select2{
+    width: 13%;
+    border-radius: 4px;
+    border: 1px solid #CCC;
+    color: #888;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+.Content-Main textarea{
+    width: 70%;
+    height: 100px;
+    padding: 5px 0px 0px 5px;
+}
+.button{
+    padding: 10px 25px 10px 25px;
+    margin-left: 111px;
+    border-radius: 4px;
+    border:1px solid #CCC;
+    background: #FFF;
+    color: #333;
+}
+.button:hover{
+    color: #333;
+    background-color: #EBEBEB;
+    border-color: #ADADAD;
+}
+
+.main-view.common-qa{
+    display: block;
+    overflow: auto;
+padding-top: 20px;
+height: 100%;
+background: #F0F0F8;
+}
+
+.feedback{
+ box-sizing: content-box;
+}
+.row {
+  max-width:1200px;
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+
+/* 左侧栏的宽度 */
+.left-body {
+   width: 65%;
+border: 20px;
+bottom: 0;
+top: 0;
+float: left;
+padding-bottom: 15px;
+background-color: #fff;
+box-sizing: border-box;
+}
+
+.left-container{
+    float: left;
+    width: 100%;
+    min-height: 400px;
+    background-color: #fff;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.question-list-container{
+    padding: 20px;
+    padding-top: 10px;
+}
+
+.question-header{
+    box-sizing: border-box;
+}
+
+.list-container{
+    margin-top: 5px;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.question-item{
+    line-height: 39px;
+    color: #333;
+    font-size: 12px;
+    border: 1px solid #EAEAEA;
+    border-bottom: 0;
+    padding-left: 6px;
+    box-sizing: border-box;
+}
+/* 响应式布局 - 宽度小于600px时设置上下布局 */
+@media screen and (max-width: 600px) {
+  .column.side, .column.middle {
+    width: 100%;
+  }
+}
+/* 底部样式 */
+.footer {
+  background-color: #f1f1f1;
+  padding: 10px;
+  text-align: center;
+  height: 100px;
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  font-size:5px
+}
+    </style>
 </head>
 
 <body>
@@ -21,13 +215,72 @@
 <script>
     $("#header").load("header.html")
 </script>
-<div class="container" style="margin-top: 20px">
-    <div style="text-align: center;font-size: 20px;margin-top: 40px">
+
+<section id="common-list" class="main-view common-qa" style="background-color: #F5F5F5;">
+<div class="feedback">
+<div class="body-container">
+    <div class="left-body" ng-class="{'is-question-list':question}">
+        <div class="left-container">
+            <div class="question-list-container">
+            <div class="question-header">
+                <span class="header-title">问题列表</span>
+            </div>
+            <div id="list-container" style="margin-top:5px;position:relative;">
+                <div id="not-more" class="default-not-show" style="line-height:40px;">
+                </div>
+                <div id="new-data" class="default-not-show new-data"></div>
+                <div class="question-item ng-scope" ng-repeat="item in question track by item.id">
+                        <p>this is question feedback</p>
+                        <p>this is question feedback</p>
+                        <p>this is question feedback</p>
+                        <p>this is question feedback</p>
+                </div>
+            </div>
+
+
+            </div>
+        </div>
+    </div>
+    <div class="Content-Main">
+        <div class="Content-Main1">
+            <h3>用户反馈</h3>
+        </div>
+        <form action="" method="post" class="form-report">
+            <label>
+                <span>Contact:</span>
+                <select name="select2" class="select2">
+                    <option value="Email">Email</option>
+                    <option value="Phone">Phone</option>
+                    <option value="QQ">QQ</option>
+                </select>
+                <input type="text" placeholder="">
+            </label>
+            <label>
+                <span>Message:</span>
+                <textarea id="mesaage" name="message" placeholder="Your can tell me"></textarea>
+            </label>
+            <label>
+                <span>Subject:</span>
+                <select name="select1" class="select1">
+                    <option value="Job Inquiry">Job Inquiry</option>
+                    <option value="General Question">General Question</option>
+                </select>
+            </label>
+            <label>
+                <input type="button" class="button" value="Send">
+            </label>
+        </form>
+    </div>
+    <div class="footer">
         <p>该项目是北航软件工程课葫芦娃团队的课程设计</p>
         <p>了解我们团队请查看博客园链接：<a href="https://www.cnblogs.com/1606-huluwa/">团队博客</a></p>
         <p>如果您在使用中出现了问题，或者有什么好的建议，请发送邮件到：464365439@qq.com</p>
     </div>
 </div>
+</div>
+</section>
+
+
 
 </body>
 </html>
