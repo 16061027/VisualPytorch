@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
-from config import config
+from config import database_config
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'NeuralNetwork.apps.NeuralnetworkConfig',
     'journal.apps.JournalConfig',
     'user.apps.UserConfig',
-    'social_django',
 ]
 
 MIDDLEWARE = [
@@ -104,7 +103,6 @@ ALLOWED_HOSTS = ['*']
 
 ROOT_URLCONF = 'VisualPytorch.urls'
 
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -131,11 +129,11 @@ WSGI_APPLICATION = 'VisualPytorch.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': config.NAME,
-        'HOST': config.HOST,
-        'PORT': config.PORT,
-        'USER': config.USER,
-        'PASSWORD': config.PASSWORD
+        'NAME': database_config.NAME,
+        'HOST': database_config.HOST,
+        'PORT': database_config.PORT,
+        'USER': database_config.USER,
+        'PASSWORD': database_config.PASSWORD
     }
 }
 
