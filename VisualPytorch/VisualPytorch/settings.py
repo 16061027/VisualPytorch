@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'NeuralNetwork.apps.NeuralnetworkConfig',
     'journal.apps.JournalConfig',
     'user.apps.UserConfig',
+    'social_django',
 ]
 
 MIDDLEWARE = [
@@ -102,6 +103,7 @@ CORS_ALLOW_HEADERS = (
 ALLOWED_HOSTS = ['*']
 
 ROOT_URLCONF = 'VisualPytorch.urls'
+
 
 TEMPLATES = [
     {
