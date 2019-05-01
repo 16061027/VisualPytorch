@@ -29,43 +29,49 @@ var gobalConfig = {
         });
     });
 });*/
+
 function save_network() {
     var conn_list;
-    var network = [];
+    var nets_conn = [];
+    var nets = {};
+    $("#canvas").find(".node").each(function (index, element) {
+        var id = $(element).attr('id');
+        nets[id] = {
+            "name": $(element).attr('name'),
+            "attribute": eval('(' + window.localStorage.getItem(id) + ')'),
+            "left": $(element).css('left'),
+            "top": $(element).css('top')
+        }
+    });
     conn_list = jsPlumb.getAllConnections();
     console.log(conn_list);
 
     for (var i = 0; i < conn_list.length; i++) {
         var source_id = conn_list[i]["sourceId"];
         var target_id = conn_list[i]["targetId"];
-
-        var source = {
-            "id": source_id,
-            "name": $("#" + source_id).attr("name"),
-            "attribute": eval('(' + window.localStorage.getItem(source_id) + ')')
-        };
-        var target = {
-            "id": target_id,
-            "name": $("#" + target_id).attr("name"),
-            "attribute": eval('(' + window.localStorage.getItem(target_id) + ')')
-        };
         var conn = {
-            "source": source,
-            "target": target
+            "source": {
+                "id": source_id,
+                "anchor_position": conn_list[i]["endpoints"][0]["anchor"]["type"]
+            },
+            "target": {
+                "id": target_id,
+                "anchor_position": conn_list[i]["endpoints"][1]["anchor"]["type"]
+            }
         };
-        network.push(conn);
+        nets_conn.push(conn);
     }
-    var epoch=$("#epoch").val();
-    if(epoch==""){
-        epoch= "1";
+    var epoch = $("#epoch").val();
+    if (epoch == "") {
+        epoch = "1";
     }
     var learning_rate = $("#learning_rate").val();
-    if(learning_rate==""){
-        learning_rate="0.5";
+    if (learning_rate == "") {
+        learning_rate = "0.5";
     }
     var batch_size = $("#batch_size").val();
-    if(batch_size==""){
-        batch_size="1";
+    if (batch_size == "") {
+        batch_size = "1";
     }
     var static = {
         "epoch": epoch,
@@ -74,57 +80,95 @@ function save_network() {
         "batch_size": batch_size
     };
     var data = {
-        "network": network,
-        "static": static
+        "name": "123",
+        "structure": {
+            "nets": nets,
+            "nets_conn": nets_conn,
+            "static": static
+        }
     };
     console.log(data);
-    $.ajax({
-        type: 'POST',
-        url: gobalConfig.base_url + 'api/NeuralNetwork/network/',
-        data: JSON.stringify(data),
-        contentType: 'application/json; charset=UTF-8',
-        success: function (data_return) {
-        },
-        error:function (data_return) {
-            alert(data_return["responseText"])
-        }
-    });
+    var query_object = getQueryObject(window.location.href);
+    if (query_object.hasOwnProperty("id")) {
+        var net_id = query_object["id"];
+        $.ajax({
+            type: 'PUT',
+            url: gobalConfig.base_url + 'api/NeuralNetwork/network/' + net_id + '/',
+            data: JSON.stringify(data),
+            contentType: 'application/json; charset=UTF-8',
+            beforeSend: function (XMLHttpRequest) {
+                var token = window.sessionStorage.getItem('token');
+                if (token != null) {
+                    XMLHttpRequest.setRequestHeader("Authorization", "JWT " + token)
+                }
+            },
+            success: function (data_return) {
+            },
+            error: function (data_return) {
+                alert(data_return["responseText"])
+            }
+        });
+    }else {
+        $.ajax({
+            type: 'POST',
+            url: gobalConfig.base_url + 'api/NeuralNetwork/network/',
+            data: JSON.stringify(data),
+            contentType: 'application/json; charset=UTF-8',
+            beforeSend: function (XMLHttpRequest) {
+                var token = window.sessionStorage.getItem('token');
+                if (token != null) {
+                    XMLHttpRequest.setRequestHeader("Authorization", "JWT " + token)
+                }
+            },
+            success: function (data_return) {
+            },
+            error: function (data_return) {
+                alert(data_return["responseText"])
+            }
+        });
+    }
     $.ajax({
         type: 'POST',
         url: gobalConfig.base_url + 'api/NeuralNetwork/getcode/',
         data: JSON.stringify(data),
         contentType: 'application/json; charset=UTF-8',
-        success: function (data_return,status,xhr) {
-            console.log(data_return,status,xhr);
-            if(xhr.status==200){
-                var main="";
-                var model="";
+        beforeSend: function (XMLHttpRequest) {
+            var token = window.sessionStorage.getItem('token');
+            if (token != null) {
+                XMLHttpRequest.setRequestHeader("Authorization", "JWT " + token)
+            }
+        },
+        success: function (data_return, status, xhr) {
+            console.log(data_return, status, xhr);
+            if (xhr.status == 200) {
+                var main = "";
+                var model = "";
                 var ops = "";
-                for(var i=0;i<data_return["Main"].length;i++){
-                    main = main+data_return["Main"][i]+"<br>";
+                for (var i = 0; i < data_return["Main"].length; i++) {
+                    main = main + data_return["Main"][i] + "<br>";
                 }
-                for(var i=0;i<data_return["Model"].length;i++){
-                    model = main+data_return["Model"][i]+"<br>";
+                for (var i = 0; i < data_return["Model"].length; i++) {
+                    model = main + data_return["Model"][i] + "<br>";
                 }
-                for(var i=0;i<data_return["Ops"].length;i++){
-                    ops = main+data_return["Ops"][i]+"<br>";
+                for (var i = 0; i < data_return["Ops"].length; i++) {
+                    ops = main + data_return["Ops"][i] + "<br>";
                 }
                 var code = {
-                  "model":model,
-                  "main":main,
-                  "ops":ops
+                    "model": model,
+                    "main": main,
+                    "ops": ops
                 };
-                window.localStorage.setItem("code",JSON.stringify(data_return));
+                window.localStorage.setItem("code", JSON.stringify(data_return));
                 window.open("show_code.html");
                 //window.location.href="show_code.html";
 
             }
-            else{
+            else {
                 alert(JSON.stringify(data_return));
             }
 
         },
-        error:function (data_return) {
+        error: function (data_return) {
             alert(data_return["responseText"])
         }
 
@@ -140,16 +184,16 @@ function save_attr_linear_layer(button) {
     var out_channel = form.find("[name = \"out_channel\"]");
     //todo:加入更精确的正则判断
     form.find("[name='input_error']").remove();
-    var reg = /^[0-9]+$/ ;
+    var reg = /^[0-9]+$/;
     var flag = true;
-    var check_array = [in_channel,out_channel];
-    check_array.forEach(function (value,index,array) {
-       if(!reg.test(value.val())){
-           value.after("<p name='input_error' class='alert_font'>输入不合法</p>");
-           flag = false;
-       }
+    var check_array = [in_channel, out_channel];
+    check_array.forEach(function (value, index, array) {
+        if (!reg.test(value.val())) {
+            value.after("<p name='input_error' class='alert_font'>输入不合法</p>");
+            flag = false;
+        }
     });
-    if(!flag){
+    if (!flag) {
         return;
     }
     window.localStorage.setItem(id, "{\"in_channel\":\"" + in_channel.val() + "\", \"out_channel\":\"" + out_channel.val() + "\"}");
@@ -162,7 +206,7 @@ function save_attr_view_layer(button) {
     var form = $("#" + button["id"]).parent();
     var shape = form.find("[name = \"shape\"]");
     form.find("[name='input_error']").remove();
-    if(shape.val().replace(" ","")==""){
+    if (shape.val().replace(" ", "") == "") {
         shape.after("<p name='input_error' class='alert_font'>输入不合法</p>");
         return;
     }
@@ -183,16 +227,16 @@ function save_attr_conv1d_layer(button) {
     var pool_way = form.find("[id=\"" + id + "pool_way\"]").find("option:selected").val();
     //todo:加入更精确的正则判断
     form.find("[name='input_error']").remove();
-    var reg = /^[0-9]+$/ ;
+    var reg = /^[0-9]+$/;
     var flag = true;
-    var check_array = [in_channel,out_channel,kernel_size,stride,padding];
-    check_array.forEach(function (value,index,array) {
-       if(!reg.test(value.val())){
-           value.after("<p name='input_error' class='alert_font'>输入不合法</p>");
-           flag = false;
-       }
+    var check_array = [in_channel, out_channel, kernel_size, stride, padding];
+    check_array.forEach(function (value, index, array) {
+        if (!reg.test(value.val())) {
+            value.after("<p name='input_error' class='alert_font'>输入不合法</p>");
+            flag = false;
+        }
     });
-    if(!flag){
+    if (!flag) {
         return;
     }
     //var activity = form.find("[name = \"activity\"]").val();
@@ -215,16 +259,16 @@ function save_attr_conv2d_layer(button) {
     var pool_way = form.find("[id=\"" + id + "pool_way\"]").find("option:selected").val();
     //todo:加入更精确的正则判断
     form.find("[name='input_error']").remove();
-    var reg = /^[0-9]+$/ ;
+    var reg = /^[0-9]+$/;
     var flag = true;
-    var check_array = [in_channel,out_channel,kernel_size,stride,padding];
-    check_array.forEach(function (value,index,array) {
-       if(!reg.test(value.val())){
-           value.after("<p name='input_error' class='alert_font'>输入不合法</p>");
-           flag = false;
-       }
+    var check_array = [in_channel, out_channel, kernel_size, stride, padding];
+    check_array.forEach(function (value, index, array) {
+        if (!reg.test(value.val())) {
+            value.after("<p name='input_error' class='alert_font'>输入不合法</p>");
+            flag = false;
+        }
     });
-    if(!flag){
+    if (!flag) {
         return;
     }
     //var activity = form.find("[name = \"activity\"]").val();

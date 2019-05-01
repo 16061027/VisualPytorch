@@ -2,12 +2,13 @@ from django.shortcuts import render
 from django.shortcuts import render_to_response
 from NeuralNetwork.models import Network
 from NeuralNetwork.serializers import NetworkSerializer
-from rest_framework.views import APIView
+from BaseApiView.views import APIView
 from django.http import Http404
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
 from .translate import ops
+import json
 
 
 # Create your views here.
@@ -21,11 +22,18 @@ class NetworkList(APIView):
 
     def post(self, request):
 
-        data = {
-            "creator": -1,
-            "structure": str(request.data)
-        }
-
+        if request.successful_authenticator is None:
+            data = {
+                "name":request.data["name"],
+                "structure": json.dumps(request.data["structure"])
+            }
+        else:
+            creator = request.user.id
+            data = {
+                "name": request.data["name"],
+                "creator": creator,
+                "structure": json.dumps(request.data["structure"])
+            }
         serializer = NetworkSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
@@ -49,7 +57,11 @@ class NetworkDetail(APIView):
 
     def put(self, request, pk):
         net = self.get_object(pk)
-        serializer = NetworkSerializer(net, data=request.data)
+        data = {
+            "name": request.data["name"],
+            "structure": json.dumps(request.data["structure"])
+        }
+        serializer = NetworkSerializer(net, data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -59,6 +71,7 @@ class NetworkDetail(APIView):
         net = self.get_object(pk)
         net.delete()
         return Response(status=status.HTTP_200_OK)
+
 
 @api_view(['POST'])
 def gen_code(request):
