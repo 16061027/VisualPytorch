@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
-from config import database_config
+from config import db
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -129,11 +129,11 @@ WSGI_APPLICATION = 'VisualPytorch.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': database_config.NAME,
-        'HOST': database_config.HOST,
-        'PORT': database_config.PORT,
-        'USER': database_config.USER,
-        'PASSWORD': database_config.PASSWORD
+        'NAME': db.NAME,
+        'HOST': db.HOST,
+        'PORT': db.PORT,
+        'USER': db.USER,
+        'PASSWORD': db.PASSWORD
     }
 }
 

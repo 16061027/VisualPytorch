@@ -53,4 +53,7 @@ docs/_build/
 .idea
 
 #config
-database_config.py
+db.py
+
+#test
+.pytest_cache
