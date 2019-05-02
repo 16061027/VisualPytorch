@@ -1,3 +1,8 @@
+body {
+    padding-right: 0 !important;
+}
+
+
 .orange {
     color: #fef4e9;
     border: solid 1px #ffd267;

@@ -1,3 +1,4 @@
+<link href="../css/login.css" rel="stylesheet">
 <div class="navbar navbar-inverse normal-font" role="navigation" style="background-color:orange;
         border-color: white">
     <div class="container">
@@ -11,11 +12,12 @@
             </button>
         </div>
         <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
+            <ul class="nav navbar-nav navbar-left">
                 <li ><a href="canvas.html" style="color:white">VisualPytorch</a></li>
                 <li ><a href="wiki.html" style="color:white;">帮助</a></li>
                 <li ><a href="statistics.html" style="color:white;">统计</a></li>
                 <li ><a href="contact_us.html" style="color:white;">联系我们</a></li>
+
                 <!--
                 <li><a onclick="jump_to_user_index('esfan')">Query</a></li>
 
@@ -36,6 +38,102 @@
                     </ul>
                 </li>-->
             </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a onclick="jump_to_login()" style="color:white;right:10%">登录</a></li>
+            </ul>
+
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" style="width: 368px;font-size: 14px" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <div class="logGet">
+                    <!-- 头部提示信息 -->
+                    <div class="logD logDtip">
+                        <p class="p1">登录</p>
+                    </div>
+                    <!-- 输入框 -->
+                    <div class="lgD">
+                        <img src="../img/person.png" width="20" height="20" alt=""/>
+                        <input type="text" placeholder=" 输入用户名"/>
+                    </div>
+                    <div class="lgD">
+                        <img src="../img/lock.png" width="20" height="20" alt=""/>
+                        <input type="text" placeholder=" 输入用户密码"/>
+                    </div>
+                    <div class="lgD">
+                        <p class="p3">
+                            <a style="float: right" onclick="open_register()">立即注册</a>
+                        </p>
+                    </div>
+                    <div class="logC" style="margin-top: 70px">
+                        <a target="_self">
+                            <button>登 录</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="registerModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" style="width: 368px;font-size: 14px" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <div class="logGet">
+                    <!-- 头部提示信息 -->
+                    <div class="logD logDtip">
+                        <p class="p1">注册</p>
+                    </div>
+                    <!-- 输入框 -->
+                    <div class="lgD">
+                        <img src="../img/person.png" width="20" height="20" alt=""/>
+                        <input type="text" placeholder=" 输入用户名"/>
+                    </div>
+                    <div class="lgD">
+                        <img src="../img/lock.png" width="20" height="20" alt=""/>
+                        <input type="text" placeholder=" 输入用户密码"/>
+                    </div>
+                    <div class="lgD">
+                        <img src="../img/lock.png" width="20" height="20" alt=""/>
+                        <input type="text" placeholder=" 确认用户密码"/>
+                    </div>
+                    <div class="lgD">
+                        <img src="../img/e-mail.png" width="20" height="20" alt=""/>
+                        <input type="text" placeholder=" 输入用户邮箱"/>
+                    </div>
+                    <div class="lgD">
+                        <p class="p3">
+                            <a  onclick="open_login()" style="float: left">已有账户，立即登录</a>
+                        </p>
+                    </div>
+                    <div class="logC" style="margin-top: 70px">
+                        <a target="_self">
+                            <button>注册</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function jump_to_login() {
+        $("#loginModal").modal('show');
+    }
+    function open_register() {
+        $("#loginModal").modal('hide');
+        $("#registerModal").modal('show');
+    }
+    function open_login() {
+        $("#registerModal").modal('hide');
+        $("#loginModal").modal('show');
+    }
+</script>
