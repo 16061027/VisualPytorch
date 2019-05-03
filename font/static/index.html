@@ -1,11 +1,8 @@
-<!--author:mahaoxiang
-    time:2019-3-20
--->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>VisualPytorch</title>
+    <title>index</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <script type="text/javascript" src="../resources/jquery-3.3.1.js"></script>
     <script type="text/javascript" src="../resources/bootstrap.min.js"></script>
@@ -14,322 +11,139 @@
     <link href="../resources/jquery-ui.css" rel="stylesheet">
     <link href="../resources/jquery-ui.structure.css" rel="stylesheet">
     <link href="../resources/jquery-ui.theme.css" rel="stylesheet">
-    <link href="../css/layer.css" rel="stylesheet">
-    <script type="text/javascript" src="../resources/jsplumb.min.js"></script>
+    <link href="../css/login.css" rel="stylesheet">
     <script type="text/javascript" src="../javascript/graph_action.js"></script>
-    <script type="text/javascript" src="../javascript/layer_popover.js"></script>
+    <script type="text/javascript" src="../javascript/base_service.js"></script>
 </head>
-
-<body>
-<nav style="font-size:20px;text-align: center; top: 0; height: 50px" id="header"></nav>
-<script>
-    $("#header").load("header.html")
-</script>
-<!--解决在ie火狐浏览器等中不兼容出现布局错误的问题，暂时性解决方案-->
-<div class="container-fluid" style="margin-top: 20px">
-    <div id="content" class="row-fluid">
-        <div class="col-md-3" id="element_list">
-             <button type="button" class="btn btn-warning" style="width: 150px" id="submit" onclick="save_network()">生成代码
-            </button>
-            <div class="panel-group" id="left_ele_collapse" style="margin-top: 20px">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#left_ele_collapse"
-                               href="#collapseOne">
-                                可选用网络层
-                            </a>
-                        </h4>
-                    </div>
-                    <div id="collapseOne" class="panel-collapse collapse in">
-
-                        <div class="panel-body">
-                            <div class="ele_in_list">
-                                <div class="node start little_green" id="start">
-                                    开始
-                                </div>
-                            </div>
-                            <div class="ele_in_list">
-                                <div class="node orange" id="view_layer" type="button"
-                                     data-container="body" data-toggle="popover">
-                                    reshape层
-                                </div>
-                            </div>
-                            <div class="ele_in_list">
-                                <div class="node orange" id="linear_layer" type="button"
-                                     data-container="body" data-toggle="popover" in_channel="" out_channel="">
-                                    全连接层
-                                </div>
-                            </div>
-
-                            <div class="ele_in_list">
-                                <div class="node orange" id="conv1d_layer" type="button"
-                                     data-container="body" data-toggle="popover">
-                                    一维卷积层
-                                </div>
-                            </div>
-
-                            <div class="ele_in_list">
-                                <div class="node orange" id="conv2d_layer" type="button"
-                                     data-container="body" data-toggle="popover">
-                                    二维卷积层
-                                </div>
-                            </div>
-
-
-                        </div>
-                    </div>
-                </div>
-                <!--<div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#left_ele_collapse"
-                               href="#collapseTwo">
-                                elements_group_2
-                            </a>
-                        </h4>
-                    </div>
-                    <div id="collapseTwo" class="panel-collapse collapse">
-                        <div class="panel-body">
-                        </div>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#left_ele_collapse"
-                               href="#collapseThree">
-                                elements_group_3
-                            </a>
-                        </h4>
-                    </div>
-                    <div id="collapseThree" class="panel-collapse collapse">
-                        <div class="panel-body">
-                        </div>
-                    </div>
-                </div>-->
+<nav style="font-size:20px;text-align: center; top: 0; height: 50px" id="header">
+    <div class="navbar navbar-inverse normal-font" role="navigation" style="background-color:orange;
+        border-color: white">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle"
+                        data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
             </div>
-            <div>
-                <h4>训练参数配置</h4>
-                <form class="form-horizontal" role="form">
-                    <div class="form-group">
-                        <label class="col-sm-5 control-label">epoch(训练轮次)</label>
-                        <div class="col-sm-5">
-                            <input type="text" class="form-control" placeholder="1" id="epoch">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-5 control-label">optimizer(优化器)</label>
-                        <div class="col-sm-5">
-                            <select id="optimizer" class="form-control">
-                                <option value="torch.optim.Adam">Adam</option>
-                                <option value="torch.optim.Optimizer">Optimizer</option>
-                                <option value="torch.optim.Adamax">Adamax</option>
-                                <option value="torch.optim.ASGD">ASGD</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-5 control-label">learning_rate(学习率)</label>
-                        <div class="col-sm-5">
-                            <input type="text" id="learning_rate" class="form-control" placeholder="0.5">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-5 control-label">batch_size</label>
-                        <div class="col-sm-5">
-                            <input type="text" id="batch_size" class="form-control" placeholder="1">
-                        </div>
-                    </div>
-
-                </form>
-            </div>
-
-        </div>
-        <div class="col-md-9" id="canvas">
-            <div style="height:1000px;border:0.5px solid black;background:url(../img/grid.png) no-repeat;background-size:100%;opacity: .6">
-
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="canvas.html" style="color:white">VisualPytorch</a></li>
+                    <li><a href="wiki.html" style="color:white;">帮助</a></li>
+                    <li><a href="statistics.html" style="color:white;">统计</a></li>
+                    <li><a href="contact_us.html" style="color:white;">联系我们</a></li>
+                </ul>
             </div>
         </div>
     </div>
+</nav>
+
+<body>
+<h1 style="text-align: center">welcome to VisualPytorch</h1>
+<div>
+    <div style="width: 30%;top:40%;left:35%;position: absolute">
+        <button type="button" class="btn" style="width: 150px;float: left" id="tourist_btn">游客模式
+        </button>
+        <button type="button" class="btn " style="width: 150px;float: right" id="login_btn" data-toggle="modal"
+                data-target="#loginModal">登录
+        </button>
+    </div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" style="width: 368px" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <div class="logGet">
+                    <!-- 头部提示信息 -->
+                    <div class="logD logDtip">
+                        <p class="p1">登录</p>
+                    </div>
+                    <!-- 输入框 -->
+                    <div class="lgD">
+                        <img src="../img/person.png" width="20" height="20" alt=""/>
+                        <input id="username_log" type="text" placeholder=" 输入用户名或邮箱"/>
+                    </div>
+                    <div class="lgD">
+                        <img src="../img/lock.png" width="20" height="20" alt=""/>
+                        <input id="pwd_log" type="password" placeholder=" 输入用户密码"/>
+                    </div>
+                    <div class="lgD">
+                        <p class="p3">
+                            <a style="float: right" onclick="open_register()">立即注册</a>
+                        </p>
+                    </div>
+                    <div class="logC" style="margin-top: 70px">
+                        <a target="_self">
+                            <button onclick="login()">登 录</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="registerModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" style="width: 368px" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <div class="logGet">
+                    <!-- 头部提示信息 -->
+                    <div class="logD logDtip">
+                        <p class="p1">注册</p>
+                    </div>
+                    <!-- 输入框 -->
+                    <div class="lgD">
+                        <img src="../img/person.png" width="20" height="20" alt=""/>
+                        <input id="username_reg" type="text" placeholder=" 输入用户名"/>
+                    </div>
+                    <div class="lgD">
+                        <img src="../img/lock.png" width="20" height="20" alt=""/>
+                        <input id="pwd_reg" type="password" placeholder=" 输入用户密码"/>
+                    </div>
+                    <div class="lgD">
+                        <img src="../img/lock.png" width="20" height="20" alt=""/>
+                        <input id="pwd_confirm_reg" type="password" placeholder=" 确认用户密码"/>
+                    </div>
+                    <div class="lgD">
+                        <img src="../img/e-mail.png" width="20" height="20" alt=""/>
+                        <input id="email_reg" type="text" placeholder=" 输入用户邮箱"/>
+                    </div>
+                    <div class="lgD">
+                        <p class="p3">
+                            <a  onclick="open_login()" style="float: left">已有账户，立即登录</a>
+                        </p>
+                    </div>
+                    <div class="logC" style="margin-top: 70px">
+                        <a target="_self">
+                            <button onclick="register()">注册</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 </body>
-<script>
-    var my_end_point = {
-        endpoint: ["Dot", {radius: 5}],
-        connectorStyle: {
-            stroke: "#fc2f49",
-            strokeWidth: 3,
-
-        },
-        isSource: true,
-        isTarget: true,
-        maxConnections: -1,
-        connector: ["Flowchart", {stub: [40, 60], gap: 5, cornerRadius: 5, alwaysRespectStubs: true}],
-        connectorOverlays: [["Arrow", {width: 10, length: 10, location: 1}]],
-        connectionsDetachable: true,
-
-    };
-
-</script>
-<script>
-    var canvas_cnt = 0;
-    $("#view_layer").draggable(
-        {
-            helper: "clone",
-            scope: "ss",
-        }
-    );
-    $("#linear_layer").draggable(
-        {
-            helper: "clone",
-            scope: "ss",
-        }
-    );
-    $("#conv1d_layer").draggable(
-        {
-            helper: "clone",
-            scope: "ss",
-        }
-    );
-    $("#conv2d_layer").draggable(
-        {
-            helper: "clone",
-            scope: "ss",
-        }
-    );
-    $("#start").draggable(
-        {
-            helper: "clone",
-            scope: "ss",
-        }
-    );
-
-    $("#canvas").droppable({
-        scope: "ss",
-        drop: function (event, ui) {
-            var left = parseInt(ui.offset.left - $(this).offset().left);
-            var top = parseInt(ui.offset.top - $(this).offset().top);
-            var name = ui.draggable[0].id;
-            canvas_cnt++;
-            var id = "canvas_" + canvas_cnt;
-            /*$(this).append("<div class='" + $("#" + name).attr("class") + "' id='" + id + "' name='" + name + "' type='" + $("#" + name).attr("type") + "' " +
-                "onclick='popover_show(\"" + id + "\",\"" + name + "\")'" + " data-container='" + $("#" + name).attr("data-container") + "' data-toggle='" + $("#" + name).attr("data-toggle") + "' " + ">" + $(ui.helper).html() + "</div>");*/
-            $(this).append("<div class='" + $("#" + name).attr("class") + "' id='" + id + "' name='" + name + "' type='" + $("#" + name).attr("type") + "' " +
-                " data-container='" + $("#" + name).attr("data-container") + "' data-toggle='" + $("#" + name).attr("data-toggle") + "' " + ">" + $(ui.helper).html() + "</div>");
-            $("#" + id).css("left", left).css("top", top);
-            jsPlumb.draggable(id);
-            $("#" + id).draggable({containment: "parent"});
-            jsPlumb.addEndpoint(id, {anchor: 'Top'}, my_end_point);
-            jsPlumb.addEndpoint(id, {anchor: 'Left'}, my_end_point);
-            jsPlumb.addEndpoint(id, {anchor: 'Right'}, my_end_point);
-            jsPlumb.addEndpoint(id, {anchor: 'Bottom'}, my_end_point);
-            /*doubleclick("#" + id);*/
-            /*$("#" + id).on("click", function () {
-                if (confirm("确定要删除吗?")) {
-                    jsPlumb.removeAllEndpoints($(this).attr("id"));
-                    $(this).remove();
-                }
-            });*/
-            if (name == "start") {
-                window.localStorage.setItem(id, "{\"start\":\"true\"}");
-            }
-            if (name == "view_layer") {
-                window.localStorage.setItem(id, "{\"shape\":\"\"}");
-            }
-            if (name == "linear_layer") {
-                window.localStorage.setItem(id, "{\"in_channel\":\"\",\"out_channel\":\"\"}");
-            }
-            if (name == "conv1d_layer") {
-                window.localStorage.setItem(id, "{\"in_channel\":\"\",\"out_channel\":\"\",\"kernel_size\":\"\",\"stride\":\"\",\"padding\":\"\",\"activity\":\"None\",\"pool_way\":\"None\"}");
-            }
-            if (name == "conv2d_layer") {
-                window.localStorage.setItem(id, "{\"in_channel\":\"\",\"out_channel\":\"\",\"kernel_size\":\"\",\"stride\":\"\",\"padding\":\"\",\"activity\":\"None\",\"pool_way\":\"None\"}");
-            }
-            $("#" + id).bind("contextmenu", function () {
-                return false;
-            });
-            $("#" + id).mousedown(function (e) {
-                //右键为3
-
-                if (3 == e.which) {
-
-                    if (confirm("确定要删除吗?")) {
-                        jsPlumb.removeAllEndpoints($(this).attr("id"));
-                        $("#" + id).popover('destroy');
-                        $(this).remove();
-
-                    }
-                }
-            });
-            var flag = -1;
-            $("#" + id).bind({
-                mousedown: function (e) {
-                    flag = 0;
-                    return;
-                },
-                mousemove: function (e) {
-                    if (flag == 0) {
-                        $("#" + id).popover('hide');
-                    }
-                    flag = 1;
-
-                    return;
-                },
-                mouseup: function (e) {
-
-                    if (flag == 0) {
-                        popover_show(id, name);
-                    }
-                    flag = -1;
-                    return;
-                }
-            });
-            /*var tmp_list = searh_layer[name].split("id_anchor");
-            var popover_content= tmp_list[0]+"popover_"+id+tmp_list[1];*/
-        }
-    });
-
-    jsPlumb.bind('click', function (conn, originalEvent) {
-        jsPlumb.deleteConnection(conn);
-
-    });
-
-    function popover_show(id, name) {
-        popover_restart(name, id);
-        $("#" + id).popover('show');
-        if (name == "conv1d_layer") {
-            var data = eval('(' + window.localStorage.getItem(id) + ')');
-            $("#" + id + "activity").find("[value = \"" + data["activity"] + "\"]").attr("selected", "selected");
-            $("#" + id + "pool_way").find("[value = \"" + data["pool_way"] + "\"]").attr("selected", "selected");
-        }
-        if (name == "conv2d_layer") {
-            var data = eval('(' + window.localStorage.getItem(id) + ')');
-            $("#" + id + "activity").find("[value = \"" + data["activity"] + "\"]").attr("selected", "selected");
-            $("#" + id + "pool_way").find("[value = \"" + data["pool_way"] + "\"]").attr("selected", "selected");
-        }
-
-    }
-
-    function popover_restart(name, id) {
-        $("#" + id).popover({
-            placement: "right",
-            content: get_content(name, id),
-            html: true
-        });
-        $("#" + id).on('hidden.bs.popover', function () {
-            $("#" + id).popover('destroy');
-        });
-    }
-</script>
-<script>
-    $(document).ready(function () {
-        $.ajax({
-            type: 'POST',
-            data: "{\"name\":\"index\"}",
-            url: gobalConfig.base_url + 'api/journal/',
-            contentType: 'application/json; charset=UTF-8',
-        })
-    })
-</script>
 </html>
+
+<script>
+    function open_register() {
+        $("#loginModal").modal('hide');
+        $("#registerModal").modal('show');
+    }
+    function open_login() {
+
+        $("#registerModal").modal('hide');
+        $("#loginModal").modal('show');
+    }
+</script>
