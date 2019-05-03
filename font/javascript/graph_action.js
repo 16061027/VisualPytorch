@@ -139,7 +139,7 @@ function save_network() {
             }
         },
         success: function (data_return, status, xhr) {
-            console.log(data_return, status, xhr);
+
             if (xhr.status == 200) {
                 var main = "";
                 var model = "";

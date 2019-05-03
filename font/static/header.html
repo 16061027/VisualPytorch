@@ -59,7 +59,7 @@
                     </a>
                     <ul class="dropdown-menu normal-font" aria-labelledby="userMenu" style="text-align: center">
                         <li><a href="models.html" id="selfindex">模型查看</a></li>
-                        <li><a >登出</a></li>
+                        <li><a onclick="logout()">登出</a></li>
                     </ul>
                 </li>
             </ul>
@@ -81,11 +81,11 @@
                     <!-- 输入框 -->
                     <div class="lgD">
                         <img src="../img/person.png" width="20" height="20" alt=""/>
-                        <input type="text" placeholder=" 输入用户名或邮箱"/>
+                        <input id="username_log" type="text" placeholder=" 输入用户名或邮箱"/>
                     </div>
                     <div class="lgD">
                         <img src="../img/lock.png" width="20" height="20" alt=""/>
-                        <input type="text" placeholder=" 输入用户密码"/>
+                        <input id="pwd_log" type="password" placeholder=" 输入用户密码"/>
                     </div>
                     <div class="lgD">
                         <p class="p3">
@@ -94,7 +94,7 @@
                     </div>
                     <div class="logC" style="margin-top: 70px">
                         <a target="_self">
-                            <button>登 录</button>
+                            <button onclick="login()">登 录</button>
                         </a>
                     </div>
                 </div>
@@ -116,19 +116,19 @@
                     <!-- 输入框 -->
                     <div class="lgD">
                         <img src="../img/person.png" width="20" height="20" alt=""/>
-                        <input type="text" placeholder=" 输入用户名"/>
+                        <input id="username_reg" type="text" placeholder=" 输入用户名"/>
                     </div>
                     <div class="lgD">
                         <img src="../img/lock.png" width="20" height="20" alt=""/>
-                        <input type="text" placeholder=" 输入用户密码"/>
+                        <input id="pwd_reg" type="password" placeholder=" 输入用户密码"/>
                     </div>
                     <div class="lgD">
                         <img src="../img/lock.png" width="20" height="20" alt=""/>
-                        <input type="text" placeholder=" 确认用户密码"/>
+                        <input id="pwd_confirm_reg" type="password" placeholder=" 确认用户密码"/>
                     </div>
                     <div class="lgD">
                         <img src="../img/e-mail.png" width="20" height="20" alt=""/>
-                        <input type="text" placeholder=" 输入用户邮箱"/>
+                        <input id="email_reg" type="text" placeholder=" 输入用户邮箱"/>
                     </div>
                     <div class="lgD">
                         <p class="p3">
@@ -137,7 +137,7 @@
                     </div>
                     <div class="logC" style="margin-top: 70px">
                         <a target="_self">
-                            <button>注册</button>
+                            <button onclick="register()">注册</button>
                         </a>
                     </div>
                 </div>
