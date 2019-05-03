@@ -12,7 +12,8 @@
     <link href="../resources/jquery-ui.structure.css" rel="stylesheet">
     <link href="../resources/jquery-ui.theme.css" rel="stylesheet">
     <link href="../css/login.css" rel="stylesheet">
-    <script type="text/javascript" src="../javascript/load_web.js"></script>
+    <script type="text/javascript" src="../javascript/graph_action.js"></script>
+    <script type="text/javascript" src="../javascript/base_service.js"></script>
 </head>
 <nav style="font-size:20px;text-align: center; top: 0; height: 50px" id="header">
     <div class="navbar navbar-inverse normal-font" role="navigation" style="background-color:orange;
@@ -65,11 +66,11 @@
                     <!-- 输入框 -->
                     <div class="lgD">
                         <img src="../img/person.png" width="20" height="20" alt=""/>
-                        <input type="text" placeholder=" 输入用户名"/>
+                        <input id="username_log" type="text" placeholder=" 输入用户名或邮箱"/>
                     </div>
                     <div class="lgD">
                         <img src="../img/lock.png" width="20" height="20" alt=""/>
-                        <input type="text" placeholder=" 输入用户密码"/>
+                        <input id="pwd_log" type="text" placeholder=" 输入用户密码"/>
                     </div>
                     <div class="lgD">
                         <p class="p3">
@@ -78,7 +79,7 @@
                     </div>
                     <div class="logC" style="margin-top: 70px">
                         <a target="_self">
-                            <button>登 录</button>
+                            <button onclick="login()">登 录</button>
                         </a>
                     </div>
                 </div>
@@ -101,19 +102,19 @@
                     <!-- 输入框 -->
                     <div class="lgD">
                         <img src="../img/person.png" width="20" height="20" alt=""/>
-                        <input type="text" placeholder=" 输入用户名"/>
+                        <input id="username_reg" type="text" placeholder=" 输入用户名"/>
                     </div>
                     <div class="lgD">
                         <img src="../img/lock.png" width="20" height="20" alt=""/>
-                        <input type="text" placeholder=" 输入用户密码"/>
+                        <input id="pwd_reg" type="text" placeholder=" 输入用户密码"/>
                     </div>
                     <div class="lgD">
                         <img src="../img/lock.png" width="20" height="20" alt=""/>
-                        <input type="text" placeholder=" 确认用户密码"/>
+                        <input id="pwd_confirm_reg" type="text" placeholder=" 确认用户密码"/>
                     </div>
                     <div class="lgD">
                         <img src="../img/e-mail.png" width="20" height="20" alt=""/>
-                        <input type="text" placeholder=" 输入用户邮箱"/>
+                        <input id="email_reg" type="text" placeholder=" 输入用户邮箱"/>
                     </div>
                     <div class="lgD">
                         <p class="p3">
@@ -122,7 +123,7 @@
                     </div>
                     <div class="logC" style="margin-top: 70px">
                         <a target="_self">
-                            <button>注册</button>
+                            <button onclick="register()">注册</button>
                         </a>
                     </div>
                 </div>

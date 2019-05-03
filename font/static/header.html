@@ -1,4 +1,16 @@
 <link href="../css/login.css" rel="stylesheet">
+<script type="text/javascript" src="../javascript/base_service.js"></script>
+<style>
+    .navbar-inverse .navbar-nav>li>a{
+        color: white ;
+    }
+    .navbar-inverse .navbar-nav>.open>a:hover{
+        background-color: #ce8500;
+    }
+    .navbar-inverse .navbar-nav>.open>a:focus{
+        background-color: #ce8500;
+    }
+</style>
 <div class="navbar navbar-inverse normal-font" role="navigation" style="background-color:orange;
         border-color: white">
     <div class="container">
@@ -13,10 +25,10 @@
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-left">
-                <li ><a href="canvas.html" style="color:white">VisualPytorch</a></li>
-                <li ><a href="wiki.html" style="color:white;">帮助</a></li>
-                <li ><a href="statistics.html" style="color:white;">统计</a></li>
-                <li ><a href="contact_us.html" style="color:white;">联系我们</a></li>
+                <li ><a href="canvas.html" >VisualPytorch</a></li>
+                <li ><a href="wiki.html" >帮助</a></li>
+                <li ><a href="statistics.html">统计</a></li>
+                <li ><a href="contact_us.html">联系我们</a></li>
 
                 <!--
                 <li><a onclick="jump_to_user_index('esfan')">Query</a></li>
@@ -39,7 +51,17 @@
                 </li>-->
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a onclick="jump_to_login()" style="color:white;right:10%">登录</a></li>
+                <li id="login_nav"><a onclick="jump_to_login()" style="right:10%">登录</a></li>
+                <li id="user_nav" class="dropdown">
+                    <a id="username_show" class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu normal-font" aria-labelledby="userMenu" style="text-align: center">
+                        <li><a href="models.html" id="selfindex">模型查看</a></li>
+                        <li><a >登出</a></li>
+                    </ul>
+                </li>
             </ul>
 
         </div>
@@ -59,7 +81,7 @@
                     <!-- 输入框 -->
                     <div class="lgD">
                         <img src="../img/person.png" width="20" height="20" alt=""/>
-                        <input type="text" placeholder=" 输入用户名"/>
+                        <input type="text" placeholder=" 输入用户名或邮箱"/>
                     </div>
                     <div class="lgD">
                         <img src="../img/lock.png" width="20" height="20" alt=""/>
@@ -123,6 +145,22 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(function () {
+        if(window.sessionStorage.hasOwnProperty("userinfo")){
+
+            $("#login_nav").hide();
+            $("#user_nav").show();
+            var userinfo = eval('('+window.sessionStorage.getItem("userinfo")+')');
+            console.log(userinfo);
+            $("#username_show").text(userinfo['username']);
+        }else{
+            $("#login_nav").show();
+            $("#user_nav").hide();
+        }
+    })
+</script>
 
 <script>
     function jump_to_login() {
