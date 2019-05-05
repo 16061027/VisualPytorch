@@ -22,11 +22,22 @@ nn_sequential = 'torch.nn.Sequential'
 
 conv_layer_para = ['in_channels', 'out_channels', 'kernel_size', 'stride', 'padding']
 
+#model
+graph = Vector()
 
 
+'''
+	A:
+	B:
+	C:
+	D:
+	E:
+	F:多个start
+	G:
+'''
+def error(str):
 
-def make_graph():
-	return None	
+    return None
 
 def init():
 	layer_used_time['view_layer'] = 0
@@ -194,7 +205,7 @@ def add_convlayer_to_init_forward(init, forward, in_data, out_data, node):
     init_tmp = generate_n_tap(3) + '),'
     init = np.append(init, init_tmp)
 
-	init = add_activity_pooling(init, node)
+    init = add_activity_pooling(init, node)
 
     init_tmp = generate_n_tap(2) + ')'
     init = np.append(init, init_tmp)
@@ -219,16 +230,45 @@ def add_one_layer(init_func, forward_func, in_data, out_data, node):
     return np.concatenate((init_func, init)), np.concatenate((forward_func, forward))
 
 
-def find_and_check_start(network, start):
+def find_edges_whose_id_is_same(network, start):
+    ans = np.array([])
     for edge in network:
-        if edge['source']['name'] == start:
-            ans = edge['source']['id']
-            break
-
+        if edge['source']['id'] == start:	
+            ans = np.append(ans, edge)
     return ans
 
+def find_and_check_start_id(network):
+    flag = False
+    start_id = None
+    for edge in network:
+    	if edge['source']['name'] == 'start':
+    	    if start_id != None:
+    	    	flag = True
+    	    start_id = edge['source']['id']
 
-def add_net_info(network):
+    return start_id, flag
+
+def make_graph(nets, nets_conn, init_func, forward_func):
+    start_id, flag = find_and_check_start_id(network)
+    if flag:
+        error('F')
+
+    Q = Queue()
+    Q.put(start_id)
+
+    while not Q.empty():
+        sid = Q.get()
+        edges = find_edges_whose_id_is_same(sid)
+        for edge in edges:
+
+
+
+
+    return init_func, forward_func
+
+
+
+def add_net_info(nets, nets_conn):
     # NET declaration and the head of init()
     init_func = add_init_info()
     # head of forword()
@@ -237,22 +277,24 @@ def add_net_info(network):
     in_data = ''
     out_data = 'x_data'
 
+    init_func, forward_func = make_graph(nets, nets_conn, init_func, forward_func)
     # replace name with id
-    edge_name = find_and_check_start(network, 'start')
-    init_name = edge_name
-    edge = find_next_edge(network, edge_name)
-    while edge is not None:
-        in_data = out_data
-        out_data = generate_variable_name(edge['target']['name'])
-        #
-        init_func, forward_func = add_one_layer(init_func, forward_func, in_data, out_data, edge['target'])
-        update_layer_used_time(edge['target']['name'])
-        #
+    # edge_name, flag = find_edges_whose_id_is_same(network, 'start')
+    # if flag:
+    # 	error('F')
+    # init_name = edge_name
+    # edge = find_next_edge(network, edge_name)
+    # while edge is not None:
+    #     in_data = out_data
+    #     out_data = generate_variable_name(edge['target']['name'])
+    #     #
+    #     init_func, forward_func = add_one_layer(init_func, forward_func, in_data, out_data, edge['target'])
+    #     update_layer_used_time(edge['target']['name'])
+    #     #
 
-        edge_name = edge['target']['id']
-        edge = find_next_edge(network, edge_name)
+    #     edge_name = edge['target']['id']
+    #     edge = find_next_edge(network, edge_name)
 
-    forward_func = np.append(forward_func, generate_n_tap(2) + 'return ' + out_data)
     return np.concatenate((init_func, forward_func))
 
 
@@ -267,7 +309,7 @@ def main_func(edge_record):
     Main = add_static_info(Main, glob)
 
     # Model
-    Model = np.concatenate((Model, add_net_info(edge_record['network'])))
+    Model = np.concatenate((Model, add_net_info(edge_record['nets'], edge_record['nets_conn'])))
     # Ops
 
     return Main, Model, Ops
