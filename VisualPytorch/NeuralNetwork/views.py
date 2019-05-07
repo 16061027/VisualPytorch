@@ -8,32 +8,33 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
 from .translate import ops
+from rest_framework import permissions
+import os
+from django.conf import settings
+from django.http import FileResponse
 import json
 
 
 # Create your views here.
 
 class NetworkList(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request):
-        networklist = Network.objects.all()
-        serializer = NetworkSerializer(networklist, many=True)
-        return Response(serializer.data)
+        user_id = request.GET['id']
+        if user_id is None:
+            return Response("need user id", status=status.HTTP_400_NOT_FOUND)
+        network_list = Network.objects.filter(creator=user_id).values('id', 'time', 'creator_id', 'name')
+        return Response(list(network_list), status=status.HTTP_200_OK)
 
     def post(self, request):
 
-        if request.successful_authenticator is None:
-            data = {
-                "name":request.data["name"],
-                "structure": json.dumps(request.data["structure"])
-            }
-        else:
-            creator = request.user.id
-            data = {
-                "name": request.data["name"],
-                "creator": creator,
-                "structure": json.dumps(request.data["structure"])
-            }
+        creator = request.user.id
+        data = {
+            "name": request.data["name"],
+            "creator": creator,
+            "structure": json.dumps(request.data["structure"])
+        }
         serializer = NetworkSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
@@ -43,6 +44,7 @@ class NetworkList(APIView):
 
 
 class NetworkDetail(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get_object(self, pk):
         try:
@@ -82,3 +84,12 @@ def gen_code(request):
         return Response({"error": "some error happened"}, status=status.HTTP_400_BAD_REQUEST)
     else:
         return Response(result, status=status.HTTP_200_OK)
+
+
+#todo:这里仅仅是简单的样例
+def download_project(request):
+    file = open(os.path.join(settings.FILE_DIR,"test.jpg"), "rb")
+    response = FileResponse(file)
+    response['Content-Type'] = 'application/octet-stream'
+    response['Content-Disposition'] = 'attachment;filename="rika_suki.jpg"'
+    return response

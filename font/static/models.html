@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>network list</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <script type="text/javascript" src="../resources/jquery-3.3.1.js"></script>
+    <script type="text/javascript" src="../resources/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../resources/jquery-ui.js"></script>
+    <link href="../resources/bootstrap.min.css" rel="stylesheet">
+    <link href="../resources/jquery-ui.css" rel="stylesheet">
+    <link href="../resources/jquery-ui.structure.css" rel="stylesheet">
+    <link href="../resources/jquery-ui.theme.css" rel="stylesheet">
+    <link href="../css/login.css" rel="stylesheet">
+    <script type="text/javascript" src="../javascript/graph_action.js"></script>
+    <script type="text/javascript" src="../javascript/base_service.js"></script>
+</head>
+<nav style="font-size:20px;text-align: center; top: 0; height: 50px" id="header"></nav>
+
+<script>
+    $("#header").load("header.html");
+</script>
+<body>
+
+<div class="container-fluid">
+    <div style="width: 60%;margin: auto">
+        <h2>我的模型</h2>
+        <table class="table table-bordered text-nowrap">
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>名称</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody id="user_models">
+            </tbody>
+        </table>
+
+    </div>
+</div>
+</body>
+</html>
+
+<script>
+    $(function () {
+        var query_object = getQueryObject(window.location.href)
+        var user_id = query_object['id'];
+        var data = {
+            "id": user_id
+        };
+        $.ajax({
+            type: 'GET',
+            url: gobalConfig.base_url + 'api/NeuralNetwork/network/?id=' + user_id,
+            data: JSON.stringify(data),
+            contentType: 'application/json; charset=UTF-8',
+            beforeSend: function (XMLHttpRequest) {
+                var token = window.sessionStorage.getItem('token');
+                if (token != null) {
+                    XMLHttpRequest.setRequestHeader("Authorization", "JWT " + token)
+                }
+            },
+            success: function (data_return) {
+                for (var i = 0; i < data_return.length; i++) {
+                    $("#user_models").append(
+                        "<tr><th scope=\"row\">" + (i + 1).toString() + "</th>" +
+                        "<td>" + data_return[i]["name"] + "</td>" +
+                        "<td><button type=\"button\" onclick='open_model(" + data_return[i]["id"] + ")' class=\"btn btn-warning btn-sm\">查看</button>\n" +
+                        "                        <button type=\"button\" onclick='delete_model(" + data_return[i]["id"] + ")' class=\"btn btn-danger btn-sm\">删除</button></td></tr>"
+                    )
+                }
+            },
+            error: function (data_return) {
+                alert(data_return["responseText"])
+            }
+        });
+    })
+</script>
+
+<script>
+    function open_model(id) {
+        window.location.href="canvas.html?id="+id
+    }
+
+    function delete_model(id) {
+        $.ajax({
+            type: 'DELETE',
+            url: gobalConfig.base_url + 'api/NeuralNetwork/network/'+id,
+            contentType: 'application/json; charset=UTF-8',
+            success: function (data) {
+                location.reload()
+            },
+            error:function (data_return) {
+            alert(data_return["responseText"])
+        }
+        })
+    }
+</script>

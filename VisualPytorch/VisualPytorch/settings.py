@@ -179,3 +179,4 @@ AUTHENTICATION_BACKENDS = [
     'user.utils.UserAuthBackend',  # 修改auth认证后端类
 ]
 
+FILE_DIR = os.path.dirname(BASE_DIR) + r"\files"

@@ -31,8 +31,36 @@
 <div class="container-fluid" style="margin-top: 20px">
     <div id="content" class="row-fluid">
         <div class="col-md-3" id="element_list">
-            <button type="button" class="btn btn-warning" style="width: 150px" id="submit" onclick="save_network()">生成代码
+
+            <button type="button" class="btn btn-warning" style="width: 180px" id="submit"
+                    onclick="translate_network()">生成代码
             </button>
+
+
+            <button type="button" class="btn btn-warning" style="width: 180px;margin-top: 20px" id="save"
+                    onclick="open_save()">保存
+            </button>
+
+            <div class="modal fade" id="save_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" id="myModalLabel">保存您的模型</h4>
+                        </div>
+                        <div class="modal-body"><label class="control-label">模型名称</label>
+                        <div>
+                            <input type="text" class="form-control" placeholder="我的模型" id="model_name">
+                        </div></div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                            <button type="button" class="btn btn-warning" onclick="save_network()">提交</button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal -->
+            </div>
+
             <div class="panel-group" id="left_ele_collapse" style="margin-top: 20px">
                 <div class="panel panel-default">
                     <div class="panel-heading">
@@ -356,8 +384,8 @@
                         jsPlumb.ready(function () {
                             var ui = {
                                 'offset': {
-                                    'left': parseInt(val['left'].split('px'))+$("#canvas").offset().left,
-                                    'top': parseInt(val['top'].split('px'))+$("#canvas").offset().top
+                                    'left': parseInt(val['left'].split('px')) + $("#canvas").offset().left,
+                                    'top': parseInt(val['top'].split('px')) + $("#canvas").offset().top
                                 },
                                 'draggable': [{
                                     "id": val['name'],
@@ -415,7 +443,15 @@
         })
 
     });
+</script>
 
-
+<script>
+    function open_save() {
+        $("#save_modal").modal('show');
+        var object = getQueryObject(window.location.href);
+        if(object.hasOwnProperty("name")){
+            $("#model_name").val(object["name"]);
+        }
+    }
 </script>
 </html>

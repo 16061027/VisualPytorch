@@ -58,7 +58,7 @@
                         <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu normal-font" aria-labelledby="userMenu" style="text-align: center">
-                        <li><a href="models.html" id="selfindex">模型查看</a></li>
+                        <li><a onclick="self_models()" id="selfindex">模型查看</a></li>
                         <li><a onclick="logout()">登出</a></li>
                     </ul>
                 </li>
@@ -173,5 +173,9 @@
     function open_login() {
         $("#registerModal").modal('hide');
         $("#loginModal").modal('show');
+    }
+    function self_models() {
+        var userinfo = eval('('+window.sessionStorage.getItem("userinfo")+')');
+        window.location.href = "models.html?"+"id="+userinfo['id']
     }
 </script>
