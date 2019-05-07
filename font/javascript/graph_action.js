@@ -30,7 +30,8 @@ var gobalConfig = {
     });
 });*/
 
-function save_network() {
+
+function get_network() {
     var conn_list;
     var nets_conn = [];
     var nets = {};
@@ -80,53 +81,18 @@ function save_network() {
         "batch_size": batch_size
     };
     var data = {
-        "name": "123",
+        "name": $("#model_name").val(),
         "structure": {
             "nets": nets,
             "nets_conn": nets_conn,
             "static": static
         }
     };
+    return data;
+}
+function translate_network() {
+    var data = get_network();
     console.log(data);
-    var query_object = getQueryObject(window.location.href);
-    if (query_object.hasOwnProperty("id")) {
-        var net_id = query_object["id"];
-        $.ajax({
-            type: 'PUT',
-            url: gobalConfig.base_url + 'api/NeuralNetwork/network/' + net_id + '/',
-            data: JSON.stringify(data),
-            contentType: 'application/json; charset=UTF-8',
-            beforeSend: function (XMLHttpRequest) {
-                var token = window.sessionStorage.getItem('token');
-                if (token != null) {
-                    XMLHttpRequest.setRequestHeader("Authorization", "JWT " + token)
-                }
-            },
-            success: function (data_return) {
-            },
-            error: function (data_return) {
-                alert(data_return["responseText"])
-            }
-        });
-    }else {
-        $.ajax({
-            type: 'POST',
-            url: gobalConfig.base_url + 'api/NeuralNetwork/network/',
-            data: JSON.stringify(data),
-            contentType: 'application/json; charset=UTF-8',
-            beforeSend: function (XMLHttpRequest) {
-                var token = window.sessionStorage.getItem('token');
-                if (token != null) {
-                    XMLHttpRequest.setRequestHeader("Authorization", "JWT " + token)
-                }
-            },
-            success: function (data_return) {
-            },
-            error: function (data_return) {
-                alert(data_return["responseText"])
-            }
-        });
-    }
     $.ajax({
         type: 'POST',
         url: gobalConfig.base_url + 'api/NeuralNetwork/getcode/',
@@ -174,6 +140,56 @@ function save_network() {
 
 
     });
+}
+
+
+function save_network() {
+    $("#save_modal").modal('hide');
+    if(!window.sessionStorage.hasOwnProperty("userinfo")){
+        jump_to_login();
+        return
+    }
+    var data = get_network();
+    console.log(data);
+    var query_object = getQueryObject(window.location.href);
+    if (query_object.hasOwnProperty("id")) {
+        var net_id = query_object["id"];
+        $.ajax({
+            type: 'PUT',
+            url: gobalConfig.base_url + 'api/NeuralNetwork/network/' + net_id + '/',
+            data: JSON.stringify(data),
+            contentType: 'application/json; charset=UTF-8',
+            beforeSend: function (XMLHttpRequest) {
+                var token = window.sessionStorage.getItem('token');
+                if (token != null) {
+                    XMLHttpRequest.setRequestHeader("Authorization", "JWT " + token)
+                }
+            },
+            success: function (data_return) {
+            },
+            error: function (data_return) {
+                alert(data_return["responseText"])
+            }
+        });
+    }else {
+        $.ajax({
+            type: 'POST',
+            url: gobalConfig.base_url + 'api/NeuralNetwork/network/',
+            data: JSON.stringify(data),
+            contentType: 'application/json; charset=UTF-8',
+            beforeSend: function (XMLHttpRequest) {
+                var token = window.sessionStorage.getItem('token');
+                if (token != null) {
+                    XMLHttpRequest.setRequestHeader("Authorization", "JWT " + token)
+                }
+            },
+            success: function (data_return) {
+            },
+            error: function (data_return) {
+                alert(data_return["responseText"])
+            }
+        });
+    }
 }
 
 function save_attr_linear_layer(button) {

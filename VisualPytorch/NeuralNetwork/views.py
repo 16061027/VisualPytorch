@@ -8,32 +8,30 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
 from .translate import ops
+from rest_framework import permissions
 import json
 
 
 # Create your views here.
 
 class NetworkList(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request):
-        networklist = Network.objects.all()
-        serializer = NetworkSerializer(networklist, many=True)
-        return Response(serializer.data)
+        user_id = request.GET['id']
+        if user_id is None:
+            return Response("need user id", status=status.HTTP_400_NOT_FOUND)
+        network_list = Network.objects.filter(creator=user_id).values('id', 'time', 'creator_id', 'name')
+        return Response(list(network_list),status=status.HTTP_200_OK)
 
     def post(self, request):
 
-        if request.successful_authenticator is None:
-            data = {
-                "name":request.data["name"],
-                "structure": json.dumps(request.data["structure"])
-            }
-        else:
-            creator = request.user.id
-            data = {
-                "name": request.data["name"],
-                "creator": creator,
-                "structure": json.dumps(request.data["structure"])
-            }
+        creator = request.user.id
+        data = {
+            "name": request.data["name"],
+            "creator": creator,
+            "structure": json.dumps(request.data["structure"])
+        }
         serializer = NetworkSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
@@ -43,6 +41,7 @@ class NetworkList(APIView):
 
 
 class NetworkDetail(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get_object(self, pk):
         try:

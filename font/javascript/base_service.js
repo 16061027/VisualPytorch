@@ -17,7 +17,7 @@ function getQueryObject(url) {
 function login() {
 
     var username = $("#username_log").val();
-    var password = $("#pwd_log").val()
+    var password = $("#pwd_log").val();
 
     var data = {
         "username": username,
