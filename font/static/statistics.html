@@ -14,6 +14,7 @@
     <link href="../resources/bootstrap.min.css" rel="stylesheet">
     <link href="../resources/jquery-ui.css" rel="stylesheet">
     <link href="../resources/jquery-ui.structure.css" rel="stylesheet">
+     <link href="../css/layer.css" rel="stylesheet">
 </head>
 
 <body>
@@ -57,7 +58,7 @@
 
         $.ajax({
             type: 'GET',
-            url: gobalConfig.base_url + 'api/journal/',
+            url: gobalConfig.base_url + 'api/journal/statistics/',
             contentType: 'application/json; charset=UTF-8',
             success: function (data) {
                 $("#visit_count").text(data["visit_count"]);
