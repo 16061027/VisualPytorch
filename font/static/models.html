@@ -83,6 +83,16 @@
     }
 
     function delete_model(id) {
-
+        $.ajax({
+            type: 'DELETE',
+            url: gobalConfig.base_url + 'api/NeuralNetwork/network/'+id,
+            contentType: 'application/json; charset=UTF-8',
+            success: function (data) {
+                location.reload()
+            },
+            error:function (data_return) {
+            alert(data_return["responseText"])
+        }
+        })
     }
 </script>
