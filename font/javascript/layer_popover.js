@@ -73,7 +73,7 @@ function get_content(name,parid) {
     "                    </div>" +
     "                    <label class=\"col-sm-5 control-label\">pool_way</label>" +
     "                            <div class=\"col-sm-5\">" +
-    "                        <select id=\""+parid+"pool_way\" class=\"form-control\">\n" +
+    "                        <select id=\""+parid+"pool_way\" name='pool_way' class=\"form-control\">\n" +
     "                            <option value=\"None\">None</option>\n" +
     "                            <option value=\"torch.nn.functional.max_pool1d\">max_pool1d</option>\n" +
     "                            <option value=\"torch.nn.functional.max_pool2d\">max_pool2d</option>\n" +
@@ -135,7 +135,7 @@ function get_content(name,parid) {
     "                    </div>" +
     "                    <label class=\"col-sm-5 control-label\">pool_way</label>" +
     "                            <div class=\"col-sm-5\">" +
-    "                        <select id=\""+parid+"pool_way\" class=\"form-control\">\n" +
+    "                        <select id=\""+parid+"pool_way\" name='pool_way' class=\"form-control\">\n" +
     "                            <option value=\"None\">None</option>\n" +
     "                            <option value=\"torch.nn.functional.max_pool1d\">max_pool1d</option>\n" +
     "                            <option value=\"torch.nn.functional.max_pool2d\">max_pool2d</option>\n" +

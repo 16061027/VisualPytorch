@@ -188,6 +188,17 @@
 
 </script>
 <script>
+    $("[name='pool_way']").change(function () {
+        console.log(123)
+        if(this.val()=='None'){
+            this.parent().parent().find("[name=pool_kernal_size]").attr("disabled",true);
+        }
+        else{
+            this.parent().parent().find("[name=pool_kernal_size]").removeAttr("disabled");
+        }
+    })
+</script>
+<script>
     var canvas_cnt = 0;
     $("#view_layer").draggable(
         {
@@ -338,7 +349,7 @@
             var data = eval('(' + window.localStorage.getItem(id) + ')');
             $("#" + id + "activity").find("[value = \"" + data["activity"] + "\"]").attr("selected", "selected");
             $("#" + id + "pool_way").find("[value = \"" + data["pool_way"] + "\"]").attr("selected", "selected");
-            if($("#" + id + "pool_way").val()=="None"){
+            /*if($("#" + id + "pool_way").val()=="None"){
                 $("#"+id+"pool_kernel_size").attr("disabled",true);
                 $("#"+id+"pool_stride").attr("disabled",true);
                 $("#"+id+"pool_padding").attr("disabled",true);
@@ -347,13 +358,13 @@
                 $("#"+id+"pool_kernel_size").removeAttr("disabled");
                 $("#"+id+"pool_stride").removeAttr("disabled");
                 $("#"+id+"pool_padding").removeAttr("disabled");
-            }
+            }*/
         }
         if (name == "conv2d_layer") {
             var data = eval('(' + window.localStorage.getItem(id) + ')');
             $("#" + id + "activity").find("[value = \"" + data["activity"] + "\"]").attr("selected", "selected");
             $("#" + id + "pool_way").find("[value = \"" + data["pool_way"] + "\"]").attr("selected", "selected");
-            if($("#" + id + "pool_way").val()=="None"){
+            /*if($("#" + id + "pool_way").val()=="None"){
                 $("#"+id+"pool_kernel_size").attr("disabled",true);
                 $("#"+id+"pool_stride").attr("disabled",true);
                 $("#"+id+"pool_padding").attr("disabled",true);
@@ -362,7 +373,7 @@
                 $("#"+id+"pool_kernel_size").removeAttr("disabled");
                 $("#"+id+"pool_stride").removeAttr("disabled");
                 $("#"+id+"pool_padding").removeAttr("disabled");
-            }
+            }*/
         }
 
     }
