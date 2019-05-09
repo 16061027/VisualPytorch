@@ -85,15 +85,15 @@ function get_content(name,parid) {
     "                    </div>" +
     "                    <label class=\"col-sm-5 control-label\">pool_kernel_size</label>" +
     "                            <div class=\"col-sm-5\">" +
-    "                        <input type=\"text\" id=\""+parid+"pool_kernel_size\" name='pool_kernel_size' class=\"form-control\" value=\""+eval('('+window.localStorage.getItem(parid)+')')["pool_kernel_size"]+"\">" +
+    "                        <input type=\"text\" id=\""+parid+"pool_kernel_size\" name='pool_kernel_size' disabled=true class=\"form-control\" value=\""+eval('('+window.localStorage.getItem(parid)+')')["pool_kernel_size"]+"\">" +
     "                    </div>" +
     "                    <label class=\"col-sm-5 control-label\">pool_stride</label>" +
     "                            <div class=\"col-sm-5\">" +
-    "                        <input type=\"text\" id=\""+parid+"pool_stride\" name='pool_stride' class=\"form-control\" value=\""+eval('('+window.localStorage.getItem(parid)+')')["pool_stride"]+"\">" +
+    "                        <input type=\"text\" id=\""+parid+"pool_stride\" name='pool_stride' disabled=true class=\"form-control\" value=\""+eval('('+window.localStorage.getItem(parid)+')')["pool_stride"]+"\">" +
     "                    </div>" +
     "                    <label class=\"col-sm-5 control-label\">pool_padding</label>" +
     "                            <div class=\"col-sm-5\">" +
-    "                        <input type=\"text\" id=\""+parid+"pool_padding\" name='pool_padding' class=\"form-control\" value=\""+eval('('+window.localStorage.getItem(parid)+')')["pool_padding"]+"\">" +
+    "                        <input type=\"text\" id=\""+parid+"pool_padding\" name='pool_padding' disabled=true class=\"form-control\" value=\""+eval('('+window.localStorage.getItem(parid)+')')["pool_padding"]+"\">" +
     "                    </div>" +
     "                </div>" +
     "<button type=\"button\" class=\"btn btn-success\" style=\"width: 150px\" id=\"popover_"+parid+"\" onclick=\"save_attr_conv1d_layer(this)\">确认</button>"+
@@ -147,15 +147,15 @@ function get_content(name,parid) {
     "                    </div>" +
     "                    <label class=\"col-sm-5 control-label\">pool_kernel_size</label>" +
     "                            <div class=\"col-sm-5\">" +
-    "                        <input type=\"text\" id=\""+parid+"pool_kernel_size\" name='pool_kernel_size' class=\"form-control\" value=\""+eval('('+window.localStorage.getItem(parid)+')')["pool_kernel_size"]+"\">" +
+    "                        <input type=\"text\" id=\""+parid+"pool_kernel_size\" name='pool_kernel_size' disabled=true class=\"form-control\" value=\""+eval('('+window.localStorage.getItem(parid)+')')["pool_kernel_size"]+"\">" +
     "                    </div>" +
     "                    <label class=\"col-sm-5 control-label\">pool_stride</label>" +
     "                            <div class=\"col-sm-5\">" +
-    "                        <input type=\"text\" id=\""+parid+"pool_stride\" name='pool_stride' class=\"form-control\" value=\""+eval('('+window.localStorage.getItem(parid)+')')["pool_stride"]+"\">" +
+    "                        <input type=\"text\" id=\""+parid+"pool_stride\" name='pool_stride' disabled=true class=\"form-control\" value=\""+eval('('+window.localStorage.getItem(parid)+')')["pool_stride"]+"\">" +
     "                    </div>" +
     "                    <label class=\"col-sm-5 control-label\">pool_padding</label>" +
     "                            <div class=\"col-sm-5\">" +
-    "                        <input type=\"text\" id=\""+parid+"pool_padding\" name='pool_padding' class=\"form-control\" value=\""+eval('('+window.localStorage.getItem(parid)+')')["pool_padding"]+"\">" +
+    "                        <input type=\"text\" id=\""+parid+"pool_padding\" name='pool_padding' disabled=true class=\"form-control\" value=\""+eval('('+window.localStorage.getItem(parid)+')')["pool_padding"]+"\">" +
     "                    </div>" +
     "                </div>" +
     "<button type=\"button\" class=\"btn btn-success\" style=\"width: 150px\" id=\"popover_"+parid+"\" onclick=\"save_attr_conv2d_layer(this)\">确认</button>"+

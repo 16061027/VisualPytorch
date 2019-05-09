@@ -397,9 +397,13 @@
         $("[name='pool_way']").bind('change', function () {
             if ($(this).val() == 'None') {
                 $(this).parent().parent().find("[name='pool_kernel_size']").attr("disabled", true);
+                $(this).parent().parent().find("[name='pool_stride']").attr("disabled", true);
+                $(this).parent().parent().find("[name='pool_padding']").attr("disabled", true);
             }
             else {
                 $(this).parent().parent().find("[name='pool_kernel_size']").removeAttr("disabled");
+                $(this).parent().parent().find("[name='pool_stride']").removeAttr("disabled");
+                $(this).parent().parent().find("[name='pool_padding']").removeAttr("disabled");
             }
         })
 
