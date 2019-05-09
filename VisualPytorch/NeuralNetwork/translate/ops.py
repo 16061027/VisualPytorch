@@ -9,7 +9,8 @@ step:
 import numpy as np
 import sys
 from model import Node, Vector
-
+from exception import *
+import queue
 
 #global parameters
 layer_used_time = {'view_layer': 0, 'linear_layer': 0, 'conv1d_layer': 0, 'conv2d_layer': 0, 'element_wise_add_layer':0, 'concatenate_layer':0}
@@ -54,6 +55,8 @@ def generate_n_tap(n):
 
 
 def add_static_info(Main, glob):
+    Main = np.append(Main, 'from Model import *')
+    Main = np.append(Main, 'from Ops import *')	
     names = {'epoch': '1', 'optimizer': 'torch.optim.Adam', 'learning_rate': '0.5', \
              'batch_size': '1', 'data_dir': 'None', 'data_set': 'None', 'train': 'True'}
     for name in names:
@@ -172,7 +175,7 @@ def add_conv_layer_para(init, node):
 
 	return init
 def add_activity_pooling(init, node):
-	activity_pooling = ['activity', 'pooling']
+	activity_pooling = ['activity', 'pool_way']
 	for attr in activity_pooling:
 			if node['attribute'][attr] != 'None':
 				init_tmp = generate_n_tap(3) + node['attribute'][attr] + '(),'
@@ -255,25 +258,43 @@ def find_start_id(nets):
 def get_next_nodes_and_update_pre_nodes(nets_conn, cur_id):
     next_nodes = np.array([], dtype = str)
     fa_nodes = np.array([], dtype = str)
+    flag = True
     for edge in nets_conn:
         if edge['source']['id'] == cur_id:
             next_nodes = np.append(next_nodes, edge['target']['id'])
-            if not done.has_key(edge['target']['id']):
+            if edge['target']['id'] not in done:
                 graph[edge['target']['id']] = Node(id = edge['target']['id'])
                 done[edge['target']['id']] = False	
         if edge['target']['id'] == cur_id:
             fa_nodes = np.append(fa_nodes, edge['source']['id'])
+            if not done[edge['source']['id']]:
+            	flag = False
     graph[cur_id].next = next_nodes
     graph[cur_id].fa = fa_nodes
     
-    return next_nodes
+    return next_nodes, flag
+
+def add_element_wise_add_layer(init_func, forward_func, cur_id, out_data):
+    #error not ok
+    if len(graph[cur_id].fa) == 0:
+        raise ModelError('element wise layer has no inputs')
+    
+    array_of_nodes = '[' + graph[cur_id].fa[0]
+    for indx in range(1, len(graph[cur_id].fa)):
+        array_of_nodes = array_of_nodes + ', ' + graph[graph[cur_id].fa[indx]].data
+
+    array_of_nodes = array_of_nodes + ']'
+    code = generate_n_tap(2) + out_data + ' = element_wise_add(' + array_of_nodes + ')'
+    forward_func = np.append(forward_func, code)
+
+    return init_func, forward_func
 
 
 def make_graph(nets, nets_conn, init_func, forward_func):
    #error not ok
     start_id, one_start = find_start_id(nets)
 
-    Q = Queue()
+    Q = queue.Queue()
     Q.put(start_id)
     graph[start_id] = Node(id = start_id, name = 'start', data = 'x_data')
     done[start_id] = True
@@ -284,32 +305,35 @@ def make_graph(nets, nets_conn, init_func, forward_func):
 
     #update Q
     for node_id in next_nodes:
-        Q.put(node)
+        Q.put(node_id)
 
     while not Q.empty():
         cur_id = Q.get()
         if done[cur_id]:
             continue
-        next_nodes = get_next_nodes_and_update_pre_nodes(nets_conn, cur_id)
+        next_nodes, flag = get_next_nodes_and_update_pre_nodes(nets_conn, cur_id)
+        if cur_id != start_id and not flag:
+            continue
+
         #update Q
         for node_id in next_nodes:
-            Q.put(node)
+            Q.put(node_id)
         #generate codes and update Node.fa[]
+        out_data = generate_variable_name(nets[cur_id]['name'])
+        graph[cur_id].data = out_data
         if nets[cur_id]['name'] == 'concatenate_layer':
             pass
         elif nets[cur_id]['name'] == 'element_wise_add_layer':
-            pass
+            init_func, forward_func = add_element_wise_add_layer(init_func, forward_func, cur_id, out_data)
         else:
-            out_data = generate_variable_name(nets[cur_id]['name'])
-            graph[cur_id].data = out_data
             in_data = None
-            if len(graph[cur_id]) != 1:
+            if len(graph[cur_id].fa) != 1:
                 pass#error not ok
             else:
-                in_data = graph[graph[cur_id].fa].data
+                in_data = graph[graph[cur_id].fa[0]].data
         	
             init_func, forward_func = add_layer_except_add_and_concate(init_func, forward_func, in_data, out_data, nets[cur_id])
-            update_layer_used_time(nets[cur_id]['name'])
+        update_layer_used_time(nets[cur_id]['name'])
 
 
     return init_func, forward_func
@@ -322,8 +346,6 @@ def add_net_info(nets, nets_conn):
     # head of forword()
     forward_func = np.array([generate_n_tap(1) + 'def forward(self, x_data):'])
 
-    in_data = ''
-    out_data = 'x_data'
 
     init_func, forward_func = make_graph(nets, nets_conn, init_func, forward_func)
     # replace name with id
@@ -361,6 +383,101 @@ def main_func(edge_record):
     # Ops
 
     return Main, Model, Ops
+
+
+test = {
+    "nets": {
+        "canvas_1": {
+            "name": "start",
+            "attribute": {
+                "start": "true"
+            },
+            "left": "350px",
+            "top": "163px"
+        },
+        "canvas_2": {
+            "name": "view_layer",
+            "attribute": {
+                "shape": "3"
+            },
+            "left": "325px",
+            "top": "307px"
+        },
+        "canvas_3": {
+            "name": "conv1d_layer",
+            "attribute": {
+                "in_channels": "2",
+                "out_channels": "32",
+                "kernel_size": "2",
+                "stride": "3",
+                "padding": "2",
+                "activity": "torch.nn.functional.leaky_relu",
+                "pool_way": "torch.nn.functional.max_pool1d"
+            },
+            "left": "590px",
+            "top": "312px"
+        },
+        "canvas_4": {
+            "name": "conv2d_layer",
+            "attribute": {
+                "in_channels": "2",
+                "out_channels": "3",
+                "kernel_size": "2",
+                "stride": "1",
+                "padding": "3",
+                "activity": "torch.nn.functional.tanh",
+                "pool_way": "torch.nn.AvgPool2d"
+            },
+            "left": "401px",
+            "top": "461px"
+        }
+    },
+    "nets_conn": [
+        {
+            "source": {
+                "id": "canvas_1",
+                "anchor_position": "Bottom"
+            },
+            "target": {
+                "id": "canvas_2",
+                "anchor_position": "Top"
+            }
+        },
+        {
+            "source": {
+                "id": "canvas_2",
+                "anchor_position": "Bottom"
+            },
+            "target": {
+                "id": "canvas_4",
+                "anchor_position": "Top"
+            }
+        },
+        {
+            "source": {
+                "id": "canvas_4",
+                "anchor_position": "Right"
+            },
+            "target": {
+                "id": "canvas_3",
+                "anchor_position": "Left"
+            }
+        }
+    ],
+    "static": {
+        "epoch": "1",
+        "learning_rate": "0.5",
+        "batch_size": "1"
+    }
+}
+
+# Main, Model, Ops = main_func(test)
+# print('Model')
+# for val in Model:
+# 	print(val)
+# print('Ops', Ops)
+
+
 
 
 
