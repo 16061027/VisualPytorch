@@ -230,22 +230,39 @@ function save_attr_view_layer(button) {
     $("#" + id).popover('hide');
 }
 
+function save_attr_concatenate_layer(button) {
+    //这里是硬编码，考虑在b版本优化
+    var id = button["id"].split("popover_")[1];
+    var form = $("#" + button["id"]).parent();
+    var dim = form.find("[name = \"dim\"]");
+    form.find("[name='input_error']").remove();
+    if (dim.val().replace(" ", "") == "") {
+        dim.after("<p name='input_error' class='alert_font'>输入不合法</p>");
+        return;
+    }
+    window.localStorage.setItem(id, "{\"dim\":\"" + dim.val() + "\"}");
+    $("#" + id).popover('hide');
+}
+
 function save_attr_conv1d_layer(button) {
     //这里是硬编码，考虑在b版本优化
     var id = button["id"].split("popover_")[1];
     var form = $("#" + button["id"]).parent();
-    var in_channel = form.find("[name = \"in_channel\"]");
-    var out_channel = form.find("[name = \"out_channel\"]");
+    var in_channels = form.find("[name = \"in_channels\"]");
+    var out_channels= form.find("[name = \"out_channels\"]");
     var kernel_size = form.find("[name = \"kernel_size\"]");
     var stride = form.find("[name = \"stride\"]");
     var padding = form.find("[name = \"padding\"]");
     var activity = form.find("[id=\"" + id + "activity\"]").find("option:selected").val();
     var pool_way = form.find("[id=\"" + id + "pool_way\"]").find("option:selected").val();
+    var pool_kernel_size = form.find("[name = \"pool_kernel_size\"]");
+    var pool_stride = form.find("[name = \"pool_stride\"]");
+    var pool_padding = form.find("[name = \"pool_padding\"]");
     //todo:加入更精确的正则判断
     form.find("[name='input_error']").remove();
     var reg = /^[0-9]+$/;
     var flag = true;
-    var check_array = [in_channel, out_channel, kernel_size, stride, padding];
+    var check_array = [in_channels, out_channels, kernel_size, stride, padding];
     check_array.forEach(function (value, index, array) {
         if (!reg.test(value.val())) {
             value.after("<p name='input_error' class='alert_font'>输入不合法</p>");
@@ -257,8 +274,9 @@ function save_attr_conv1d_layer(button) {
     }
     //var activity = form.find("[name = \"activity\"]").val();
     //var pool_way = form.find("[name = \"pool_way\"]").val();
-    window.localStorage.setItem(id, "{\"in_channel\":\"" + in_channel.val() + "\", \"out_channel\":\"" + out_channel.val() + "\", \"kernel_size\":\"" + kernel_size.val() + "\", " +
-        "\"stride\":\"" + stride.val() + "\", \"padding\":\"" + padding.val() + "\",\"activity\":\"" + activity + "\",\"pool_way\":\"" + pool_way + "\"}");
+    window.localStorage.setItem(id, "{\"in_channels\":\"" + in_channels.val() + "\", \"out_channels\":\"" + out_channels.val() + "\", \"kernel_size\":\"" + kernel_size.val() + "\", " +
+        "\"stride\":\"" + stride.val() + "\", \"padding\":\"" + padding.val() + "\",\"activity\":\"" + activity + "\",\"pool_way\":\"" + pool_way + "\",\"pool_kernel_size\":\"" + pool_kernel_size.val() + "\"," +
+        "\"pool_stride\":\"" + pool_stride.val() + "\",\"pool_padding\":\"" + pool_padding.val() + "\"}");
     $("#" + id).popover('hide');
 }
 
@@ -266,18 +284,21 @@ function save_attr_conv2d_layer(button) {
     //这里是硬编码，考虑在b版本优化
     var id = button["id"].split("popover_")[1];
     var form = $("#" + button["id"]).parent();
-    var in_channel = form.find("[name = \"in_channel\"]");
-    var out_channel = form.find("[name = \"out_channel\"]");
+    var in_channels = form.find("[name = \"in_channels\"]");
+    var out_channels = form.find("[name = \"out_channels\"]");
     var kernel_size = form.find("[name = \"kernel_size\"]");
     var stride = form.find("[name = \"stride\"]");
     var padding = form.find("[name = \"padding\"]");
     var activity = form.find("[id=\"" + id + "activity\"]").find("option:selected").val();
     var pool_way = form.find("[id=\"" + id + "pool_way\"]").find("option:selected").val();
+    var pool_kernel_size = form.find("[name = \"pool_kernel_size\"]");
+    var pool_stride = form.find("[name = \"pool_stride\"]");
+    var pool_padding = form.find("[name = \"pool_padding\"]");
     //todo:加入更精确的正则判断
     form.find("[name='input_error']").remove();
     var reg = /^[0-9]+$/;
     var flag = true;
-    var check_array = [in_channel, out_channel, kernel_size, stride, padding];
+    var check_array = [in_channels, out_channels, kernel_size, stride, padding];
     check_array.forEach(function (value, index, array) {
         if (!reg.test(value.val())) {
             value.after("<p name='input_error' class='alert_font'>输入不合法</p>");
@@ -289,7 +310,8 @@ function save_attr_conv2d_layer(button) {
     }
     //var activity = form.find("[name = \"activity\"]").val();
     //var pool_way = form.find("[name = \"pool_way\"]").val();
-    window.localStorage.setItem(id, "{\"in_channel\":\"" + in_channel.val() + "\", \"out_channel\":\"" + out_channel.val() + "\", \"kernel_size\":\"" + kernel_size.val() + "\", " +
-        "\"stride\":\"" + stride.val() + "\", \"padding\":\"" + padding.val() + "\",\"activity\":\"" + activity + "\",\"pool_way\":\"" + pool_way + "\"}");
+    window.localStorage.setItem(id, "{\"in_channels\":\"" + in_channels.val() + "\", \"out_channels\":\"" + out_channels.val() + "\", \"kernel_size\":\"" + kernel_size.val() + "\", " +
+        "\"stride\":\"" + stride.val() + "\", \"padding\":\"" + padding.val() + "\",\"activity\":\"" + activity + "\",\"pool_way\":\"" + pool_way + "\",\"pool_kernel_size\":\"" + pool_kernel_size.val() + "\"," +
+        "\"pool_stride\":\"" + pool_stride.val() + "\",\"pool_padding\":\"" + pool_padding.val() + "\"}");
     $("#" + id).popover('hide');
 }

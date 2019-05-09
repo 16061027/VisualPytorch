@@ -106,6 +106,19 @@
                                 </div>
                             </div>
 
+                            <div class="ele_in_list">
+                                <div class="node orange" id="element_wise_add_layer" type="button"
+                                     data-container="body" data-toggle="popover">
+                                    元素级相加层
+                                </div>
+                            </div>
+
+                            <div class="ele_in_list">
+                                <div class="node orange" id="concatenate_layer" type="button"
+                                     data-container="body" data-toggle="popover">
+                                    channel维度拼接层
+                                </div>
+                            </div>
 
                         </div>
                     </div>
@@ -203,6 +216,17 @@
 
 </script>
 <script>
+    $("[name='pool_way']").change(function () {
+        console.log(123)
+        if(this.val()=='None'){
+            this.parent().parent().find("[name=pool_kernal_size]").attr("disabled",true);
+        }
+        else{
+            this.parent().parent().find("[name=pool_kernal_size]").removeAttr("disabled");
+        }
+    })
+</script>
+<script>
     var canvas_cnt = 0;
     $("#view_layer").draggable(
         {
@@ -223,6 +247,18 @@
         }
     );
     $("#conv2d_layer").draggable(
+        {
+            helper: "clone",
+            scope: "ss",
+        }
+    );
+    $("#element_wise_add_layer").draggable(
+        {
+            helper: "clone",
+            scope: "ss",
+        }
+    );
+    $("#concatenate_layer").draggable(
         {
             helper: "clone",
             scope: "ss",
@@ -267,17 +303,23 @@
             if (name == "start") {
                 window.localStorage.setItem(id, "{\"start\":\"true\"}");
             }
+            if (name == "element_wise_add_layer") {
+                window.localStorage.setItem(id, "{\"element_wise_add_layer\":\"true\"}");
+            }
             if (name == "view_layer") {
                 window.localStorage.setItem(id, "{\"shape\":\"\"}");
             }
+            if (name == "concatenate_layer") {
+                window.localStorage.setItem(id, "{\"dim\":\"\"}");
+            }
             if (name == "linear_layer") {
-                window.localStorage.setItem(id, "{\"in_channel\":\"\",\"out_channel\":\"\"}");
+                window.localStorage.setItem(id, "{\"in_channels\":\"\",\"out_channels\":\"\"}");
             }
             if (name == "conv1d_layer") {
-                window.localStorage.setItem(id, "{\"in_channel\":\"\",\"out_channel\":\"\",\"kernel_size\":\"\",\"stride\":\"\",\"padding\":\"\",\"activity\":\"None\",\"pool_way\":\"None\"}");
+                window.localStorage.setItem(id, "{\"in_channels\":\"\",\"out_channels\":\"\",\"kernel_size\":\"\",\"stride\":\"1\",\"padding\":\"0\",\"activity\":\"None\",\"pool_way\":\"None\",\"pool_kernel_size\":\"\",\"pool_stride\":\"\",\"pool_padding\":\"0\"}");
             }
             if (name == "conv2d_layer") {
-                window.localStorage.setItem(id, "{\"in_channel\":\"\",\"out_channel\":\"\",\"kernel_size\":\"\",\"stride\":\"\",\"padding\":\"\",\"activity\":\"None\",\"pool_way\":\"None\"}");
+                window.localStorage.setItem(id, "{\"in_channels\":\"\",\"out_channels\":\"\",\"kernel_size\":\"\",\"stride\":\"1\",\"padding\":\"0\",\"activity\":\"None\",\"pool_way\":\"None\",\"pool_kernel_size\":\"\",\"pool_stride\":\"\",\"pool_padding\":\"0\"}");
             }
             $("#" + id).bind("contextmenu", function () {
                 return false;
@@ -335,11 +377,31 @@
             var data = eval('(' + window.localStorage.getItem(id) + ')');
             $("#" + id + "activity").find("[value = \"" + data["activity"] + "\"]").attr("selected", "selected");
             $("#" + id + "pool_way").find("[value = \"" + data["pool_way"] + "\"]").attr("selected", "selected");
+            /*if($("#" + id + "pool_way").val()=="None"){
+                $("#"+id+"pool_kernel_size").attr("disabled",true);
+                $("#"+id+"pool_stride").attr("disabled",true);
+                $("#"+id+"pool_padding").attr("disabled",true);
+            }
+            else{
+                $("#"+id+"pool_kernel_size").removeAttr("disabled");
+                $("#"+id+"pool_stride").removeAttr("disabled");
+                $("#"+id+"pool_padding").removeAttr("disabled");
+            }*/
         }
         if (name == "conv2d_layer") {
             var data = eval('(' + window.localStorage.getItem(id) + ')');
             $("#" + id + "activity").find("[value = \"" + data["activity"] + "\"]").attr("selected", "selected");
             $("#" + id + "pool_way").find("[value = \"" + data["pool_way"] + "\"]").attr("selected", "selected");
+            /*if($("#" + id + "pool_way").val()=="None"){
+                $("#"+id+"pool_kernel_size").attr("disabled",true);
+                $("#"+id+"pool_stride").attr("disabled",true);
+                $("#"+id+"pool_padding").attr("disabled",true);
+            }
+            else{
+                $("#"+id+"pool_kernel_size").removeAttr("disabled");
+                $("#"+id+"pool_stride").removeAttr("disabled");
+                $("#"+id+"pool_padding").removeAttr("disabled");
+            }*/
         }
 
     }
