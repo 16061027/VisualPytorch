@@ -50,9 +50,10 @@
                             <h4 class="modal-title" id="myModalLabel">保存您的模型</h4>
                         </div>
                         <div class="modal-body"><label class="control-label">模型名称</label>
-                        <div>
-                            <input type="text" class="form-control" placeholder="我的模型" id="model_name">
-                        </div></div>
+                            <div>
+                                <input type="text" class="form-control" placeholder="我的模型" id="model_name">
+                            </div>
+                        </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                             <button type="button" class="btn btn-warning" onclick="save_network()">提交</button>
@@ -215,17 +216,7 @@
     };
 
 </script>
-<script>
-    $("[name='pool_way']").change(function () {
-        console.log(123)
-        if(this.val()=='None'){
-            this.parent().parent().find("[name=pool_kernal_size]").attr("disabled",true);
-        }
-        else{
-            this.parent().parent().find("[name=pool_kernal_size]").removeAttr("disabled");
-        }
-    })
-</script>
+
 <script>
     var canvas_cnt = 0;
     $("#view_layer").draggable(
@@ -403,6 +394,14 @@
                 $("#"+id+"pool_padding").removeAttr("disabled");
             }*/
         }
+        $("[name='pool_way']").bind('change', function () {
+            if ($(this).val() == 'None') {
+                $(this).parent().parent().find("[name='pool_kernel_size']").attr("disabled", true);
+            }
+            else {
+                $(this).parent().parent().find("[name='pool_kernel_size']").removeAttr("disabled");
+            }
+        })
 
     }
 
@@ -511,9 +510,11 @@
     function open_save() {
         $("#save_modal").modal('show');
         var object = getQueryObject(window.location.href);
-        if(object.hasOwnProperty("name")){
+        if (object.hasOwnProperty("name")) {
             $("#model_name").val(object["name"]);
         }
     }
 </script>
+
+
 </html>
