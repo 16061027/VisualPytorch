@@ -12,7 +12,7 @@ from model import Node, Vector
 
 
 #global parameters
-layer_used_time = {'view_layer': 0, 'linear_layer': 0, 'conv1d_layer': 0, 'conv2d_layer': 0}
+layer_used_time = {'view_layer': 0, 'linear_layer': 0, 'conv1d_layer': 0, 'conv2d_layer': 0, 'element_wise_add_layer':0, 'concatenate_layer':0}
 nn = 'torch.nn.'
 nn_linear = 'torch.nn.Linear'
 nn_conv1d = 'torch.nn.Conv1d'
@@ -23,9 +23,9 @@ nn_sequential = 'torch.nn.Sequential'
 conv_layer_para = ['in_channels', 'out_channels', 'kernel_size', 'stride', 'padding']
 
 #model
-graph = Vector()
-
-
+#graph = Vector()
+graph = {} #record the node information
+done = {}
 '''
 	A:
 	B:
@@ -40,11 +40,10 @@ def error(str):
     return None
 
 def init():
-	layer_used_time['view_layer'] = 0
-	layer_used_time['linear_layer'] = 0
-	layer_used_time['conv1d_layer'] = 0
-	layer_used_time['conv2d_layer'] = 0
-
+	for key in layer_used_time:
+		layer_used_time[key] = 0
+	graph = {} #init
+	done = {}
 
 def generate_n_tap(n):
     ans = ''
@@ -213,7 +212,7 @@ def add_convlayer_to_init_forward(init, forward, in_data, out_data, node):
     return init, forward
 
 
-def add_one_layer(init_func, forward_func, in_data, out_data, node):
+def add_layer_except_add_and_concate(init_func, forward_func, in_data, out_data, node):
     init = np.array([])
     forward = np.array([])
 
@@ -230,13 +229,6 @@ def add_one_layer(init_func, forward_func, in_data, out_data, node):
     return np.concatenate((init_func, init)), np.concatenate((forward_func, forward))
 
 
-def find_edges_whose_id_is_same(network, start):
-    ans = np.array([])
-    for edge in network:
-        if edge['source']['id'] == start:	
-            ans = np.append(ans, edge)
-    return ans
-
 def find_and_check_start_id(network):
     flag = False
     start_id = None
@@ -248,20 +240,76 @@ def find_and_check_start_id(network):
 
     return start_id, flag
 
+def find_start_id(nets):
+    one_start = True
+    start_id = None
+    for key in nets:
+    	if nets[key]['name'] == 'start':
+    		if start_id is not None:
+    			one_start = False
+    		start_id = key
+        
+    return start_id, one_start    
+
+
+def get_next_nodes_and_update_pre_nodes(nets_conn, cur_id):
+    next_nodes = np.array([], dtype = str)
+    fa_nodes = np.array([], dtype = str)
+    for edge in nets_conn:
+        if edge['source']['id'] == cur_id:
+            next_nodes = np.append(next_nodes, edge['target']['id'])
+            if not done.has_key(edge['target']['id']):
+                graph[edge['target']['id']] = Node(id = edge['target']['id'])
+                done[edge['target']['id']] = False	
+        if edge['target']['id'] == cur_id:
+            fa_nodes = np.append(fa_nodes, edge['source']['id'])
+    graph[cur_id].next = next_nodes
+    graph[cur_id].fa = fa_nodes
+    
+    return next_nodes
+
+
 def make_graph(nets, nets_conn, init_func, forward_func):
-    start_id, flag = find_and_check_start_id(network)
-    if flag:
-        error('F')
+   #error not ok
+    start_id, one_start = find_start_id(nets)
 
     Q = Queue()
     Q.put(start_id)
+    graph[start_id] = Node(id = start_id, name = 'start', data = 'x_data')
+    done[start_id] = True
+
+    cur_id = start_id
+
+    next_nodes = get_next_nodes_and_update_pre_nodes(nets_conn, cur_id)
+
+    #update Q
+    for node_id in next_nodes:
+        Q.put(node)
 
     while not Q.empty():
-        sid = Q.get()
-        edges = find_edges_whose_id_is_same(sid)
-        for edge in edges:
-
-
+        cur_id = Q.get()
+        if done[cur_id]:
+            continue
+        next_nodes = get_next_nodes_and_update_pre_nodes(nets_conn, cur_id)
+        #update Q
+        for node_id in next_nodes:
+            Q.put(node)
+        #generate codes and update Node.fa[]
+        if nets[cur_id]['name'] == 'concatenate_layer':
+            pass
+        elif nets[cur_id]['name'] == 'element_wise_add_layer':
+            pass
+        else:
+            out_data = generate_variable_name(nets[cur_id]['name'])
+            graph[cur_id].data = out_data
+            in_data = None
+            if len(graph[cur_id]) != 1:
+                pass#error not ok
+            else:
+                in_data = graph[graph[cur_id].fa].data
+        	
+            init_func, forward_func = add_layer_except_add_and_concate(init_func, forward_func, in_data, out_data, nets[cur_id])
+            update_layer_used_time(nets[cur_id]['name'])
 
 
     return init_func, forward_func
@@ -288,7 +336,7 @@ def add_net_info(nets, nets_conn):
     #     in_data = out_data
     #     out_data = generate_variable_name(edge['target']['name'])
     #     #
-    #     init_func, forward_func = add_one_layer(init_func, forward_func, in_data, out_data, edge['target'])
+    #     init_func, forward_func = add_layer_except_add_and_concate(init_func, forward_func, in_data, out_data, edge['target'])
     #     update_layer_used_time(edge['target']['name'])
     #     #
 
