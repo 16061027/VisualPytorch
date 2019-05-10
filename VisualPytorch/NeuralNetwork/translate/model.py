@@ -1,7 +1,7 @@
 import numpy as np
 class Node:
     def __init__(self, id = None, name = None, in_channels = 1, out_channels = 1, kernel_size = 3, 
-    	stride = 1, padding = 0, data = None):
+    	stride = 1, padding = 0, data = None, activity = None, pool_way = None, cat_dim = None):
     	self.fa = np.array([], dtype = str)
     	self.next = np.array([], dtype = str)
     	self.id = id
@@ -12,8 +12,10 @@ class Node:
     	self.kernel_size = kernel_size
     	self.stride = stride
     	self.padding = padding
-    	self.in_shape = np.array([], dtype = int)
-    	self.out_shape = np.array([], dtype = int)
+    	self.pool_way = pool_way
+    	self.activity = activity
+    	self.data_shape = np.array([], dtype = int)
+    	self.cat_dim = cat_dim
 
     def add_fa(self, f):
     	self.fa = np.append(self.fa, f)

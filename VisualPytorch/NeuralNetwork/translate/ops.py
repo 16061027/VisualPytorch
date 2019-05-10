@@ -1,9 +1,21 @@
 
 '''
 step:
-	make_graph
-	BFS and get ans
+	make_graph:
+		fill the graph{} and done{}
+		check model
+		get codes
 	return
+
+exceptioin:
+	A:
+	B:
+	C:
+	D:
+	E:
+	F:多个start
+	G:
+
 '''
 
 import numpy as np
@@ -21,21 +33,19 @@ nn_conv2d = 'torch.nn.Conv2d'
 nn_view = '.view'
 nn_sequential = 'torch.nn.Sequential'
 
+#array of layers
+start_layer = ['start']
+norm_layer = ['conv1d_layer', 'conv2d_layer', 'view_layer', 'linaer_layer']
+multi_layer = ['element_wise_add_layer', 'concatenate_layer']
+
+#parameters of convolutional layer
 conv_layer_para = ['in_channels', 'out_channels', 'kernel_size', 'stride', 'padding']
 
 #model
 #graph = Vector()
 graph = {} #record the node information
 done = {}
-'''
-	A:
-	B:
-	C:
-	D:
-	E:
-	F:多个start
-	G:
-'''
+
 def error(str):
 
     return None
@@ -59,6 +69,7 @@ def add_static_info(Main, glob):
     Main = np.append(Main, 'from Ops import *')	
     names = {'epoch': '1', 'optimizer': 'torch.optim.Adam', 'learning_rate': '0.5', \
              'batch_size': '1', 'data_dir': 'None', 'data_set': 'None', 'train': 'True'}
+
     for name in names:
         tmp = name + ' = '
         if name in glob:
@@ -66,9 +77,10 @@ def add_static_info(Main, glob):
         elif name in names:
             tmp = tmp + str(names[name])
         else:
-            print('[ERROR] %s: No such global attribute' % layer_name)
+            raise ModelError('%s: No such global attribute' % name)
             sys.exit(1)
         Main = np.append(Main, tmp)
+
     return Main
 
 
@@ -77,7 +89,7 @@ def generate_variable_name(layer_name):
     try:
         cnt = layer_used_time[layer_name]
     except:
-        print('[ERROR] %s: No such layer' % layer_name)
+        raise ModelError('%s: No such layer' % layer_name)
         sys.exit(1)
     ans = layer_name
     if (cnt != 0):
@@ -97,21 +109,11 @@ def add_init_info():
 
     return ans
 
-
-def find_next_edge(network, point_name):
-    ans = None
-    for edge in network:
-        if edge['source']['id'] == point_name:
-            ans = edge
-            break
-    return ans
-
-
 def update_layer_used_time(layer):
     try:
         layer_used_time[layer] = layer_used_time[layer] + 1
     except:
-        print('[ERROR] %s: No such layer' % layer_name)
+        raise ModelError('%s: No such layer' % layer_name)
         sys.exit(1)
 
 
@@ -121,7 +123,7 @@ def generate_layer_name(layer_name):
     try:
         cnt = layer_used_time[layer_name]
     except:
-        print('[ERROR] %s: No such layer' % layer_name)
+        raise ModelError('%s: No such layer' % layer_name)
         sys.exit(1)
     if cnt > 0:
         ans = ans + '_' + str(cnt)
@@ -134,8 +136,9 @@ def add_linear_to_init_forward(init, forward, in_data, out_data, node):
     forward_tmp = generate_n_tap(2) + out_data + ' = ' + self_layer + '(' + in_data + ')'
     forward = np.append(forward, forward_tmp)
 
-    in_c = str(node['attribute']['in_channel'])
-    out_c = str(node['attribute']['out_channel'])
+    in_c = str(node['attribute']['in_channels'])
+    out_c = str(node['attribute']['out_channels'])
+
     init_tmp = generate_n_tap(2) + self_layer + ' = ' + nn_linear + '(' + in_c + ', ' + out_c + ')'
     init = np.append(init, init_tmp)
 
@@ -147,11 +150,9 @@ def parse_shape(str_shape):
         shape = list(map(int, str_shape.split(',')))
 
     except:
-        print('[ERROR] %s: Invalid view shape' % str)
-        sys.exit(1)
+        raise ModelError('Invalid view shape')
     if (len(shape) == 0):
-        print('[ERROR] %s: Invalid view shape' % str)
-        sys.exit(1)
+        raise ModelError('Invalid view shape')
     return str(shape)[1:-1]
 
 
@@ -197,7 +198,7 @@ def add_convlayer_to_init_forward(init, forward, in_data, out_data, node):
     elif node['name'] == 'conv2d_layer':
         init_tmp = init_tmp + nn_conv2d + '('
     else:
-        print('[ERROR] %s: No such convolution layer' % node['name'])
+        raise ModelError('%s: No such convolution layer' % node['name'])
         sys.exit(1)
     init = np.append(init, init_tmp)
 
@@ -227,25 +228,14 @@ def add_layer_except_add_and_concate(init_func, forward_func, in_data, out_data,
     elif node_name == 'conv1d_layer' or node_name == 'conv2d_layer':
         init, forward = add_convlayer_to_init_forward(init, forward, in_data, out_data, node)
     else:
-        print('[ERROR] %s: No such layer' % node_name)
-        sys.exit(1)
+        raise ModelError('%s: No such layer' % node_name)
+
     return np.concatenate((init_func, init)), np.concatenate((forward_func, forward))
-
-
-def find_and_check_start_id(network):
-    flag = False
-    start_id = None
-    for edge in network:
-    	if edge['source']['name'] == 'start':
-    	    if start_id != None:
-    	    	flag = True
-    	    start_id = edge['source']['id']
-
-    return start_id, flag
 
 def find_start_id(nets):
     one_start = True
     start_id = None
+
     for key in nets:
     	if nets[key]['name'] == 'start':
     		if start_id is not None:
@@ -254,25 +244,93 @@ def find_start_id(nets):
         
     return start_id, one_start    
 
+def add_node_information_about_conv_layer(edge, node):
+    try:
+        graph[edge['target']['id']].in_channels = int(node['in_channels'])
+    except:
+        raise ModelError('invalid in_channels of convolution layer')
+    try:
+        graph[edge['target']['id']].out_channels = int(node['out_channels'])
+    except:
+        raise ModelError('invalid out_channels of convolution layer')
+    try:
+        graph[edge['target']['id']].kernel_size = int(node['kernel_size'])
+    except:
+        raise ModelError('invalid kernel_size of convolution layer')
+    try:
+        graph[edge['target']['id']].stride = int(node['stride'])
+    except:
+        raise ModelError('invalid stride of convolution layer')
+    try:
+        graph[edge['target']['id']].padding = int(node['padding'])
+    except:
+        raise ModelError('invalid padding of convolution layer')
+    graph[edge['target']['id']].activity = node['activity']
+    graph[edge['target']['id']].pool_way = node['pool_way']
 
-def get_next_nodes_and_update_pre_nodes(nets_conn, cur_id):
+
+def get_next_nodes_and_update_pre_nodes(nets, nets_conn, cur_id):
     next_nodes = np.array([], dtype = str)
     fa_nodes = np.array([], dtype = str)
     flag = True
     for edge in nets_conn:
         if edge['source']['id'] == cur_id:
             next_nodes = np.append(next_nodes, edge['target']['id'])
-            if edge['target']['id'] not in done:
+
+            if edge['target']['id'] not in done.keys():
                 graph[edge['target']['id']] = Node(id = edge['target']['id'])
+                graph[edge['target']['id']].name = nets[edge['target']['id']]['name']
+                node = nets[edge['target']['id']]['attribute']
+                if nets[edge['target']['id']]['name'] in ['conv2d_layer', 'conv1d_layer']:
+                    add_node_information_about_conv_layer(edge, node)
+
+                if nets[edge['target']['id']]['name'] == 'view_layer':
+                        try:
+                            shape = np.array(list(map(int, nets[edge['target']['id']]['attribute']['shape'].split(','))))
+                        except:
+                            raise ModelError('invalid view_layer shape')
+                        graph[edge['target']['id']].data_shape = shape
+
+                if nets[edge['target']['id']]['name'] == 'concatenate_layer':
+                    try:
+                        graph[edge['target']['id']].cat_dim = int(node['dim'])
+                    except:
+                        raise ModelError('invalid concatenate dimension')
+
                 done[edge['target']['id']] = False	
+
         if edge['target']['id'] == cur_id:
             fa_nodes = np.append(fa_nodes, edge['source']['id'])
             if not done[edge['source']['id']]:
             	flag = False
+
     graph[cur_id].next = next_nodes
     graph[cur_id].fa = fa_nodes
+
+    name = nets[cur_id]['name']
+    if name in start_layer or name in norm_layer:
+        if name == 'start' and len(graph[cur_id].fa) != 0:
+            raise ModelError('start: can not have father nodes')
+        elif name != 'start' and len(graph[cur_id].fa) != 1:
+            raise ModelError('%s: should have one and only one father node' % name)
+     
+    if name in multi_layer and len(graph[cur_id].fa) == 0:
+        raise ModelError('%s: should have one or more father nodes' % name)    
+
     
     return next_nodes, flag
+
+def add_concatenate_layer(init_func, forward_func, cur_id, out_data):
+    #check shape first
+    dim = graph[cur_id].cat_dim
+    array_of_inputs = graph[cur_id].fa[0]
+    for indx in range(1, len(graph[cur_id].fa)):
+        #check shape
+        array_of_inputs = array_of_inputs + ', ' + graph[cur_id].fa[indx]      
+    #check dim
+    code = generate_n_tap(2) + out_data + ' = torch.cat((' + array_of_inputs + '), ' + graph[cur_id].cat_dim + ')'
+
+    return init_func, np.append(forward_func, code)
 
 def add_element_wise_add_layer(init_func, forward_func, cur_id, out_data):
     #error not ok
@@ -295,15 +353,15 @@ def make_graph(nets, nets_conn, init_func, forward_func):
     start_id, one_start = find_start_id(nets)
 
     Q = queue.Queue()
-    Q.put(start_id)
+    #Q.put(start_id)
     graph[start_id] = Node(id = start_id, name = 'start', data = 'x_data')
     done[start_id] = True
 
     cur_id = start_id
 
-    next_nodes = get_next_nodes_and_update_pre_nodes(nets_conn, cur_id)
+    next_nodes, flag = get_next_nodes_and_update_pre_nodes(nets, nets_conn, cur_id)
 
-    #update Q
+    # #update Q
     for node_id in next_nodes:
         Q.put(node_id)
 
@@ -311,8 +369,9 @@ def make_graph(nets, nets_conn, init_func, forward_func):
         cur_id = Q.get()
         if done[cur_id]:
             continue
-        next_nodes, flag = get_next_nodes_and_update_pre_nodes(nets_conn, cur_id)
-        if cur_id != start_id and not flag:
+        next_nodes, flag = get_next_nodes_and_update_pre_nodes(nets, nets_conn, cur_id)
+        if cur_id != start_id and flag is False:
+            Q.put(cur_id)
             continue
 
         #update Q
@@ -322,22 +381,18 @@ def make_graph(nets, nets_conn, init_func, forward_func):
         out_data = generate_variable_name(nets[cur_id]['name'])
         graph[cur_id].data = out_data
         if nets[cur_id]['name'] == 'concatenate_layer':
-            pass
+            init_func, forward_func = add_concatenate_layer(init_func, forward_func, cur_id, out_data)
         elif nets[cur_id]['name'] == 'element_wise_add_layer':
             init_func, forward_func = add_element_wise_add_layer(init_func, forward_func, cur_id, out_data)
         else:
-            in_data = None
-            if len(graph[cur_id].fa) != 1:
-                pass#error not ok
-            else:
-                in_data = graph[graph[cur_id].fa[0]].data
+            in_data = graph[graph[cur_id].fa[0]].data
         	
             init_func, forward_func = add_layer_except_add_and_concate(init_func, forward_func, in_data, out_data, nets[cur_id])
         update_layer_used_time(nets[cur_id]['name'])
 
+        done[cur_id] = True
 
     return init_func, forward_func
-
 
 
 def add_net_info(nets, nets_conn):
@@ -348,25 +403,18 @@ def add_net_info(nets, nets_conn):
 
 
     init_func, forward_func = make_graph(nets, nets_conn, init_func, forward_func)
-    # replace name with id
-    # edge_name, flag = find_edges_whose_id_is_same(network, 'start')
-    # if flag:
-    # 	error('F')
-    # init_name = edge_name
-    # edge = find_next_edge(network, edge_name)
-    # while edge is not None:
-    #     in_data = out_data
-    #     out_data = generate_variable_name(edge['target']['name'])
-    #     #
-    #     init_func, forward_func = add_layer_except_add_and_concate(init_func, forward_func, in_data, out_data, edge['target'])
-    #     update_layer_used_time(edge['target']['name'])
-    #     #
 
-    #     edge_name = edge['target']['id']
-    #     edge = find_next_edge(network, edge_name)
 
     return np.concatenate((init_func, forward_func))
 
+def add_element_add_to_Ops(Ops):
+    tmp = ['def element_wise_add(inputs):', 
+            generate_n_tap(1) + 'ans = inputs[0]', 
+            generate_n_tap(1) + 'for indx in range(1, len(inputs)):', 
+            generate_n_tap(2) + 'ans.add_(inputs[indx])', 
+            generate_n_tap(1) + 'return ans']
+
+    return np.concatenate((Ops, tmp))
 
 
 def main_func(edge_record):
@@ -381,7 +429,7 @@ def main_func(edge_record):
     # Model
     Model = np.concatenate((Model, add_net_info(edge_record['nets'], edge_record['nets_conn'])))
     # Ops
-
+    Ops = add_element_add_to_Ops(Ops)
     return Main, Model, Ops
 
 
@@ -471,11 +519,13 @@ test = {
     }
 }
 
-# Main, Model, Ops = main_func(test)
-# print('Model')
-# for val in Model:
-# 	print(val)
-# print('Ops', Ops)
+Main, Model, Ops = main_func(test)
+print('Model')
+for val in Model:
+	print(val)
+print('Ops', Ops)
+for ops in Ops:
+	print(ops)
 
 
 
