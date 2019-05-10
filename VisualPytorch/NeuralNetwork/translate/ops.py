@@ -249,22 +249,28 @@ def add_node_information_about_conv_layer(edge, node):
         graph[edge['target']['id']].in_channels = int(node['in_channels'])
     except:
         raise ModelError('invalid in_channels of convolution layer')
+
     try:
         graph[edge['target']['id']].out_channels = int(node['out_channels'])
     except:
         raise ModelError('invalid out_channels of convolution layer')
+
     try:
         graph[edge['target']['id']].kernel_size = int(node['kernel_size'])
     except:
         raise ModelError('invalid kernel_size of convolution layer')
+
     try:
         graph[edge['target']['id']].stride = int(node['stride'])
     except:
         raise ModelError('invalid stride of convolution layer')
+
     try:
         graph[edge['target']['id']].padding = int(node['padding'])
     except:
         raise ModelError('invalid padding of convolution layer')
+
+
     graph[edge['target']['id']].activity = node['activity']
     graph[edge['target']['id']].pool_way = node['pool_way']
 
@@ -273,6 +279,7 @@ def get_next_nodes_and_update_pre_nodes(nets, nets_conn, cur_id):
     next_nodes = np.array([], dtype = str)
     fa_nodes = np.array([], dtype = str)
     flag = True
+
     for edge in nets_conn:
         if edge['source']['id'] == cur_id:
             next_nodes = np.append(next_nodes, edge['target']['id'])
@@ -281,6 +288,7 @@ def get_next_nodes_and_update_pre_nodes(nets, nets_conn, cur_id):
                 graph[edge['target']['id']] = Node(id = edge['target']['id'])
                 graph[edge['target']['id']].name = nets[edge['target']['id']]['name']
                 node = nets[edge['target']['id']]['attribute']
+
                 if nets[edge['target']['id']]['name'] in ['conv2d_layer', 'conv1d_layer']:
                     add_node_information_about_conv_layer(edge, node)
 
@@ -288,14 +296,14 @@ def get_next_nodes_and_update_pre_nodes(nets, nets_conn, cur_id):
                         try:
                             shape = np.array(list(map(int, nets[edge['target']['id']]['attribute']['shape'].split(','))))
                         except:
-                            raise ModelError('invalid view_layer shape')
+                            raise ModelError('%s: invalid view_layer shape' % nets[edge['target']['id']]['attribute']['shape'])
                         graph[edge['target']['id']].data_shape = shape
 
                 if nets[edge['target']['id']]['name'] == 'concatenate_layer':
                     try:
                         graph[edge['target']['id']].cat_dim = int(node['dim'])
                     except:
-                        raise ModelError('invalid concatenate dimension')
+                        raise ModelError('%s: invalid concatenate dimension' % node['dim'])
 
                 done[edge['target']['id']] = False	
 
