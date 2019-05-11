@@ -1,13 +1,12 @@
 
 '''
-step:
-	make_graph:
-		fill the graph{} and done{}
-		check model
-		get codes
-	return
 
-exceptioin:
+Copyright @ 2019 buaa_huluwa. All rights reserved.
+
+View more, visit our team's home page: https://home.cnblogs.com/u/1606-huluwa/
+
+
+exception defined as follows:
 	A:
 	B:
 	C:
@@ -17,17 +16,6 @@ exceptioin:
 	G:
 
 '''
-
-
-
-'''
-add exception:
-	(1)
-
-
-
-'''
-
 
 
 import numpy as np
@@ -77,8 +65,10 @@ def generate_n_tap(n):
 
 
 def add_static_info(Main, glob):
-    Main = np.append(Main, 'from Model import *')
-    Main = np.append(Main, 'from Ops import *')	
+    tmp = np.array(['from Model import *', 'from Ops import *', '', '', '#Hyper Parameters'])	
+
+    Main = np.concatenate((Main, tmp))
+
     names = {'epoch': '1', 'optimizer': 'torch.optim.Adam', 'learning_rate': '0.5', \
              'batch_size': '1', 'data_dir': 'None', 'data_set': 'None', 'train': 'True'}
 
@@ -110,7 +100,7 @@ def generate_variable_name(layer_name):
 
 
 def add_import_info():
-    ans = np.array(["import torch", "import numpy", "import torchvision", "import os"])
+    ans = np.array(['', '#standard library', "import os", '', '#third-party library', "import torch", "import numpy", "import torchvision"])
 
     return ans, ans, ans
 
@@ -433,8 +423,16 @@ def add_net_info(nets, nets_conn):
     init_func, forward_func = make_graph(nets, nets_conn, init_func, forward_func)
 
     #add return statement to forward_func
+    ret_state = None
+    for node_id in graph:
+        if len(graph[node_id].next) == 0:
+            if ret_state is None: 
+                ret_state = graph[node_id].data
+            else:
+                ret_state = ', ' + graph[node_id].data
+    ret_state = generate_n_tap(2) + 'return ' + ret_state
 
-    return np.concatenate((init_func, forward_func))
+    return np.concatenate((init_func, np.append(forward_func, ret_state)))
 
 def add_element_add_to_Ops(Ops):
     tmp = ['def element_wise_add(inputs):', 
@@ -445,20 +443,75 @@ def add_element_add_to_Ops(Ops):
 
     return np.concatenate((Ops, tmp))
 
+def generate_copyright_information(flag):
+    copy_right = 'Copyright @2019 buaa_huluwa. All rights reserved.'
+
+    view_more = "View more, visit our team's home page: https://home.cnblogs.com/u/1606-huluwa/"
+
+    declaration = 'This code is the corresponding pytorch code generated from the model built by the user.'
+
+    Main_py = ' "main.py" mainly contains the code of the training and testing part, and you can modify it according to your own needs.'
+
+    Model_py = '"model.py" contains the complete model code, and you can modify it according to your own needs'
+
+    Ops_py = '"ops.py" contains functions you might use'
+
+    none = ''
+
+    tmp = np.array([])
+    if flag == 'Main':
+        tmp = np.array(["'''", none, copy_right, none, view_more, none, none, declaration, none, Main_py, none, "'''"])
+
+    if flag == 'Model':
+        tmp = np.array(["'''", none, declaration, none, Model_py, none, "'''"])
+
+    if flag == 'Ops':
+        tmp = np.array(["'''", none, declaration, none, Ops_py, none, "'''"])
+    
+    return tmp
+
+def generate_train_codes():
+    ans = np.array(['',
+                  'net = NET()',
+                  '#print net architecture', 
+                  'print(net)', 
+                  '',  
+                  '', 
+    	          '#load your own dataset and normalize', '', '',
+                  '', 
+                  '#you can add some functions for visualization here or you can ignore them', 
+                  '', 
+                  '', 
+                  '', 
+                  '#training and testing, you can modify these codes as you expect', 
+                  'for epo in range(epoch):', 
+                  '', 
+                  ''
+    	])
+
+
+    return ans
 
 def main_func(edge_record):
     # add import information
     init()
+
     Main, Model, Ops = add_import_info()
 
     # Main
     glob = edge_record['static']
     Main = add_static_info(Main, glob)
+    Main = np.concatenate((generate_copyright_information('Main'), Main, generate_train_codes()))
+    
 
     # Model
     Model = np.concatenate((Model, add_net_info(edge_record['nets'], edge_record['nets_conn'])))
+    Model = np.concatenate((generate_copyright_information('Model'), Model))
+
     # Ops
     Ops = add_element_add_to_Ops(Ops)
+    Ops = np.concatenate((generate_copyright_information('Ops'), Ops))
+
     return Main, Model, Ops
 
 
@@ -583,10 +636,12 @@ test = {
 }
 
 Main, Model, Ops = main_func(test)
+for m in Main:
+    print(m)
+
 print('Model')
 for val in Model:
 	print(val)
-print('Ops', Ops)
 for ops in Ops:
 	print(ops)
 
