@@ -18,6 +18,18 @@ exceptioin:
 
 '''
 
+
+
+'''
+add exception:
+	(1)
+
+
+
+'''
+
+
+
 import numpy as np
 import sys
 from model import Node, Vector
@@ -153,12 +165,16 @@ def parse_shape(str_shape):
         raise ModelError('Invalid view shape')
     if (len(shape) == 0):
         raise ModelError('Invalid view shape')
-    return str(shape)[1:-1]
+    return shape, str(shape)[1:-1]
 
 
 def add_view_to_init_forward(init, forward, in_data, out_data, node):
-    shape = parse_shape(node['attribute']['shape'])
-    forward_tmp = generate_n_tap(2) + out_data + ' = ' + in_data + nn_view + '(' + shape + ')'
+    shape, shape_str = parse_shape(node['attribute']['shape'])
+
+    #add shape checking of reshape layer  
+
+
+    forward_tmp = generate_n_tap(2) + out_data + ' = ' + in_data + nn_view + '(' + shape_str + ')'
     forward = np.append(forward, forward_tmp)
 
     return init, forward
@@ -232,6 +248,7 @@ def add_layer_except_add_and_concate(init_func, forward_func, in_data, out_data,
 
     return np.concatenate((init_func, init)), np.concatenate((forward_func, forward))
 
+
 def find_start_id(nets):
     one_start = True
     start_id = None
@@ -243,6 +260,7 @@ def find_start_id(nets):
     		start_id = key
         
     return start_id, one_start    
+
 
 def add_node_information_about_conv_layer(edge, node):
     try:
@@ -328,6 +346,7 @@ def get_next_nodes_and_update_pre_nodes(nets, nets_conn, cur_id):
     
     return next_nodes, flag
 
+
 def add_concatenate_layer(init_func, forward_func, cur_id, out_data):
     #check shape first
     dim = graph[cur_id].cat_dim
@@ -340,12 +359,13 @@ def add_concatenate_layer(init_func, forward_func, cur_id, out_data):
 
     return init_func, np.append(forward_func, code)
 
+
 def add_element_wise_add_layer(init_func, forward_func, cur_id, out_data):
     #error not ok
     if len(graph[cur_id].fa) == 0:
         raise ModelError('element wise layer has no inputs')
     
-    array_of_nodes = '[' + graph[cur_id].fa[0]
+    array_of_nodes = '[' + graph[graph[cur_id].fa[0]].data
     for indx in range(1, len(graph[cur_id].fa)):
         array_of_nodes = array_of_nodes + ', ' + graph[graph[cur_id].fa[indx]].data
 
@@ -412,6 +432,7 @@ def add_net_info(nets, nets_conn):
 
     init_func, forward_func = make_graph(nets, nets_conn, init_func, forward_func)
 
+    #add return statement to forward_func
 
     return np.concatenate((init_func, forward_func))
 
@@ -486,6 +507,20 @@ test = {
             },
             "left": "401px",
             "top": "461px"
+        }, 
+        "canvas_5": {
+            "name": "element_wise_add_layer",
+            "attribute": {
+                "in_channels": "2",
+                "out_channels": "3",
+                "kernel_size": "2",
+                "stride": "1",
+                "padding": "3",
+                "activity": "torch.nn.functional.tanh",
+                "pool_way": "torch.nn.AvgPool2d"
+            },
+            "left": "401px",
+            "top": "461px"
         }
     },
     "nets_conn": [
@@ -518,7 +553,27 @@ test = {
                 "id": "canvas_3",
                 "anchor_position": "Left"
             }
-        }
+        }, 
+        {
+            "source": {
+                "id": "canvas_4",
+                "anchor_position": "Right"
+            },
+            "target": {
+                "id": "canvas_5",
+                "anchor_position": "Left"
+            }
+        }, 
+        {
+            "source": {
+                "id": "canvas_3",
+                "anchor_position": "Right"
+            },
+            "target": {
+                "id": "canvas_5",
+                "anchor_position": "Left"
+            }
+        }        
     ],
     "static": {
         "epoch": "1",
