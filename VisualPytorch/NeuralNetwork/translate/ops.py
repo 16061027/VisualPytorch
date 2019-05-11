@@ -100,7 +100,7 @@ def generate_variable_name(layer_name):
 
 
 def add_import_info():
-    ans = np.array(['', '#standard library', "import os", '', '#third-party library', "import torch", "import numpy", "import torchvision"])
+    ans = np.array(['', '#standard library', "import os", '', '#third-party library', "import torch", "import numpy", "import torchvision", '', ''])
 
     return ans, ans, ans
 
@@ -472,6 +472,8 @@ def generate_copyright_information(flag):
 
 def generate_train_codes():
     ans = np.array(['',
+    	          '', 
+    	          '#initialize a NET object', 
                   'net = NET()',
                   '#print net architecture', 
                   'print(net)', 
@@ -513,137 +515,6 @@ def main_func(edge_record):
     Ops = np.concatenate((generate_copyright_information('Ops'), Ops))
 
     return Main, Model, Ops
-
-
-test = {
-    "nets": {
-        "canvas_1": {
-            "name": "start",
-            "attribute": {
-                "start": "true"
-            },
-            "left": "350px",
-            "top": "163px"
-        },
-        "canvas_2": {
-            "name": "view_layer",
-            "attribute": {
-                "shape": "3"
-            },
-            "left": "325px",
-            "top": "307px"
-        },
-        "canvas_3": {
-            "name": "conv1d_layer",
-            "attribute": {
-                "in_channels": "2",
-                "out_channels": "32",
-                "kernel_size": "2",
-                "stride": "3",
-                "padding": "2",
-                "activity": "torch.nn.functional.leaky_relu",
-                "pool_way": "torch.nn.functional.max_pool1d"
-            },
-            "left": "590px",
-            "top": "312px"
-        },
-        "canvas_4": {
-            "name": "conv2d_layer",
-            "attribute": {
-                "in_channels": "2",
-                "out_channels": "3",
-                "kernel_size": "2",
-                "stride": "1",
-                "padding": "3",
-                "activity": "torch.nn.functional.tanh",
-                "pool_way": "torch.nn.AvgPool2d"
-            },
-            "left": "401px",
-            "top": "461px"
-        }, 
-        "canvas_5": {
-            "name": "element_wise_add_layer",
-            "attribute": {
-                "in_channels": "2",
-                "out_channels": "3",
-                "kernel_size": "2",
-                "stride": "1",
-                "padding": "3",
-                "activity": "torch.nn.functional.tanh",
-                "pool_way": "torch.nn.AvgPool2d"
-            },
-            "left": "401px",
-            "top": "461px"
-        }
-    },
-    "nets_conn": [
-        {
-            "source": {
-                "id": "canvas_1",
-                "anchor_position": "Bottom"
-            },
-            "target": {
-                "id": "canvas_2",
-                "anchor_position": "Top"
-            }
-        },
-        {
-            "source": {
-                "id": "canvas_2",
-                "anchor_position": "Bottom"
-            },
-            "target": {
-                "id": "canvas_4",
-                "anchor_position": "Top"
-            }
-        },
-        {
-            "source": {
-                "id": "canvas_4",
-                "anchor_position": "Right"
-            },
-            "target": {
-                "id": "canvas_3",
-                "anchor_position": "Left"
-            }
-        }, 
-        {
-            "source": {
-                "id": "canvas_4",
-                "anchor_position": "Right"
-            },
-            "target": {
-                "id": "canvas_5",
-                "anchor_position": "Left"
-            }
-        }, 
-        {
-            "source": {
-                "id": "canvas_3",
-                "anchor_position": "Right"
-            },
-            "target": {
-                "id": "canvas_5",
-                "anchor_position": "Left"
-            }
-        }        
-    ],
-    "static": {
-        "epoch": "1",
-        "learning_rate": "0.5",
-        "batch_size": "1"
-    }
-}
-
-Main, Model, Ops = main_func(test)
-for m in Main:
-    print(m)
-
-print('Model')
-for val in Model:
-	print(val)
-for ops in Ops:
-	print(ops)
 
 
 
