@@ -16,9 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from NeuralNetwork import views
+from django.conf.urls import url
+
 
 urlpatterns = [
     path('api/admin/', admin.site.urls),
     path('api/NeuralNetwork/',include('NeuralNetwork.urls')),
-    path('api/journal/',include('journal.urls'))
+    path('api/journal/',include('journal.urls')),
+    path('api/user/',include('user.urls')),
 ]
