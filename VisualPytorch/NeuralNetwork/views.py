@@ -78,12 +78,14 @@ class NetworkDetail(APIView):
 @api_view(['POST'])
 def gen_code(request):
     result = {}
+
     try:
         result["Main"], result["Model"], result["Ops"] = ops.main_func(request.data)
-    except BaseException:
-        return Response({"error": "some error happened"}, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        return Response({str(e)}, status=status.HTTP_400_BAD_REQUEST)
     else:
         return Response(result, status=status.HTTP_200_OK)
+
 
 
 #todo:这里仅仅是简单的样例

@@ -368,31 +368,11 @@
             var data = eval('(' + window.localStorage.getItem(id) + ')');
             $("#" + id + "activity").find("[value = \"" + data["activity"] + "\"]").attr("selected", "selected");
             $("#" + id + "pool_way").find("[value = \"" + data["pool_way"] + "\"]").attr("selected", "selected");
-            /*if($("#" + id + "pool_way").val()=="None"){
-                $("#"+id+"pool_kernel_size").attr("disabled",true);
-                $("#"+id+"pool_stride").attr("disabled",true);
-                $("#"+id+"pool_padding").attr("disabled",true);
-            }
-            else{
-                $("#"+id+"pool_kernel_size").removeAttr("disabled");
-                $("#"+id+"pool_stride").removeAttr("disabled");
-                $("#"+id+"pool_padding").removeAttr("disabled");
-            }*/
         }
         if (name == "conv2d_layer") {
             var data = eval('(' + window.localStorage.getItem(id) + ')');
             $("#" + id + "activity").find("[value = \"" + data["activity"] + "\"]").attr("selected", "selected");
             $("#" + id + "pool_way").find("[value = \"" + data["pool_way"] + "\"]").attr("selected", "selected");
-            /*if($("#" + id + "pool_way").val()=="None"){
-                $("#"+id+"pool_kernel_size").attr("disabled",true);
-                $("#"+id+"pool_stride").attr("disabled",true);
-                $("#"+id+"pool_padding").attr("disabled",true);
-            }
-            else{
-                $("#"+id+"pool_kernel_size").removeAttr("disabled");
-                $("#"+id+"pool_stride").removeAttr("disabled");
-                $("#"+id+"pool_padding").removeAttr("disabled");
-            }*/
         }
         $("[name='pool_way']").bind('change', function () {
             if ($(this).val() == 'None') {

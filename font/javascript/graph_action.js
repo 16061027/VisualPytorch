@@ -90,8 +90,9 @@ function get_network() {
     };
     return data;
 }
+
 function translate_network() {
-    var data = get_network();
+    var data = get_network()["structure"];
     console.log(data);
     $.ajax({
         type: 'POST',
@@ -145,7 +146,7 @@ function translate_network() {
 
 function save_network() {
     $("#save_modal").modal('hide');
-    if(!window.sessionStorage.hasOwnProperty("userinfo")){
+    if (!window.sessionStorage.hasOwnProperty("userinfo")) {
         jump_to_login();
         return
     }
@@ -171,7 +172,7 @@ function save_network() {
                 alert(data_return["responseText"])
             }
         });
-    }else {
+    } else {
         $.ajax({
             type: 'POST',
             url: gobalConfig.base_url + 'api/NeuralNetwork/network/',
@@ -196,23 +197,24 @@ function save_attr_linear_layer(button) {
     //这里是硬编码，考虑在b版本优化
     var id = button["id"].split("popover_")[1];
     var form = $("#" + button["id"]).parent();
-    var in_channel = form.find("[name = \"in_channel\"]");
-    var out_channel = form.find("[name = \"out_channel\"]");
+    var in_channel = form.find("[name = \"in_channels\"]");
+    var out_channel = form.find("[name = \"out_channels\"]");
     //todo:加入更精确的正则判断
     form.find("[name='input_error']").remove();
-    var reg = /^[0-9]+$/;
+    //正整数
+    var reg = /^\s*[1-9]\d*\s*$/;
     var flag = true;
     var check_array = [in_channel, out_channel];
     check_array.forEach(function (value, index, array) {
         if (!reg.test(value.val())) {
-            value.after("<p name='input_error' class='alert_font'>输入不合法</p>");
+            value.after("<p name='input_error' class='alert_font'>请输入正整数</p>");
             flag = false;
         }
     });
     if (!flag) {
         return;
     }
-    window.localStorage.setItem(id, "{\"in_channel\":\"" + in_channel.val() + "\", \"out_channel\":\"" + out_channel.val() + "\"}");
+    window.localStorage.setItem(id, "{\"in_channels\":\"" + in_channel.val() + "\", \"out_channels\":\"" + out_channel.val() + "\"}");
     $("#" + id).popover('hide');
 }
 
@@ -222,21 +224,24 @@ function save_attr_view_layer(button) {
     var form = $("#" + button["id"]).parent();
     var shape = form.find("[name = \"shape\"]");
     form.find("[name='input_error']").remove();
-    if (shape.val().replace(" ", "") == "") {
+    //匹配符合要求的数组
+    var reg = /^(\s*[1-9]\d*\s*)+(,\s*[1-9]\d*\s*)*$/;
+    if (!reg.test(shape.val())) {
         shape.after("<p name='input_error' class='alert_font'>输入不合法</p>");
         return;
+
     }
     window.localStorage.setItem(id, "{\"shape\":\"" + shape.val() + "\"}");
     $("#" + id).popover('hide');
 }
 
 function save_attr_concatenate_layer(button) {
-    //这里是硬编码，考虑在b版本优化
     var id = button["id"].split("popover_")[1];
     var form = $("#" + button["id"]).parent();
     var dim = form.find("[name = \"dim\"]");
     form.find("[name='input_error']").remove();
-    if (dim.val().replace(" ", "") == "") {
+    var reg = /^\s*\d+\s*$/;
+    if (!reg.test(dim.val())) {
         dim.after("<p name='input_error' class='alert_font'>输入不合法</p>");
         return;
     }
@@ -249,7 +254,7 @@ function save_attr_conv1d_layer(button) {
     var id = button["id"].split("popover_")[1];
     var form = $("#" + button["id"]).parent();
     var in_channels = form.find("[name = \"in_channels\"]");
-    var out_channels= form.find("[name = \"out_channels\"]");
+    var out_channels = form.find("[name = \"out_channels\"]");
     var kernel_size = form.find("[name = \"kernel_size\"]");
     var stride = form.find("[name = \"stride\"]");
     var padding = form.find("[name = \"padding\"]");
@@ -260,7 +265,7 @@ function save_attr_conv1d_layer(button) {
     var pool_padding = form.find("[name = \"pool_padding\"]");
     //todo:加入更精确的正则判断
     form.find("[name='input_error']").remove();
-    var reg = /^[0-9]+$/;
+    var reg = /^\s*[1-9]\d*\s*$/;
     var flag = true;
     var check_array = [in_channels, out_channels, kernel_size, stride, padding];
     check_array.forEach(function (value, index, array) {
@@ -296,7 +301,7 @@ function save_attr_conv2d_layer(button) {
     var pool_padding = form.find("[name = \"pool_padding\"]");
     //todo:加入更精确的正则判断
     form.find("[name='input_error']").remove();
-    var reg = /^[0-9]+$/;
+    var reg = /^\s*[1-9]\d*\s*$/;
     var flag = true;
     var check_array = [in_channels, out_channels, kernel_size, stride, padding];
     check_array.forEach(function (value, index, array) {
