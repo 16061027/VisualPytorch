@@ -1,11 +1,11 @@
 <<<<<<< HEAD
-VisualPytorch/.DS_Store
-VisualPytorch/NeuralNetwork/.DS_Store
 =======
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 
+VisualPytorch/.DS_Store
+VisualPytorch/NeuralNetwork/.DS_Store
 # C extensions
 *.so
 
