@@ -340,12 +340,12 @@ def get_next_nodes_and_update_pre_nodes(nets, nets_conn, cur_id):
 def add_concatenate_layer(init_func, forward_func, cur_id, out_data):
     #check shape first
     dim = graph[cur_id].cat_dim
-    array_of_inputs = graph[cur_id].fa[0]
+    array_of_inputs = graph[graph[cur_id].fa[0]].data
     for indx in range(1, len(graph[cur_id].fa)):
         #check shape
-        array_of_inputs = array_of_inputs + ', ' + graph[cur_id].fa[indx]      
+        array_of_inputs = array_of_inputs + ', ' + graph[graph[cur_id].fa[indx]].data      
     #check dim
-    code = generate_n_tap(2) + out_data + ' = torch.cat((' + array_of_inputs + '), ' + graph[cur_id].cat_dim + ')'
+    code = generate_n_tap(2) + out_data + ' = torch.cat((' + array_of_inputs + '), ' + str(graph[cur_id].cat_dim) + ')'
 
     return init_func, np.append(forward_func, code)
 
@@ -429,7 +429,7 @@ def add_net_info(nets, nets_conn):
             if ret_state is None: 
                 ret_state = graph[node_id].data
             else:
-                ret_state = ', ' + graph[node_id].data
+                ret_state = ret_state + ', ' + graph[node_id].data
     ret_state = generate_n_tap(2) + 'return ' + ret_state
 
     return np.concatenate((init_func, np.append(forward_func, ret_state)))
