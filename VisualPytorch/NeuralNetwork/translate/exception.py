@@ -5,3 +5,5 @@ class ModelError(Exception):
 
     def __str__(self):
         return self.erro_info
+
+
