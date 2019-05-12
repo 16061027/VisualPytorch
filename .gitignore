@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -62,4 +60,4 @@ db.py
 
 #test
 .pytest_cache
->>>>>>> 76a0336dd8cfc9939ec88aacdf1a1f47d75b9250
+
