@@ -191,8 +191,8 @@
 
         </div>
         <div class="col-md-9" id="canvas">
-            <div style="height:1000px;border:0.5px solid black;background:url(../img/grid.png) no-repeat;background-size:100%;opacity: .6">
-
+            <!--<div style="height:1000px;border:0.5px solid black;background:url(../img/grid.png) no-repeat;background-size:100%;opacity: .6">-->
+            <div style="height:1000px;border:0.5px solid black">
             </div>
         </div>
     </div>
@@ -292,25 +292,25 @@
                 }
             });*/
             if (name == "start") {
-                window.localStorage.setItem(id, "{\"start\":\"true\"}");
+                window.sessionStorage.setItem(id, "{\"start\":\"true\"}");
             }
             if (name == "element_wise_add_layer") {
-                window.localStorage.setItem(id, "{\"element_wise_add_layer\":\"true\"}");
+                window.sessionStorage.setItem(id, "{\"element_wise_add_layer\":\"true\"}");
             }
             if (name == "view_layer") {
-                window.localStorage.setItem(id, "{\"shape\":\"\"}");
+                window.sessionStorage.setItem(id, "{\"shape\":\"\"}");
             }
             if (name == "concatenate_layer") {
-                window.localStorage.setItem(id, "{\"dim\":\"\"}");
+                window.sessionStorage.setItem(id, "{\"dim\":\"\"}");
             }
             if (name == "linear_layer") {
-                window.localStorage.setItem(id, "{\"in_channels\":\"\",\"out_channels\":\"\"}");
+                window.sessionStorage.setItem(id, "{\"in_channels\":\"\",\"out_channels\":\"\"}");
             }
             if (name == "conv1d_layer") {
-                window.localStorage.setItem(id, "{\"in_channels\":\"\",\"out_channels\":\"\",\"kernel_size\":\"\",\"stride\":\"1\",\"padding\":\"0\",\"activity\":\"None\",\"pool_way\":\"None\",\"pool_kernel_size\":\"\",\"pool_stride\":\"\",\"pool_padding\":\"0\"}");
+                window.sessionStorage.setItem(id, "{\"in_channels\":\"\",\"out_channels\":\"\",\"kernel_size\":\"\",\"stride\":\"1\",\"padding\":\"0\",\"activity\":\"None\",\"pool_way\":\"None\",\"pool_kernel_size\":\"\",\"pool_stride\":\"\",\"pool_padding\":\"0\"}");
             }
             if (name == "conv2d_layer") {
-                window.localStorage.setItem(id, "{\"in_channels\":\"\",\"out_channels\":\"\",\"kernel_size\":\"\",\"stride\":\"1\",\"padding\":\"0\",\"activity\":\"None\",\"pool_way\":\"None\",\"pool_kernel_size\":\"\",\"pool_stride\":\"\",\"pool_padding\":\"0\"}");
+                window.sessionStorage.setItem(id, "{\"in_channels\":\"\",\"out_channels\":\"\",\"kernel_size\":\"\",\"stride\":\"1\",\"padding\":\"0\",\"activity\":\"None\",\"pool_way\":\"None\",\"pool_kernel_size\":\"\",\"pool_stride\":\"\",\"pool_padding\":\"0\"}");
             }
             $("#" + id).bind("contextmenu", function () {
                 return false;
@@ -328,26 +328,27 @@
                     }
                 }
             });
-            var flag = -1;
+            var has_move = false;
+            var has_down = false;
             $("#" + id).bind({
                 mousedown: function (e) {
-                    flag = 0;
+                    has_move = false;
+                    has_down = true;
                     return;
                 },
                 mousemove: function (e) {
-                    if (flag == 0) {
+                    if (has_down) {
                         $("#" + id).popover('hide');
                     }
-                    flag = 1;
-
+                    has_move = true;
                     return;
                 },
                 mouseup: function (e) {
-
-                    if (flag == 0) {
+                    if (!has_move) {
                         popover_show(id, name);
                     }
-                    flag = -1;
+                    has_move = false;
+                    has_down = false;
                     return;
                 }
             });
@@ -365,12 +366,12 @@
         popover_restart(name, id);
         $("#" + id).popover('show');
         if (name == "conv1d_layer") {
-            var data = eval('(' + window.localStorage.getItem(id) + ')');
+            var data = eval('(' + window.sessionStorage.getItem(id) + ')');
             $("#" + id + "activity").find("[value = \"" + data["activity"] + "\"]").attr("selected", "selected");
             $("#" + id + "pool_way").find("[value = \"" + data["pool_way"] + "\"]").attr("selected", "selected");
         }
         if (name == "conv2d_layer") {
-            var data = eval('(' + window.localStorage.getItem(id) + ')');
+            var data = eval('(' + window.sessionStorage.getItem(id) + ')');
             $("#" + id + "activity").find("[value = \"" + data["activity"] + "\"]").attr("selected", "selected");
             $("#" + id + "pool_way").find("[value = \"" + data["pool_way"] + "\"]").attr("selected", "selected");
         }
@@ -440,7 +441,7 @@
                             };
                             drop_function(event, ui);
                         });
-                        window.localStorage.setItem(id, JSON.stringify(val['attribute']));
+                        window.sessionStorage.setItem(id, JSON.stringify(val['attribute']));
                     });
                     jQuery.each(nets_conn, function (id, val) {
                         jsPlumb.ready(function () {

@@ -61,7 +61,7 @@
 </script>
 <script>
     $(document).ready(function () {
-        var code = eval('('+window.localStorage.getItem("code")+')');
+        var code = eval('('+window.sessionStorage.getItem("code")+')');
                 for(var i=0;i<code["Main"].length;i++){
                     $("#main_code").append(code["Main"][i]+"<br>");
                 }

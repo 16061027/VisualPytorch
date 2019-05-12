@@ -235,19 +235,19 @@
                 }
             });*/
             if (name == "start") {
-                window.localStorage.setItem(id, "{\"start\":\"true\"}");
+                window.sessionStorage.setItem(id, "{\"start\":\"true\"}");
             }
             if (name == "view_layer") {
-                window.localStorage.setItem(id, "{\"shape\":\"\"}");
+                window.sessionStorage.setItem(id, "{\"shape\":\"\"}");
             }
             if (name == "linear_layer") {
-                window.localStorage.setItem(id, "{\"in_channel\":\"\",\"out_channel\":\"\"}");
+                window.sessionStorage.setItem(id, "{\"in_channel\":\"\",\"out_channel\":\"\"}");
             }
             if (name == "conv1d_layer") {
-                window.localStorage.setItem(id, "{\"in_channel\":\"\",\"out_channel\":\"\",\"kernel_size\":\"\",\"stride\":\"\",\"padding\":\"\",\"activity\":\"None\",\"pool_way\":\"None\"}");
+                window.sessionStorage.setItem(id, "{\"in_channel\":\"\",\"out_channel\":\"\",\"kernel_size\":\"\",\"stride\":\"\",\"padding\":\"\",\"activity\":\"None\",\"pool_way\":\"None\"}");
             }
             if (name == "conv2d_layer") {
-                window.localStorage.setItem(id, "{\"in_channel\":\"\",\"out_channel\":\"\",\"kernel_size\":\"\",\"stride\":\"\",\"padding\":\"\",\"activity\":\"None\",\"pool_way\":\"None\"}");
+                window.sessionStorage.setItem(id, "{\"in_channel\":\"\",\"out_channel\":\"\",\"kernel_size\":\"\",\"stride\":\"\",\"padding\":\"\",\"activity\":\"None\",\"pool_way\":\"None\"}");
             }
             $("#" + id).bind("contextmenu", function () {
                 return false;
@@ -302,12 +302,12 @@
         popover_restart(name, id);
         $("#" + id).popover('show');
         if (name == "conv1d_layer") {
-            var data = eval('(' + window.localStorage.getItem(id) + ')');
+            var data = eval('(' + window.sessionStorage.getItem(id) + ')');
             $("#" + id + "activity").find("[value = \"" + data["activity"] + "\"]").attr("selected", "selected");
             $("#" + id + "pool_way").find("[value = \"" + data["pool_way"] + "\"]").attr("selected", "selected");
         }
         if (name == "conv2d_layer") {
-            var data = eval('(' + window.localStorage.getItem(id) + ')');
+            var data = eval('(' + window.sessionStorage.getItem(id) + ')');
             $("#" + id + "activity").find("[value = \"" + data["activity"] + "\"]").attr("selected", "selected");
             $("#" + id + "pool_way").find("[value = \"" + data["pool_way"] + "\"]").attr("selected", "selected");
         }

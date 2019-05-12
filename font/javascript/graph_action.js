@@ -39,7 +39,7 @@ function get_network() {
         var id = $(element).attr('id');
         nets[id] = {
             "name": $(element).attr('name'),
-            "attribute": eval('(' + window.localStorage.getItem(id) + ')'),
+            "attribute": eval('(' + window.sessionStorage.getItem(id) + ')'),
             "left": $(element).css('left'),
             "top": $(element).css('top')
         }
@@ -125,7 +125,7 @@ function translate_network() {
                     "main": main,
                     "ops": ops
                 };
-                window.localStorage.setItem("code", JSON.stringify(data_return));
+                window.sessionStorage.setItem("code", JSON.stringify(data_return));
                 window.open("show_code.html");
                 //window.location.href="show_code.html";
 
@@ -214,7 +214,7 @@ function save_attr_linear_layer(button) {
     if (!flag) {
         return;
     }
-    window.localStorage.setItem(id, "{\"in_channels\":\"" + in_channel.val() + "\", \"out_channels\":\"" + out_channel.val() + "\"}");
+    window.sessionStorage.setItem(id, "{\"in_channels\":\"" + in_channel.val() + "\", \"out_channels\":\"" + out_channel.val() + "\"}");
     $("#" + id).popover('hide');
 }
 
@@ -231,7 +231,7 @@ function save_attr_view_layer(button) {
         return;
 
     }
-    window.localStorage.setItem(id, "{\"shape\":\"" + shape.val() + "\"}");
+    window.sessionStorage.setItem(id, "{\"shape\":\"" + shape.val() + "\"}");
     $("#" + id).popover('hide');
 }
 
@@ -245,7 +245,7 @@ function save_attr_concatenate_layer(button) {
         dim.after("<p name='input_error' class='alert_font'>输入不合法</p>");
         return;
     }
-    window.localStorage.setItem(id, "{\"dim\":\"" + dim.val() + "\"}");
+    window.sessionStorage.setItem(id, "{\"dim\":\"" + dim.val() + "\"}");
     $("#" + id).popover('hide');
 }
 
@@ -267,7 +267,7 @@ function save_attr_conv1d_layer(button) {
     form.find("[name='input_error']").remove();
     var reg = /^\s*[1-9]\d*\s*$/;
     var flag = true;
-    var check_array = [in_channels, out_channels, kernel_size, stride, padding];
+    var check_array = (padding.val()=="0")?[in_channels, out_channels, kernel_size, stride]:[in_channels, out_channels, kernel_size, stride, padding];
     check_array.forEach(function (value, index, array) {
         if (!reg.test(value.val())) {
             value.after("<p name='input_error' class='alert_font'>输入不合法</p>");
@@ -279,7 +279,7 @@ function save_attr_conv1d_layer(button) {
     }
     //var activity = form.find("[name = \"activity\"]").val();
     //var pool_way = form.find("[name = \"pool_way\"]").val();
-    window.localStorage.setItem(id, "{\"in_channels\":\"" + in_channels.val() + "\", \"out_channels\":\"" + out_channels.val() + "\", \"kernel_size\":\"" + kernel_size.val() + "\", " +
+    window.sessionStorage.setItem(id, "{\"in_channels\":\"" + in_channels.val() + "\", \"out_channels\":\"" + out_channels.val() + "\", \"kernel_size\":\"" + kernel_size.val() + "\", " +
         "\"stride\":\"" + stride.val() + "\", \"padding\":\"" + padding.val() + "\",\"activity\":\"" + activity + "\",\"pool_way\":\"" + pool_way + "\",\"pool_kernel_size\":\"" + pool_kernel_size.val() + "\"," +
         "\"pool_stride\":\"" + pool_stride.val() + "\",\"pool_padding\":\"" + pool_padding.val() + "\"}");
     $("#" + id).popover('hide');
@@ -303,7 +303,7 @@ function save_attr_conv2d_layer(button) {
     form.find("[name='input_error']").remove();
     var reg = /^\s*[1-9]\d*\s*$/;
     var flag = true;
-    var check_array = [in_channels, out_channels, kernel_size, stride, padding];
+     var check_array = (padding.val()=="0")?[in_channels, out_channels, kernel_size, stride]:[in_channels, out_channels, kernel_size, stride, padding];
     check_array.forEach(function (value, index, array) {
         if (!reg.test(value.val())) {
             value.after("<p name='input_error' class='alert_font'>输入不合法</p>");
@@ -315,7 +315,7 @@ function save_attr_conv2d_layer(button) {
     }
     //var activity = form.find("[name = \"activity\"]").val();
     //var pool_way = form.find("[name = \"pool_way\"]").val();
-    window.localStorage.setItem(id, "{\"in_channels\":\"" + in_channels.val() + "\", \"out_channels\":\"" + out_channels.val() + "\", \"kernel_size\":\"" + kernel_size.val() + "\", " +
+    window.sessionStorage.setItem(id, "{\"in_channels\":\"" + in_channels.val() + "\", \"out_channels\":\"" + out_channels.val() + "\", \"kernel_size\":\"" + kernel_size.val() + "\", " +
         "\"stride\":\"" + stride.val() + "\", \"padding\":\"" + padding.val() + "\",\"activity\":\"" + activity + "\",\"pool_way\":\"" + pool_way + "\",\"pool_kernel_size\":\"" + pool_kernel_size.val() + "\"," +
         "\"pool_stride\":\"" + pool_stride.val() + "\",\"pool_padding\":\"" + pool_padding.val() + "\"}");
     $("#" + id).popover('hide');
