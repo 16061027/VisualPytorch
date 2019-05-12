@@ -4,6 +4,7 @@
 __pycache__/
 *.py[cod]
 
+.DS_Store
 ./VisualPytorch/.DS_Store
 ./VisualPytorch/NeuralNetwork/translate/.DS_Store
 # C extensions
