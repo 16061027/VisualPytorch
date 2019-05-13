@@ -411,7 +411,7 @@
             var net_id = query_object["id"];
             $.ajax({
                 type: 'GET',
-                url: gobalConfig.base_url + 'api/NeuralNetwork/network/' + net_id + '/',
+                url: 'api/NeuralNetwork/network/' + net_id + '/',
                 beforeSend: function (XMLHttpRequest) {
                     var token = window.sessionStorage.getItem('token');
                     if (token != null) {
@@ -478,7 +478,7 @@
         $.ajax({
             type: 'POST',
             data: "{\"name\":\"index\"}",
-            url: gobalConfig.base_url + 'api/journal/visit/',
+            url:  'api/journal/visit/',
             contentType: 'application/json; charset=UTF-8',
             beforeSend: function (XMLHttpRequest) {
                 var token = window.sessionStorage.getItem('token');
