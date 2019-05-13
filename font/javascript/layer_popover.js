@@ -4,23 +4,34 @@ function get_content(name,parid) {
         return "<form class=\"form-horizontal\" role=\"form\"><div class=\"form-group\">" +
     "                    <label class=\"col-sm-5 control-label\">shape</label>" +
     "                            <div class=\"col-sm-5\">" +
-    "                        <input type=\"text\" name='shape' class=\"form-control\" value=\""+eval('('+window.localStorage.getItem(parid)+')')["shape"]+"\" placeholder=\"1\">" +
+    "                        <input type=\"text\" name='shape' class=\"form-control\" value=\""+eval('('+window.sessionStorage.getItem(parid)+')')["shape"]+"\" placeholder=\"1\">" +
     "                    </div>" +
     "                </div>" +
     "<button type=\"button\" class=\"btn btn-success\" style=\"width: 150px\" id=\"popover_"+parid+"\" onclick=\"save_attr_view_layer(this)\">确认</button>"+
     "                </form>";
     }
 
-    console.log(eval('('+window.localStorage.getItem(parid)+')'));
+    if(name == "concatenate_layer"){
+        return "<form class=\"form-horizontal\" role=\"form\"><div class=\"form-group\">" +
+    "                    <label class=\"col-sm-5 control-label\">dim</label>" +
+    "                            <div class=\"col-sm-5\">" +
+    "                        <input type=\"text\" name='dim' class=\"form-control\" value=\""+eval('('+window.sessionStorage.getItem(parid)+')')["dim"]+"\" placeholder=\"1\">" +
+    "                    </div>" +
+    "                </div>" +
+    "<button type=\"button\" class=\"btn btn-success\" style=\"width: 150px\" id=\"popover_"+parid+"\" onclick=\"save_attr_concatenate_layer(this)\">确认</button>"+
+    "                </form>";
+    }
+
+    console.log(eval('('+window.sessionStorage.getItem(parid)+')'));
     if(name == "linear_layer"){
         return "<form class=\"form-horizontal\" role=\"form\"><div class=\"form-group\">" +
-    "                    <label class=\"col-sm-5 control-label\">in_channel</label>" +
+    "                    <label class=\"col-sm-5 control-label\">in_channels</label>" +
     "                            <div class=\"col-sm-5\">" +
-    "                        <input type=\"text\" name='in_channel' class=\"form-control\" value=\""+eval('('+window.localStorage.getItem(parid)+')')["in_channel"]+"\">" +
+    "                        <input type=\"text\" name='in_channels' class=\"form-control\" value=\""+eval('('+window.sessionStorage.getItem(parid)+')')["in_channels"]+"\">" +
     "                    </div>" +
-    "                    <label class=\"col-sm-5 control-label\">out_channel</label>" +
+    "                    <label class=\"col-sm-5 control-label\">out_channels</label>" +
     "                            <div class=\"col-sm-5\">" +
-    "                        <input type=\"text\" name='out_channel' class=\"form-control\" value=\""+eval('('+window.localStorage.getItem(parid)+')')["out_channel"]+"\">" +
+    "                        <input type=\"text\" name='out_channels' class=\"form-control\" value=\""+eval('('+window.sessionStorage.getItem(parid)+')')["out_channels"]+"\">" +
     "                    </div>" +
     "                </div>" +
     "<button type=\"button\" class=\"btn btn-success\" style=\"width: 150px\" id=\"popover_"+parid+"\" onclick=\"save_attr_linear_layer(this)\">确认</button>"+
@@ -29,25 +40,25 @@ function get_content(name,parid) {
 
     if(name == "conv1d_layer"){
         return "<form class=\"form-horizontal\" role=\"form\"><div class=\"form-group\">" +
-    "                    <label class=\"col-sm-5 control-label\">in_channel</label>" +
+    "                    <label class=\"col-sm-5 control-label\">in_channels</label>" +
     "                            <div class=\"col-sm-5\">" +
-    "                        <input type=\"text\" name='in_channel' class=\"form-control\" value=\""+eval('('+window.localStorage.getItem(parid)+')')["in_channel"]+"\">" +
+    "                        <input type=\"text\" name='in_channels' class=\"form-control\" value=\""+eval('('+window.sessionStorage.getItem(parid)+')')["in_channels"]+"\">" +
     "                    </div>" +
-    "                    <label class=\"col-sm-5 control-label\">out_channel</label>" +
+    "                    <label class=\"col-sm-5 control-label\">out_channels</label>" +
     "                            <div class=\"col-sm-5\">" +
-    "                        <input type=\"text\" name='out_channel' class=\"form-control\" value=\""+eval('('+window.localStorage.getItem(parid)+')')["out_channel"]+"\">" +
+    "                        <input type=\"text\" name='out_channels' class=\"form-control\" value=\""+eval('('+window.sessionStorage.getItem(parid)+')')["out_channels"]+"\">" +
     "                    </div>" +
     "                    <label class=\"col-sm-5 control-label\">kernel_size</label>" +
     "                            <div class=\"col-sm-5\">" +
-    "                        <input type=\"text\" name='kernel_size' class=\"form-control\" value=\""+eval('('+window.localStorage.getItem(parid)+')')["kernel_size"]+"\">" +
+    "                        <input type=\"text\" name='kernel_size' class=\"form-control\" value=\""+eval('('+window.sessionStorage.getItem(parid)+')')["kernel_size"]+"\">" +
     "                    </div>" +
     "                    <label class=\"col-sm-5 control-label\">stride</label>" +
     "                            <div class=\"col-sm-5\">" +
-    "                        <input type=\"text\" name='stride' class=\"form-control\" value=\""+eval('('+window.localStorage.getItem(parid)+')')["stride"]+"\">" +
+    "                        <input type=\"text\" name='stride' class=\"form-control\" value=\""+eval('('+window.sessionStorage.getItem(parid)+')')["stride"]+"\">" +
     "                    </div>" +
     "                    <label class=\"col-sm-5 control-label\">padding</label>" +
     "                            <div class=\"col-sm-5\">" +
-    "                        <input type=\"text\" name='padding' class=\"form-control\" value=\""+eval('('+window.localStorage.getItem(parid)+')')["padding"]+"\">" +
+    "                        <input type=\"text\" name='padding' class=\"form-control\" value=\""+eval('('+window.sessionStorage.getItem(parid)+')')["padding"]+"\">" +
     "                    </div>" +
     "                    <label class=\"col-sm-5 control-label\">activity</label>" +
     "                            <div class=\"col-sm-5\">" +
@@ -62,7 +73,7 @@ function get_content(name,parid) {
     "                    </div>" +
     "                    <label class=\"col-sm-5 control-label\">pool_way</label>" +
     "                            <div class=\"col-sm-5\">" +
-    "                        <select id=\""+parid+"pool_way\" class=\"form-control\">\n" +
+    "                        <select id=\""+parid+"pool_way\" name='pool_way' class=\"form-control\">\n" +
     "                            <option value=\"None\">None</option>\n" +
     "                            <option value=\"torch.nn.functional.max_pool1d\">max_pool1d</option>\n" +
     "                            <option value=\"torch.nn.functional.max_pool2d\">max_pool2d</option>\n" +
@@ -72,6 +83,18 @@ function get_content(name,parid) {
     "                            <option value=\"torch.nn.AvgPool3d\">AvgPool3d</option>\n" +
     "                        </select>" +
     "                    </div>" +
+    "                    <label class=\"col-sm-5 control-label\">pool_kernel_size</label>" +
+    "                            <div class=\"col-sm-5\">" +
+    "                        <input type=\"text\" id=\""+parid+"pool_kernel_size\" name='pool_kernel_size' disabled=true class=\"form-control\" value=\""+eval('('+window.sessionStorage.getItem(parid)+')')["pool_kernel_size"]+"\">" +
+    "                    </div>" +
+    "                    <label class=\"col-sm-5 control-label\">pool_stride</label>" +
+    "                            <div class=\"col-sm-5\">" +
+    "                        <input type=\"text\" id=\""+parid+"pool_stride\" name='pool_stride' disabled=true class=\"form-control\" value=\""+eval('('+window.sessionStorage.getItem(parid)+')')["pool_stride"]+"\">" +
+    "                    </div>" +
+    "                    <label class=\"col-sm-5 control-label\">pool_padding</label>" +
+    "                            <div class=\"col-sm-5\">" +
+    "                        <input type=\"text\" id=\""+parid+"pool_padding\" name='pool_padding' disabled=true class=\"form-control\" value=\""+eval('('+window.sessionStorage.getItem(parid)+')')["pool_padding"]+"\">" +
+    "                    </div>" +
     "                </div>" +
     "<button type=\"button\" class=\"btn btn-success\" style=\"width: 150px\" id=\"popover_"+parid+"\" onclick=\"save_attr_conv1d_layer(this)\">确认</button>"+
     "                </form>";
@@ -79,25 +102,25 @@ function get_content(name,parid) {
 
     if(name == "conv2d_layer"){
         return "<form class=\"form-horizontal\" role=\"form\"><div class=\"form-group\">" +
-    "                    <label class=\"col-sm-5 control-label\">in_channel</label>" +
+    "                    <label class=\"col-sm-5 control-label\">in_channels</label>" +
     "                            <div class=\"col-sm-5\">" +
-    "                        <input type=\"text\" name='in_channel' class=\"form-control\" value=\""+eval('('+window.localStorage.getItem(parid)+')')["in_channel"]+"\">" +
+    "                        <input type=\"text\" name='in_channels' class=\"form-control\" value=\""+eval('('+window.sessionStorage.getItem(parid)+')')["in_channels"]+"\">" +
     "                    </div>" +
-    "                    <label class=\"col-sm-5 control-label\">out_channel</label>" +
+    "                    <label class=\"col-sm-5 control-label\">out_channels</label>" +
     "                            <div class=\"col-sm-5\">" +
-    "                        <input type=\"text\" name='out_channel' class=\"form-control\" value=\""+eval('('+window.localStorage.getItem(parid)+')')["out_channel"]+"\">" +
+    "                        <input type=\"text\" name='out_channels' class=\"form-control\" value=\""+eval('('+window.sessionStorage.getItem(parid)+')')["out_channels"]+"\">" +
     "                    </div>" +
     "                    <label class=\"col-sm-5 control-label\">kernel_size</label>" +
     "                            <div class=\"col-sm-5\">" +
-    "                        <input type=\"text\" name='kernel_size' class=\"form-control\" value=\""+eval('('+window.localStorage.getItem(parid)+')')["kernel_size"]+"\">" +
+    "                        <input type=\"text\" name='kernel_size' class=\"form-control\" value=\""+eval('('+window.sessionStorage.getItem(parid)+')')["kernel_size"]+"\">" +
     "                    </div>" +
     "                    <label class=\"col-sm-5 control-label\">stride</label>" +
     "                            <div class=\"col-sm-5\">" +
-    "                        <input type=\"text\" name='stride' class=\"form-control\" value=\""+eval('('+window.localStorage.getItem(parid)+')')["stride"]+"\">" +
+    "                        <input type=\"text\" name='stride' class=\"form-control\" value=\""+eval('('+window.sessionStorage.getItem(parid)+')')["stride"]+"\">" +
     "                    </div>" +
     "                    <label class=\"col-sm-5 control-label\">padding</label>" +
     "                            <div class=\"col-sm-5\">" +
-    "                        <input type=\"text\" name='padding' class=\"form-control\" value=\""+eval('('+window.localStorage.getItem(parid)+')')["padding"]+"\">" +
+    "                        <input type=\"text\" name='padding' class=\"form-control\" value=\""+eval('('+window.sessionStorage.getItem(parid)+')')["padding"]+"\">" +
     "                    </div>" +
     "                    <label class=\"col-sm-5 control-label\">activity</label>" +
     "                            <div class=\"col-sm-5\">" +
@@ -112,7 +135,7 @@ function get_content(name,parid) {
     "                    </div>" +
     "                    <label class=\"col-sm-5 control-label\">pool_way</label>" +
     "                            <div class=\"col-sm-5\">" +
-    "                        <select id=\""+parid+"pool_way\" class=\"form-control\">\n" +
+    "                        <select id=\""+parid+"pool_way\" name='pool_way' class=\"form-control\">\n" +
     "                            <option value=\"None\">None</option>\n" +
     "                            <option value=\"torch.nn.functional.max_pool1d\">max_pool1d</option>\n" +
     "                            <option value=\"torch.nn.functional.max_pool2d\">max_pool2d</option>\n" +
@@ -121,6 +144,18 @@ function get_content(name,parid) {
     "                            <option value=\"torch.nn.AvgPool2d\">AvgPool2d</option>\n" +
     "                            <option value=\"torch.nn.AvgPool3d\">AvgPool3d</option>\n" +
     "                        </select>" +
+    "                    </div>" +
+    "                    <label class=\"col-sm-5 control-label\">pool_kernel_size</label>" +
+    "                            <div class=\"col-sm-5\">" +
+    "                        <input type=\"text\" id=\""+parid+"pool_kernel_size\" name='pool_kernel_size' disabled=true class=\"form-control\" value=\""+eval('('+window.sessionStorage.getItem(parid)+')')["pool_kernel_size"]+"\">" +
+    "                    </div>" +
+    "                    <label class=\"col-sm-5 control-label\">pool_stride</label>" +
+    "                            <div class=\"col-sm-5\">" +
+    "                        <input type=\"text\" id=\""+parid+"pool_stride\" name='pool_stride' disabled=true class=\"form-control\" value=\""+eval('('+window.sessionStorage.getItem(parid)+')')["pool_stride"]+"\">" +
+    "                    </div>" +
+    "                    <label class=\"col-sm-5 control-label\">pool_padding</label>" +
+    "                            <div class=\"col-sm-5\">" +
+    "                        <input type=\"text\" id=\""+parid+"pool_padding\" name='pool_padding' disabled=true class=\"form-control\" value=\""+eval('('+window.sessionStorage.getItem(parid)+')')["pool_padding"]+"\">" +
     "                    </div>" +
     "                </div>" +
     "<button type=\"button\" class=\"btn btn-success\" style=\"width: 150px\" id=\"popover_"+parid+"\" onclick=\"save_attr_conv2d_layer(this)\">确认</button>"+

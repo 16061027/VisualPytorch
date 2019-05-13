@@ -25,6 +25,10 @@
     $("#header").load("header.html")
 </script>
 <body>
+<div class="container-fluid">
+<div>
+    <button  type="button" class="btn btn-warning" style="margin-top: 30px;margin-left: 130px" onclick="location.href='http://127.0.0.1:8000/api/NeuralNetwork/download/'">downloadtest</button>
+</div>
 
 <ul class="nav nav-tabs" id="codeTab" style="margin: 0 auto;margin-top: 30px; width: 80%">
   <li class="active"><a href="#Main" data-toggle="tab">Main.py</a></li>
@@ -43,6 +47,9 @@
         <pre id="ops_code"></pre>
 	</div>
 </div>
+    </div>
+
+
 </body>
 
 <script>
@@ -54,7 +61,7 @@
 </script>
 <script>
     $(document).ready(function () {
-        var code = eval('('+window.localStorage.getItem("code")+')');
+        var code = eval('('+window.sessionStorage.getItem("code")+')');
                 for(var i=0;i<code["Main"].length;i++){
                     $("#main_code").append(code["Main"][i]+"<br>");
                 }

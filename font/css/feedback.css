@@ -1,0 +1,118 @@
+
+body {
+  background:#F5F5F5;
+}
+
+#feed-body{
+    padding-top:30px;
+    background-color:#F5F5F5
+}
+
+.common-body{
+    box-sizing: content-box;
+}
+
+.fd-container{
+    margin-left:50px;
+    margin-right:50px;
+   /* margin-left: auto;
+    margin-right: auto;*/
+}
+
+.left-body{
+    background-color:white;
+    width:60%;
+    height:450px;
+    float:left;
+   /* position:absolute;*/
+}
+
+.right-body{
+    width:33%;
+    height:450px;
+    float:left;
+    background-color: white;
+    margin-left: 80px;
+    /*position:absolute;*/
+}
+
+.right-body-fd{
+    padding:0px;
+}
+
+.fd-header{
+    /*height: 40px;*/
+    padding-top: 5px;
+    padding-bottom:5px;
+    padding-left:15px;
+    padding-right:15px;
+    font-family:"Times New Roman", serif;
+}
+
+.fd-header-h3{
+    line-height: 30px;
+    font-size: 20px;
+}
+
+.fd-form-question{
+    margin-bottom:15px;
+}
+
+.form-width{
+   /**width:66.66%;*/
+}
+
+.question{
+    text-align: right;
+    font-size:14px;
+    float:left;
+    margin-top:20px;
+    margin-left:35px;
+    padding:5px;
+}
+
+.question-describe{
+    float:left;
+    padding:5px;
+    margin-top:20px;
+    overthrow:scroll;
+}
+
+.contact-describe{
+    float:left;
+    margin-top:20px;
+    padding:5px;
+}
+
+input::-webkit-input-placeholder { /* WebKit browsers */
+    font-size:10px;
+}
+
+input:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    font-size:10px;
+}
+
+input::-moz-placeholder { /* Mozilla Firefox 19+ */
+    font-size:10px;
+}
+
+input:-ms-input-placeholder { /* Internet Explorer 10+ */
+    font-size:10px;
+}
+
+input.text{
+    width:100%;
+}
+
+.footer{
+  background-color: #f1f1f1;
+  padding: 10px;
+  padding-top:15px;
+  text-align: center;
+  height: 75px;
+  width: 100%;
+  position: fixed;
+  bottom: 0px;
+  font-size:12px;
+}
+
