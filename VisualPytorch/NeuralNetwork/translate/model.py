@@ -50,3 +50,8 @@ class Vector:
 		return self.n == 0
 	def size(self):
 		return self.n
+
+class GLOBAL:
+    def __init__(self):
+        self.graph = {}
+        self.done = {}

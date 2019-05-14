@@ -20,8 +20,8 @@ exception defined as follows:
 
 import numpy as np
 import sys
-from .model import Node, Vector
-from .exception import *
+from model import Node, Vector, GLOBAL
+from exception import *
 import queue
 
 #global parameters
@@ -42,9 +42,10 @@ multi_layer = ['element_wise_add_layer', 'concatenate_layer']
 conv_layer_para = ['in_channels', 'out_channels', 'kernel_size', 'stride', 'padding']
 
 #model
-#graph = Vector()
-graph = {} #record the node information
-done = {}
+#GL.graph = Vector()
+
+
+GL = GLOBAL()#global parameters
 
 def error(str):
 
@@ -53,8 +54,8 @@ def error(str):
 def init():
 	for key in layer_used_time:
 		layer_used_time[key] = 0
-	graph = {} #init
-	done = {}
+	GL.graph = {} #init
+	GL.done = {}
 
 def generate_n_tap(n):
     ans = ''
@@ -254,33 +255,33 @@ def find_start_id(nets):
 
 def add_node_information_about_conv_layer(edge, node):
     try:
-        graph[edge['target']['id']].in_channels = int(node['in_channels'])
+        GL.graph[edge['target']['id']].in_channels = int(node['in_channels'])
     except:
         raise ModelError('invalid in_channels of convolution layer')
 
     try:
-        graph[edge['target']['id']].out_channels = int(node['out_channels'])
+        GL.graph[edge['target']['id']].out_channels = int(node['out_channels'])
     except:
         raise ModelError('invalid out_channels of convolution layer')
 
     try:
-        graph[edge['target']['id']].kernel_size = int(node['kernel_size'])
+        GL.graph[edge['target']['id']].kernel_size = int(node['kernel_size'])
     except:
         raise ModelError('invalid kernel_size of convolution layer')
 
     try:
-        graph[edge['target']['id']].stride = int(node['stride'])
+        GL.graph[edge['target']['id']].stride = int(node['stride'])
     except:
         raise ModelError('invalid stride of convolution layer')
 
     try:
-        graph[edge['target']['id']].padding = int(node['padding'])
+        GL.graph[edge['target']['id']].padding = int(node['padding'])
     except:
         raise ModelError('invalid padding of convolution layer')
 
 
-    graph[edge['target']['id']].activity = node['activity']
-    graph[edge['target']['id']].pool_way = node['pool_way']
+    GL.graph[edge['target']['id']].activity = node['activity']
+    GL.graph[edge['target']['id']].pool_way = node['pool_way']
 
 
 def get_next_nodes_and_update_pre_nodes(nets, nets_conn, cur_id):
@@ -292,9 +293,9 @@ def get_next_nodes_and_update_pre_nodes(nets, nets_conn, cur_id):
         if edge['source']['id'] == cur_id:
             next_nodes = np.append(next_nodes, edge['target']['id'])
 
-            if edge['target']['id'] not in done.keys():
-                graph[edge['target']['id']] = Node(id = edge['target']['id'])
-                graph[edge['target']['id']].name = nets[edge['target']['id']]['name']
+            if edge['target']['id'] not in GL.done.keys():
+                GL.graph[edge['target']['id']] = Node(id = edge['target']['id'])
+                GL.graph[edge['target']['id']].name = nets[edge['target']['id']]['name']
                 node = nets[edge['target']['id']]['attribute']
 
                 if nets[edge['target']['id']]['name'] in ['conv2d_layer', 'conv1d_layer']:
@@ -305,32 +306,32 @@ def get_next_nodes_and_update_pre_nodes(nets, nets_conn, cur_id):
                             shape = np.array(list(map(int, nets[edge['target']['id']]['attribute']['shape'].split(','))))
                         except:
                             raise ModelError('%s: invalid view_layer shape' % nets[edge['target']['id']]['attribute']['shape'])
-                        graph[edge['target']['id']].data_shape = shape
+                        GL.graph[edge['target']['id']].data_shape = shape
 
                 if nets[edge['target']['id']]['name'] == 'concatenate_layer':
                     try:
-                        graph[edge['target']['id']].cat_dim = int(node['dim'])
+                        GL.graph[edge['target']['id']].cat_dim = int(node['dim'])
                     except:
                         raise ModelError('%s: invalid concatenate dimension' % node['dim'])
 
-                done[edge['target']['id']] = False	
+                GL.done[edge['target']['id']] = False	
 
         if edge['target']['id'] == cur_id:
             fa_nodes = np.append(fa_nodes, edge['source']['id'])
-            if not done[edge['source']['id']]:
+            if not GL.done[edge['source']['id']]:
             	flag = False
 
-    graph[cur_id].next = next_nodes
-    graph[cur_id].fa = fa_nodes
+    GL.graph[cur_id].next = next_nodes
+    GL.graph[cur_id].fa = fa_nodes
 
     name = nets[cur_id]['name']
     if name in start_layer or name in norm_layer:
-        if name == 'start' and len(graph[cur_id].fa) != 0:
+        if name == 'start' and len(GL.graph[cur_id].fa) != 0:
             raise ModelError('start: can not have father nodes')
-        elif name != 'start' and len(graph[cur_id].fa) != 1:
+        elif name != 'start' and len(GL.graph[cur_id].fa) != 1:
             raise ModelError('%s: should have one and only one father node' % name)
      
-    if name in multi_layer and len(graph[cur_id].fa) == 0:
+    if name in multi_layer and len(GL.graph[cur_id].fa) == 0:
         raise ModelError('%s: should have one or more father nodes' % name)    
 
     
@@ -339,25 +340,25 @@ def get_next_nodes_and_update_pre_nodes(nets, nets_conn, cur_id):
 
 def add_concatenate_layer(init_func, forward_func, cur_id, out_data):
     #check shape first
-    dim = graph[cur_id].cat_dim
-    array_of_inputs = graph[graph[cur_id].fa[0]].data
-    for indx in range(1, len(graph[cur_id].fa)):
+    dim = GL.graph[cur_id].cat_dim
+    array_of_inputs = GL.graph[GL.graph[cur_id].fa[0]].data
+    for indx in range(1, len(GL.graph[cur_id].fa)):
         #check shape
-        array_of_inputs = array_of_inputs + ', ' + graph[graph[cur_id].fa[indx]].data      
+        array_of_inputs = array_of_inputs + ', ' + GL.graph[GL.graph[cur_id].fa[indx]].data      
     #check dim
-    code = generate_n_tap(2) + out_data + ' = torch.cat((' + array_of_inputs + '), ' + str(graph[cur_id].cat_dim) + ')'
+    code = generate_n_tap(2) + out_data + ' = torch.cat((' + array_of_inputs + '), ' + str(GL.graph[cur_id].cat_dim) + ')'
 
     return init_func, np.append(forward_func, code)
 
 
 def add_element_wise_add_layer(init_func, forward_func, cur_id, out_data):
     #error not ok
-    if len(graph[cur_id].fa) == 0:
+    if len(GL.graph[cur_id].fa) == 0:
         raise ModelError('element wise layer has no inputs')
     
-    array_of_nodes = '[' + graph[graph[cur_id].fa[0]].data
-    for indx in range(1, len(graph[cur_id].fa)):
-        array_of_nodes = array_of_nodes + ', ' + graph[graph[cur_id].fa[indx]].data
+    array_of_nodes = '[' + GL.graph[GL.graph[cur_id].fa[0]].data
+    for indx in range(1, len(GL.graph[cur_id].fa)):
+        array_of_nodes = array_of_nodes + ', ' + GL.graph[GL.graph[cur_id].fa[indx]].data
 
     array_of_nodes = array_of_nodes + ']'
     code = generate_n_tap(2) + out_data + ' = element_wise_add(' + array_of_nodes + ')'
@@ -372,8 +373,8 @@ def make_graph(nets, nets_conn, init_func, forward_func):
 
     Q = queue.Queue()
     #Q.put(start_id)
-    graph[start_id] = Node(id = start_id, name = 'start', data = 'x_data')
-    done[start_id] = True
+    GL.graph[start_id] = Node(id = start_id, name = 'start', data = 'x_data')
+    GL.done[start_id] = True
 
     cur_id = start_id
 
@@ -385,7 +386,7 @@ def make_graph(nets, nets_conn, init_func, forward_func):
 
     while not Q.empty():
         cur_id = Q.get()
-        if done[cur_id]:
+        if GL.done[cur_id]:
             continue
         next_nodes, flag = get_next_nodes_and_update_pre_nodes(nets, nets_conn, cur_id)
         if cur_id != start_id and flag is False:
@@ -397,18 +398,18 @@ def make_graph(nets, nets_conn, init_func, forward_func):
             Q.put(node_id)
         #generate codes and update Node.fa[]
         out_data = generate_variable_name(nets[cur_id]['name'])
-        graph[cur_id].data = out_data
+        GL.graph[cur_id].data = out_data
         if nets[cur_id]['name'] == 'concatenate_layer':
             init_func, forward_func = add_concatenate_layer(init_func, forward_func, cur_id, out_data)
         elif nets[cur_id]['name'] == 'element_wise_add_layer':
             init_func, forward_func = add_element_wise_add_layer(init_func, forward_func, cur_id, out_data)
         else:
-            in_data = graph[graph[cur_id].fa[0]].data
+            in_data = GL.graph[GL.graph[cur_id].fa[0]].data
         	
             init_func, forward_func = add_layer_except_add_and_concate(init_func, forward_func, in_data, out_data, nets[cur_id])
         update_layer_used_time(nets[cur_id]['name'])
 
-        done[cur_id] = True
+        GL.done[cur_id] = True
 
     return init_func, forward_func
 
@@ -424,12 +425,12 @@ def add_net_info(nets, nets_conn):
 
     #add return statement to forward_func
     ret_state = None
-    for node_id in graph:
-        if len(graph[node_id].next) == 0:
+    for node_id in GL.graph:
+        if len(GL.graph[node_id].next) == 0:
             if ret_state is None: 
-                ret_state = graph[node_id].data
+                ret_state = GL.graph[node_id].data
             else:
-                ret_state = ret_state + ', ' + graph[node_id].data
+                ret_state = ret_state + ', ' + GL.graph[node_id].data
     ret_state = generate_n_tap(2) + 'return ' + ret_state
 
     return np.concatenate((init_func, np.append(forward_func, ret_state)))
@@ -515,9 +516,5 @@ def main_func(edge_record):
     Ops = np.concatenate((generate_copyright_information('Ops'), Ops))
 
     return Main, Model, Ops
-
-
-
-
 
 
