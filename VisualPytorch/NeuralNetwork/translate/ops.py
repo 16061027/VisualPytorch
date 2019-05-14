@@ -20,7 +20,7 @@ exception defined as follows:
 
 import numpy as np
 import sys
-from model import Node, Vector, GLOBAL
+from model import Node, Vector, GLOB
 from exception import *
 import queue
 
@@ -45,7 +45,7 @@ conv_layer_para = ['in_channels', 'out_channels', 'kernel_size', 'stride', 'padd
 #GL.graph = Vector()
 
 
-GL = GLOBAL()#global parameters
+GL = GLOB()#global parameters
 
 def error(str):
 

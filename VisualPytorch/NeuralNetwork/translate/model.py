@@ -51,7 +51,7 @@ class Vector:
 	def size(self):
 		return self.n
 
-class GLOBAL:
+class GLOB:
     def __init__(self):
         self.graph = {}
         self.done = {}
