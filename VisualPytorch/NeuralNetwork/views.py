@@ -48,14 +48,14 @@ class NetworkList(APIView):
 class NetworkDetail(APIView):
     permission_classes = (ChangeModel,)
 
-    def get_object(self, pk, name):
+    def get_object(self, pk):
         try:
-            return Network.objects.get(Q(pk=pk) | Q(name=name))
+            return Network.objects.get(pk=pk)
         except Network.DoesNotExist:
             raise Http404
 
     def get(self, request, pk):
-        net = self.get_object(pk, request.data["name"])
+        net = self.get_object(pk)
         serializer = NetworkSerializer(net)
         return Response(serializer.data)
 
