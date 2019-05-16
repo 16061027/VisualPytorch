@@ -25,18 +25,18 @@ from exception import *
 import queue
 
 #global parameters
-layer_used_time = {'view_layer': 0, 'linear_layer': 0, 'conv1d_layer': 0, 'conv2d_layer': 0, 'element_wise_add_layer':0, 'concatenate_layer':0}
-nn = 'torch.nn.'
-nn_linear = 'torch.nn.Linear'
-nn_conv1d = 'torch.nn.Conv1d'
-nn_conv2d = 'torch.nn.Conv2d'
-nn_view = '.view'
-nn_sequential = 'torch.nn.Sequential'
+# GL.layer_used_time = {'view_layer': 0, 'linear_layer': 0, 'conv1d_layer': 0, 'conv2d_layer': 0, 'element_wise_add_layer':0, 'concatenate_layer':0}
+# GL.nn_linear = 'torch.nn.Linear'
+# GL.nn_conv1d = 'torch.nn.Conv1d'
+# GL.nn_conv2d = 'torch.nn.Conv2d'
+# GL.nn_view = '.view'
+# GL.nn_sequential = 'torch.nn.Sequential'
 
-#array of layers
-start_layer = ['start']
-norm_layer = ['conv1d_layer', 'conv2d_layer', 'view_layer', 'linaer_layer']
-multi_layer = ['element_wise_add_layer', 'concatenate_layer']
+# #array of layers
+# GL.start_layer = ['start']
+# GL.norm_layer = ['conv1d_layer', 'conv2d_layer', 'view_layer', 'linaer_layer']
+# GL.multi_layer = ['element_wise_add_layer', 'concatenate_layer']
+# GL.layers_except_start = GL.norm_layer + GL.multi_layer
 
 #parameters of convolutional layer
 conv_layer_para = ['in_channels', 'out_channels', 'kernel_size', 'stride', 'padding']
@@ -52,8 +52,8 @@ def error(str):
     return None
 
 def init():
-	for key in layer_used_time:
-		layer_used_time[key] = 0
+	for key in GL.layer_used_time:
+		GL.layer_used_time[key] = 0
 	GL.graph = {} #init
 	GL.done = {}
 
@@ -90,7 +90,7 @@ def add_static_info(Main, glob):
 def generate_variable_name(layer_name):
     cnt = 0
     try:
-        cnt = layer_used_time[layer_name]
+        cnt = GL.layer_used_time[layer_name]
     except:
         raise ModelError('%s: No such layer' % layer_name)
         sys.exit(1)
@@ -112,9 +112,9 @@ def add_init_info():
 
     return ans
 
-def update_layer_used_time(layer):
+def update_GL_layer_used_time(layer):
     try:
-        layer_used_time[layer] = layer_used_time[layer] + 1
+        GL.layer_used_time[layer] = GL.layer_used_time[layer] + 1
     except:
         raise ModelError('%s: No such layer' % layer_name)
         sys.exit(1)
@@ -124,7 +124,7 @@ def generate_layer_name(layer_name):
     ans = 'self.' + layer_name
     cnt = 0
     try:
-        cnt = layer_used_time[layer_name]
+        cnt = GL.layer_used_time[layer_name]
     except:
         raise ModelError('%s: No such layer' % layer_name)
         sys.exit(1)
@@ -142,7 +142,7 @@ def add_linear_to_init_forward(init, forward, in_data, out_data, node):
     in_c = str(node['attribute']['in_channels'])
     out_c = str(node['attribute']['out_channels'])
 
-    init_tmp = generate_n_tap(2) + self_layer + ' = ' + nn_linear + '(' + in_c + ', ' + out_c + ')'
+    init_tmp = generate_n_tap(2) + self_layer + ' = ' + GL.nn_linear + '(' + in_c + ', ' + out_c + ')'
     init = np.append(init, init_tmp)
 
     return init, forward
@@ -165,7 +165,7 @@ def add_view_to_init_forward(init, forward, in_data, out_data, node):
     #add shape checking of reshape layer  
 
 
-    forward_tmp = generate_n_tap(2) + out_data + ' = ' + in_data + nn_view + '(' + shape_str + ')'
+    forward_tmp = generate_n_tap(2) + out_data + ' = ' + in_data + GL.nn_view + '(' + shape_str + ')'
     forward = np.append(forward, forward_tmp)
 
     return init, forward
@@ -196,14 +196,14 @@ def add_convlayer_to_init_forward(init, forward, in_data, out_data, node):
     forward_tmp = generate_n_tap(2) + out_data + ' = ' + self_layer + '(' + in_data + ')'
     forward = np.append(forward, forward_tmp)
     # add init
-    init_tmp = generate_n_tap(2) + self_layer + ' = ' + nn_sequential + '('
+    init_tmp = generate_n_tap(2) + self_layer + ' = ' + GL.nn_sequential + '('
     init = np.append(init, init_tmp)
 
     init_tmp = generate_n_tap(3)
     if node['name'] == 'conv1d_layer':
-        init_tmp = init_tmp + nn_conv1d + '('
+        init_tmp = init_tmp + GL.nn_conv1d + '('
     elif node['name'] == 'conv2d_layer':
-        init_tmp = init_tmp + nn_conv2d + '('
+        init_tmp = init_tmp + GL.nn_conv2d + '('
     else:
         raise ModelError('%s: No such convolution layer' % node['name'])
         sys.exit(1)
@@ -325,13 +325,13 @@ def get_next_nodes_and_update_pre_nodes(nets, nets_conn, cur_id):
     GL.graph[cur_id].fa = fa_nodes
 
     name = nets[cur_id]['name']
-    if name in start_layer or name in norm_layer:
+    if name in GL.start_layer or name in GL.norm_layer:
         if name == 'start' and len(GL.graph[cur_id].fa) != 0:
             raise ModelError('start: can not have father nodes')
         elif name != 'start' and len(GL.graph[cur_id].fa) != 1:
             raise ModelError('%s: should have one and only one father node' % name)
      
-    if name in multi_layer and len(GL.graph[cur_id].fa) == 0:
+    if name in GL.multi_layer and len(GL.graph[cur_id].fa) == 0:
         raise ModelError('%s: should have one or more father nodes' % name)    
 
     
@@ -407,7 +407,7 @@ def make_graph(nets, nets_conn, init_func, forward_func):
             in_data = GL.graph[GL.graph[cur_id].fa[0]].data
         	
             init_func, forward_func = add_layer_except_add_and_concate(init_func, forward_func, in_data, out_data, nets[cur_id])
-        update_layer_used_time(nets[cur_id]['name'])
+        update_GL_layer_used_time(nets[cur_id]['name'])
 
         GL.done[cur_id] = True
 
@@ -423,6 +423,10 @@ def add_net_info(nets, nets_conn):
 
     init_func, forward_func = make_graph(nets, nets_conn, init_func, forward_func)
 
+    #add check for return
+    for key in GL.graph:
+        pass
+    
     #add return statement to forward_func
     ret_state = None
     for node_id in GL.graph:
@@ -516,5 +520,6 @@ def main_func(edge_record):
     Ops = np.concatenate((generate_copyright_information('Ops'), Ops))
 
     return Main, Model, Ops
+
 
 
