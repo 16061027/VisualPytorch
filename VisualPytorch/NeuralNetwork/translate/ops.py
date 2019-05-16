@@ -424,8 +424,9 @@ def add_net_info(nets, nets_conn):
     init_func, forward_func = make_graph(nets, nets_conn, init_func, forward_func)
 
     #add check for return
-    for key in GL.graph:
-        pass
+    for node in nets:
+        if node not in GL.graph or (nets[node]['name'] in GL.layers_except_start and len(GL.graph[node].fa) == 0):
+            raise ModelError('invalid layer')
     
     #add return statement to forward_func
     ret_state = None
@@ -521,5 +522,168 @@ def main_func(edge_record):
 
     return Main, Model, Ops
 
+test = {
+    "nets": {
+        "canvas_1": {
+            "name": "start",
+            "attribute": {
+                "start": "true"
+            },
+            "left": "350px",
+            "top": "163px"
+        },
+        "canvas_2": {
+            "name": "view_layer",
+            "attribute": {
+                "shape": "3"
+            },
+            "left": "325px",
+            "top": "307px"
+        },
+        "canvas_3": {
+            "name": "conv1d_layer",
+            "attribute": {
+                "in_channels": "2",
+                "out_channels": "32",
+                "kernel_size": "2",
+                "stride": "3",
+                "padding": "2",
+                "activity": "torch.nn.functional.leaky_relu",
+                "pool_way": "torch.nn.functional.max_pool1d"
+            },
+            "left": "590px",
+            "top": "312px"
+        },
+        "canvas_4": {
+            "name": "conv2d_layer",
+            "attribute": {
+                "in_channels": "2",
+                "out_channels": "3",
+                "kernel_size": "2",
+                "stride": "1",
+                "padding": "3",
+                "activity": "torch.nn.functional.tanh",
+                "pool_way": "torch.nn.AvgPool2d"
+            },
+            "left": "401px",
+            "top": "461px"
+        }, 
+        "canvas_5": {
+            "name": "element_wise_add_layer",
+            "attribute": {
+                "in_channels": "2",
+                "out_channels": "3",
+                "kernel_size": "2",
+                "stride": "1",
+                "padding": "3",
+                "activity": "torch.nn.functional.tanh",
+                "pool_way": "torch.nn.AvgPool2d"
+            },
+            "left": "401px",
+            "top": "461px"
+        }, 
+        "canvas_6": {
+            "name": "concatenate_layer",
+            "attribute": {
+                "dim": "0",
+                "out_channels": "3",
+                "kernel_size": "2",
+                "stride": "1",
+                "padding": "3",
+                "activity": "torch.nn.functional.tanh",
+                "pool_way": "torch.nn.AvgPool2d"
+            },
+            "left": "401px",
+            "top": "461px"
+        }
+    },
+    "nets_conn": [
+        {
+            "source": {
+                "id": "canvas_1",
+                "anchor_position": "Bottom"
+            },
+            "target": {
+                "id": "canvas_2",
+                "anchor_position": "Top"
+            }
+        },
+        {
+            "source": {
+                "id": "canvas_2",
+                "anchor_position": "Bottom"
+            },
+            "target": {
+                "id": "canvas_4",
+                "anchor_position": "Top"
+            }
+        },
+        {
+            "source": {
+                "id": "canvas_4",
+                "anchor_position": "Right"
+            },
+            "target": {
+                "id": "canvas_3",
+                "anchor_position": "Left"
+            }
+        }, 
+        {
+            "source": {
+                "id": "canvas_4",
+                "anchor_position": "Right"
+            },
+            "target": {
+                "id": "canvas_5",
+                "anchor_position": "Left"
+            }
+        }, 
+        {
+            "source": {
+                "id": "canvas_3",
+                "anchor_position": "Right"
+            },
+            "target": {
+                "id": "canvas_5",
+                "anchor_position": "Left"
+            }
+        }, 
+        {
+            "source": {
+                "id": "canvas_3",
+                "anchor_position": "Right"
+            },
+            "target": {
+                "id": "canvas_6",
+                "anchor_position": "Left"
+            }
+        }, 
+        {
+            "source": {
+                "id": "canvas_2",
+                "anchor_position": "Right"
+            },
+            "target": {
+                "id": "canvas_6",
+                "anchor_position": "Left"
+            }
+        }            
+    ],
+    "static": {
+        "epoch": "1",
+        "learning_rate": "0.5",
+        "batch_size": "1"
+    }
+}
 
+Main, Model, Ops = main_func(test)
+
+for m in Main:
+    print(m)
+
+for mo in Model:
+    print(mo)
+
+for o in Ops:
+    print(o)
 
