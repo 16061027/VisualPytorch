@@ -20,41 +20,42 @@ exception defined as follows:
 
 import numpy as np
 import sys
-from .model import Node, Vector
-from .exception import *
+from model import Node, Vector, GLOB
+from exception import *
 import queue
 
 #global parameters
-layer_used_time = {'view_layer': 0, 'linear_layer': 0, 'conv1d_layer': 0, 'conv2d_layer': 0, 'element_wise_add_layer':0, 'concatenate_layer':0}
-nn = 'torch.nn.'
-nn_linear = 'torch.nn.Linear'
-nn_conv1d = 'torch.nn.Conv1d'
-nn_conv2d = 'torch.nn.Conv2d'
-nn_view = '.view'
-nn_sequential = 'torch.nn.Sequential'
+# GL.layer_used_time = {'view_layer': 0, 'linear_layer': 0, 'conv1d_layer': 0, 'conv2d_layer': 0, 'element_wise_add_layer':0, 'concatenate_layer':0}
+# GL.nn_linear = 'torch.nn.Linear'
+# GL.nn_conv1d = 'torch.nn.Conv1d'
+# GL.nn_conv2d = 'torch.nn.Conv2d'
+# GL.nn_view = '.view'
+# GL.nn_sequential = 'torch.nn.Sequential'
 
-#array of layers
-start_layer = ['start']
-norm_layer = ['conv1d_layer', 'conv2d_layer', 'view_layer', 'linaer_layer']
-multi_layer = ['element_wise_add_layer', 'concatenate_layer']
+# #array of layers
+# GL.start_layer = ['start']
+# GL.norm_layer = ['conv1d_layer', 'conv2d_layer', 'view_layer', 'linaer_layer']
+# GL.multi_layer = ['element_wise_add_layer', 'concatenate_layer']
+# GL.layers_except_start = GL.norm_layer + GL.multi_layer
 
 #parameters of convolutional layer
 conv_layer_para = ['in_channels', 'out_channels', 'kernel_size', 'stride', 'padding']
 
 #model
-#graph = Vector()
-graph = {} #record the node information
-done = {}
+#GL.graph = Vector()
+
+
+GL = GLOB()#global parameters
 
 def error(str):
 
     return None
 
 def init():
-	for key in layer_used_time:
-		layer_used_time[key] = 0
-	graph = {} #init
-	done = {}
+	for key in GL.layer_used_time:
+		GL.layer_used_time[key] = 0
+	GL.graph = {} #init
+	GL.done = {}
 
 def generate_n_tap(n):
     ans = ''
@@ -89,7 +90,7 @@ def add_static_info(Main, glob):
 def generate_variable_name(layer_name):
     cnt = 0
     try:
-        cnt = layer_used_time[layer_name]
+        cnt = GL.layer_used_time[layer_name]
     except:
         raise ModelError('%s: No such layer' % layer_name)
         sys.exit(1)
@@ -111,9 +112,9 @@ def add_init_info():
 
     return ans
 
-def update_layer_used_time(layer):
+def update_GL_layer_used_time(layer):
     try:
-        layer_used_time[layer] = layer_used_time[layer] + 1
+        GL.layer_used_time[layer] = GL.layer_used_time[layer] + 1
     except:
         raise ModelError('%s: No such layer' % layer_name)
         sys.exit(1)
@@ -123,7 +124,7 @@ def generate_layer_name(layer_name):
     ans = 'self.' + layer_name
     cnt = 0
     try:
-        cnt = layer_used_time[layer_name]
+        cnt = GL.layer_used_time[layer_name]
     except:
         raise ModelError('%s: No such layer' % layer_name)
         sys.exit(1)
@@ -141,7 +142,7 @@ def add_linear_to_init_forward(init, forward, in_data, out_data, node):
     in_c = str(node['attribute']['in_channels'])
     out_c = str(node['attribute']['out_channels'])
 
-    init_tmp = generate_n_tap(2) + self_layer + ' = ' + nn_linear + '(' + in_c + ', ' + out_c + ')'
+    init_tmp = generate_n_tap(2) + self_layer + ' = ' + GL.nn_linear + '(' + in_c + ', ' + out_c + ')'
     init = np.append(init, init_tmp)
 
     return init, forward
@@ -164,7 +165,7 @@ def add_view_to_init_forward(init, forward, in_data, out_data, node):
     #add shape checking of reshape layer  
 
 
-    forward_tmp = generate_n_tap(2) + out_data + ' = ' + in_data + nn_view + '(' + shape_str + ')'
+    forward_tmp = generate_n_tap(2) + out_data + ' = ' + in_data + GL.nn_view + '(' + shape_str + ')'
     forward = np.append(forward, forward_tmp)
 
     return init, forward
@@ -195,14 +196,14 @@ def add_convlayer_to_init_forward(init, forward, in_data, out_data, node):
     forward_tmp = generate_n_tap(2) + out_data + ' = ' + self_layer + '(' + in_data + ')'
     forward = np.append(forward, forward_tmp)
     # add init
-    init_tmp = generate_n_tap(2) + self_layer + ' = ' + nn_sequential + '('
+    init_tmp = generate_n_tap(2) + self_layer + ' = ' + GL.nn_sequential + '('
     init = np.append(init, init_tmp)
 
     init_tmp = generate_n_tap(3)
     if node['name'] == 'conv1d_layer':
-        init_tmp = init_tmp + nn_conv1d + '('
+        init_tmp = init_tmp + GL.nn_conv1d + '('
     elif node['name'] == 'conv2d_layer':
-        init_tmp = init_tmp + nn_conv2d + '('
+        init_tmp = init_tmp + GL.nn_conv2d + '('
     else:
         raise ModelError('%s: No such convolution layer' % node['name'])
         sys.exit(1)
@@ -254,33 +255,33 @@ def find_start_id(nets):
 
 def add_node_information_about_conv_layer(edge, node):
     try:
-        graph[edge['target']['id']].in_channels = int(node['in_channels'])
+        GL.graph[edge['target']['id']].in_channels = int(node['in_channels'])
     except:
         raise ModelError('invalid in_channels of convolution layer')
 
     try:
-        graph[edge['target']['id']].out_channels = int(node['out_channels'])
+        GL.graph[edge['target']['id']].out_channels = int(node['out_channels'])
     except:
         raise ModelError('invalid out_channels of convolution layer')
 
     try:
-        graph[edge['target']['id']].kernel_size = int(node['kernel_size'])
+        GL.graph[edge['target']['id']].kernel_size = int(node['kernel_size'])
     except:
         raise ModelError('invalid kernel_size of convolution layer')
 
     try:
-        graph[edge['target']['id']].stride = int(node['stride'])
+        GL.graph[edge['target']['id']].stride = int(node['stride'])
     except:
         raise ModelError('invalid stride of convolution layer')
 
     try:
-        graph[edge['target']['id']].padding = int(node['padding'])
+        GL.graph[edge['target']['id']].padding = int(node['padding'])
     except:
         raise ModelError('invalid padding of convolution layer')
 
 
-    graph[edge['target']['id']].activity = node['activity']
-    graph[edge['target']['id']].pool_way = node['pool_way']
+    GL.graph[edge['target']['id']].activity = node['activity']
+    GL.graph[edge['target']['id']].pool_way = node['pool_way']
 
 
 def get_next_nodes_and_update_pre_nodes(nets, nets_conn, cur_id):
@@ -292,9 +293,9 @@ def get_next_nodes_and_update_pre_nodes(nets, nets_conn, cur_id):
         if edge['source']['id'] == cur_id:
             next_nodes = np.append(next_nodes, edge['target']['id'])
 
-            if edge['target']['id'] not in done.keys():
-                graph[edge['target']['id']] = Node(id = edge['target']['id'])
-                graph[edge['target']['id']].name = nets[edge['target']['id']]['name']
+            if edge['target']['id'] not in GL.done.keys():
+                GL.graph[edge['target']['id']] = Node(id = edge['target']['id'])
+                GL.graph[edge['target']['id']].name = nets[edge['target']['id']]['name']
                 node = nets[edge['target']['id']]['attribute']
 
                 if nets[edge['target']['id']]['name'] in ['conv2d_layer', 'conv1d_layer']:
@@ -305,32 +306,32 @@ def get_next_nodes_and_update_pre_nodes(nets, nets_conn, cur_id):
                             shape = np.array(list(map(int, nets[edge['target']['id']]['attribute']['shape'].split(','))))
                         except:
                             raise ModelError('%s: invalid view_layer shape' % nets[edge['target']['id']]['attribute']['shape'])
-                        graph[edge['target']['id']].data_shape = shape
+                        GL.graph[edge['target']['id']].data_shape = shape
 
                 if nets[edge['target']['id']]['name'] == 'concatenate_layer':
                     try:
-                        graph[edge['target']['id']].cat_dim = int(node['dim'])
+                        GL.graph[edge['target']['id']].cat_dim = int(node['dim'])
                     except:
                         raise ModelError('%s: invalid concatenate dimension' % node['dim'])
 
-                done[edge['target']['id']] = False	
+                GL.done[edge['target']['id']] = False	
 
         if edge['target']['id'] == cur_id:
             fa_nodes = np.append(fa_nodes, edge['source']['id'])
-            if not done[edge['source']['id']]:
+            if not GL.done[edge['source']['id']]:
             	flag = False
 
-    graph[cur_id].next = next_nodes
-    graph[cur_id].fa = fa_nodes
+    GL.graph[cur_id].next = next_nodes
+    GL.graph[cur_id].fa = fa_nodes
 
     name = nets[cur_id]['name']
-    if name in start_layer or name in norm_layer:
-        if name == 'start' and len(graph[cur_id].fa) != 0:
+    if name in GL.start_layer or name in GL.norm_layer:
+        if name == 'start' and len(GL.graph[cur_id].fa) != 0:
             raise ModelError('start: can not have father nodes')
-        elif name != 'start' and len(graph[cur_id].fa) != 1:
+        elif name != 'start' and len(GL.graph[cur_id].fa) != 1:
             raise ModelError('%s: should have one and only one father node' % name)
      
-    if name in multi_layer and len(graph[cur_id].fa) == 0:
+    if name in GL.multi_layer and len(GL.graph[cur_id].fa) == 0:
         raise ModelError('%s: should have one or more father nodes' % name)    
 
     
@@ -339,25 +340,25 @@ def get_next_nodes_and_update_pre_nodes(nets, nets_conn, cur_id):
 
 def add_concatenate_layer(init_func, forward_func, cur_id, out_data):
     #check shape first
-    dim = graph[cur_id].cat_dim
-    array_of_inputs = graph[graph[cur_id].fa[0]].data
-    for indx in range(1, len(graph[cur_id].fa)):
+    dim = GL.graph[cur_id].cat_dim
+    array_of_inputs = GL.graph[GL.graph[cur_id].fa[0]].data
+    for indx in range(1, len(GL.graph[cur_id].fa)):
         #check shape
-        array_of_inputs = array_of_inputs + ', ' + graph[graph[cur_id].fa[indx]].data      
+        array_of_inputs = array_of_inputs + ', ' + GL.graph[GL.graph[cur_id].fa[indx]].data      
     #check dim
-    code = generate_n_tap(2) + out_data + ' = torch.cat((' + array_of_inputs + '), ' + str(graph[cur_id].cat_dim) + ')'
+    code = generate_n_tap(2) + out_data + ' = torch.cat((' + array_of_inputs + '), ' + str(GL.graph[cur_id].cat_dim) + ')'
 
     return init_func, np.append(forward_func, code)
 
 
 def add_element_wise_add_layer(init_func, forward_func, cur_id, out_data):
     #error not ok
-    if len(graph[cur_id].fa) == 0:
+    if len(GL.graph[cur_id].fa) == 0:
         raise ModelError('element wise layer has no inputs')
     
-    array_of_nodes = '[' + graph[graph[cur_id].fa[0]].data
-    for indx in range(1, len(graph[cur_id].fa)):
-        array_of_nodes = array_of_nodes + ', ' + graph[graph[cur_id].fa[indx]].data
+    array_of_nodes = '[' + GL.graph[GL.graph[cur_id].fa[0]].data
+    for indx in range(1, len(GL.graph[cur_id].fa)):
+        array_of_nodes = array_of_nodes + ', ' + GL.graph[GL.graph[cur_id].fa[indx]].data
 
     array_of_nodes = array_of_nodes + ']'
     code = generate_n_tap(2) + out_data + ' = element_wise_add(' + array_of_nodes + ')'
@@ -372,8 +373,8 @@ def make_graph(nets, nets_conn, init_func, forward_func):
 
     Q = queue.Queue()
     #Q.put(start_id)
-    graph[start_id] = Node(id = start_id, name = 'start', data = 'x_data')
-    done[start_id] = True
+    GL.graph[start_id] = Node(id = start_id, name = 'start', data = 'x_data')
+    GL.done[start_id] = True
 
     cur_id = start_id
 
@@ -385,7 +386,7 @@ def make_graph(nets, nets_conn, init_func, forward_func):
 
     while not Q.empty():
         cur_id = Q.get()
-        if done[cur_id]:
+        if GL.done[cur_id]:
             continue
         next_nodes, flag = get_next_nodes_and_update_pre_nodes(nets, nets_conn, cur_id)
         if cur_id != start_id and flag is False:
@@ -397,18 +398,18 @@ def make_graph(nets, nets_conn, init_func, forward_func):
             Q.put(node_id)
         #generate codes and update Node.fa[]
         out_data = generate_variable_name(nets[cur_id]['name'])
-        graph[cur_id].data = out_data
+        GL.graph[cur_id].data = out_data
         if nets[cur_id]['name'] == 'concatenate_layer':
             init_func, forward_func = add_concatenate_layer(init_func, forward_func, cur_id, out_data)
         elif nets[cur_id]['name'] == 'element_wise_add_layer':
             init_func, forward_func = add_element_wise_add_layer(init_func, forward_func, cur_id, out_data)
         else:
-            in_data = graph[graph[cur_id].fa[0]].data
+            in_data = GL.graph[GL.graph[cur_id].fa[0]].data
         	
             init_func, forward_func = add_layer_except_add_and_concate(init_func, forward_func, in_data, out_data, nets[cur_id])
-        update_layer_used_time(nets[cur_id]['name'])
+        update_GL_layer_used_time(nets[cur_id]['name'])
 
-        done[cur_id] = True
+        GL.done[cur_id] = True
 
     return init_func, forward_func
 
@@ -422,14 +423,19 @@ def add_net_info(nets, nets_conn):
 
     init_func, forward_func = make_graph(nets, nets_conn, init_func, forward_func)
 
+    #add check for return
+    for node in nets:
+        if node not in GL.graph or (nets[node]['name'] in GL.layers_except_start and len(GL.graph[node].fa) == 0):
+            raise ModelError('invalid layer')
+    
     #add return statement to forward_func
     ret_state = None
-    for node_id in graph:
-        if len(graph[node_id].next) == 0:
+    for node_id in GL.graph:
+        if len(GL.graph[node_id].next) == 0:
             if ret_state is None: 
-                ret_state = graph[node_id].data
+                ret_state = GL.graph[node_id].data
             else:
-                ret_state = ret_state + ', ' + graph[node_id].data
+                ret_state = ret_state + ', ' + GL.graph[node_id].data
     ret_state = generate_n_tap(2) + 'return ' + ret_state
 
     return np.concatenate((init_func, np.append(forward_func, ret_state)))
@@ -516,8 +522,168 @@ def main_func(edge_record):
 
     return Main, Model, Ops
 
+test = {
+    "nets": {
+        "canvas_1": {
+            "name": "start",
+            "attribute": {
+                "start": "true"
+            },
+            "left": "350px",
+            "top": "163px"
+        },
+        "canvas_2": {
+            "name": "view_layer",
+            "attribute": {
+                "shape": "3"
+            },
+            "left": "325px",
+            "top": "307px"
+        },
+        "canvas_3": {
+            "name": "conv1d_layer",
+            "attribute": {
+                "in_channels": "2",
+                "out_channels": "32",
+                "kernel_size": "2",
+                "stride": "3",
+                "padding": "2",
+                "activity": "torch.nn.functional.leaky_relu",
+                "pool_way": "torch.nn.functional.max_pool1d"
+            },
+            "left": "590px",
+            "top": "312px"
+        },
+        "canvas_4": {
+            "name": "conv2d_layer",
+            "attribute": {
+                "in_channels": "2",
+                "out_channels": "3",
+                "kernel_size": "2",
+                "stride": "1",
+                "padding": "3",
+                "activity": "torch.nn.functional.tanh",
+                "pool_way": "torch.nn.AvgPool2d"
+            },
+            "left": "401px",
+            "top": "461px"
+        }, 
+        "canvas_5": {
+            "name": "element_wise_add_layer",
+            "attribute": {
+                "in_channels": "2",
+                "out_channels": "3",
+                "kernel_size": "2",
+                "stride": "1",
+                "padding": "3",
+                "activity": "torch.nn.functional.tanh",
+                "pool_way": "torch.nn.AvgPool2d"
+            },
+            "left": "401px",
+            "top": "461px"
+        }, 
+        "canvas_6": {
+            "name": "concatenate_layer",
+            "attribute": {
+                "dim": "0",
+                "out_channels": "3",
+                "kernel_size": "2",
+                "stride": "1",
+                "padding": "3",
+                "activity": "torch.nn.functional.tanh",
+                "pool_way": "torch.nn.AvgPool2d"
+            },
+            "left": "401px",
+            "top": "461px"
+        }
+    },
+    "nets_conn": [
+        {
+            "source": {
+                "id": "canvas_1",
+                "anchor_position": "Bottom"
+            },
+            "target": {
+                "id": "canvas_2",
+                "anchor_position": "Top"
+            }
+        },
+        {
+            "source": {
+                "id": "canvas_2",
+                "anchor_position": "Bottom"
+            },
+            "target": {
+                "id": "canvas_4",
+                "anchor_position": "Top"
+            }
+        },
+        {
+            "source": {
+                "id": "canvas_4",
+                "anchor_position": "Right"
+            },
+            "target": {
+                "id": "canvas_3",
+                "anchor_position": "Left"
+            }
+        }, 
+        {
+            "source": {
+                "id": "canvas_4",
+                "anchor_position": "Right"
+            },
+            "target": {
+                "id": "canvas_5",
+                "anchor_position": "Left"
+            }
+        }, 
+        {
+            "source": {
+                "id": "canvas_3",
+                "anchor_position": "Right"
+            },
+            "target": {
+                "id": "canvas_5",
+                "anchor_position": "Left"
+            }
+        }, 
+        {
+            "source": {
+                "id": "canvas_3",
+                "anchor_position": "Right"
+            },
+            "target": {
+                "id": "canvas_6",
+                "anchor_position": "Left"
+            }
+        }, 
+        {
+            "source": {
+                "id": "canvas_2",
+                "anchor_position": "Right"
+            },
+            "target": {
+                "id": "canvas_6",
+                "anchor_position": "Left"
+            }
+        }            
+    ],
+    "static": {
+        "epoch": "1",
+        "learning_rate": "0.5",
+        "batch_size": "1"
+    }
+}
 
+Main, Model, Ops = main_func(test)
 
+for m in Main:
+    print(m)
 
+for mo in Model:
+    print(mo)
 
+for o in Ops:
+    print(o)
 
