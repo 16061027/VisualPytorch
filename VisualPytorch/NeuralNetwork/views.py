@@ -48,6 +48,7 @@ class NetworkList(APIView):
 class NetworkDetail(APIView):
     permission_classes = (ChangeModel,)
 
+
     def get_object(self, pk):
         try:
             return Network.objects.get(pk=pk)
