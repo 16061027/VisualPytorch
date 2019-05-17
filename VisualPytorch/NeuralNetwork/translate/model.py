@@ -50,3 +50,26 @@ class Vector:
 		return self.n == 0
 	def size(self):
 		return self.n
+
+class GLOB:
+    def __init__(self):
+        self.graph = {}
+        self.done = {}
+        self.layer_used_time = {'view_layer': 0, 'linear_layer': 0, 'conv1d_layer': 0, 'conv2d_layer': 0, 'element_wise_add_layer':0, 'concatenate_layer':0}
+        self.nn_linear = 'torch.nn.Linear'
+        self.nn_conv1d = 'torch.nn.Conv1d'
+        self.nn_conv2d = 'torch.nn.Conv2d'
+        self.nn_view = '.view'
+        self.nn_sequential = 'torch.nn.Sequential'
+        self.start_layer = ['start']
+        self.norm_layer = ['conv1d_layer', 'conv2d_layer', 'view_layer', 'linaer_layer']
+        self.multi_layer = ['element_wise_add_layer', 'concatenate_layer']
+        self.layers_except_start = self.norm_layer + self.multi_layer
+
+
+
+
+
+
+
+
