@@ -28,7 +28,7 @@
 <div class="container-fluid">
     <div>
         <button type="button" class="btn btn-warning" style="margin-top: 30px;margin-left: 130px"
-                onclick="downloadCode()">downloadtest
+                onclick="downloadCode()">下载代码
         </button>
     </div>
 
@@ -81,7 +81,7 @@
         var data = eval('(' + window.sessionStorage.getItem('code_print') + ')');
         $.ajax({
             type: "POST",
-            url: gobalConfig.base_url + 'api/NeuralNetwork/download/',
+            url:'api/NeuralNetwork/download/',
             data: JSON.stringify(data),
             contentType: 'application/json; charset=UTF-8',
             beforeSend: function (XMLHttpRequest) {
