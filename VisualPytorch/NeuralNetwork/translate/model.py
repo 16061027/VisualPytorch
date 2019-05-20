@@ -62,7 +62,7 @@ class GLOB:
         self.nn_view = '.view'
         self.nn_sequential = 'torch.nn.Sequential'
         self.start_layer = ['start']
-        self.norm_layer = ['conv1d_layer', 'conv2d_layer', 'view_layer', 'linaer_layer']
+        self.norm_layer = ['conv1d_layer', 'conv2d_layer', 'view_layer', 'linear_layer']
         self.multi_layer = ['element_wise_add_layer', 'concatenate_layer']
         self.layers_except_start = self.norm_layer + self.multi_layer
 

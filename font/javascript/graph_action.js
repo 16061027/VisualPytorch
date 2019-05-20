@@ -109,23 +109,35 @@ function translate_network() {
 
             if (xhr.status == 200) {
                 var main = "";
+                var main_print = "";
                 var model = "";
+                var model_print = "";
                 var ops = "";
+                var ops_print = "";
                 for (var i = 0; i < data_return["Main"].length; i++) {
                     main = main + data_return["Main"][i] + "<br>";
+                    main_print=main_print+data_return["Main"][i] + "\n";
                 }
                 for (var i = 0; i < data_return["Model"].length; i++) {
-                    model = main + data_return["Model"][i] + "<br>";
+                    model = model + data_return["Model"][i] + "<br>";
+                    model_print=model_print+data_return["Model"][i] + "\n";
                 }
                 for (var i = 0; i < data_return["Ops"].length; i++) {
-                    ops = main + data_return["Ops"][i] + "<br>";
+                    ops = ops + data_return["Ops"][i] + "<br>";
+                    ops_print=ops_print+data_return["Ops"][i] + "\n";
                 }
                 var code = {
                     "model": model,
                     "main": main,
                     "ops": ops
                 };
+                var code_print = {
+                    "model": model_print,
+                    "main": main_print,
+                    "ops": ops_print
+                };
                 window.sessionStorage.setItem("code", JSON.stringify(data_return));
+                window.sessionStorage.setItem("code_print", JSON.stringify(code_print));
                 window.open("show_code.html");
                 //window.location.href="show_code.html";
 
