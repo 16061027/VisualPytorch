@@ -12,7 +12,7 @@ exception defined as follows:
 	C:
 	D:
 	E:
-	F:多个start
+	F:start
 	G:
 
 '''
