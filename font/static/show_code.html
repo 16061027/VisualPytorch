@@ -92,7 +92,7 @@
             },
             success: function (response, status, request) {
 
-                    var form = $('<form method="POST" action="' + gobalConfig.base_url + 'api/NeuralNetwork/download/' + '">');
+                    var form = $('<form method="POST" action="' + 'api/NeuralNetwork/download/' + '">');
                     $.each(data, function (k, v) {
                         form.append($('<input type="hidden" name="' + k +
                             '" value="' + v + '">'));
