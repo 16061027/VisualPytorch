@@ -20,8 +20,8 @@ exception defined as follows:
 
 import numpy as np
 import sys
-from model import Node, Vector, GLOB
-from exception import *
+from .model import Node, Vector, GLOB
+from .exception import *
 import queue
 
 #global parameters
