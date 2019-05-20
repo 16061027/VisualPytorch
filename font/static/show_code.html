@@ -26,50 +26,104 @@
 </script>
 <body>
 <div class="container-fluid">
-<div>
-    <button  type="button" class="btn btn-warning" style="margin-top: 30px;margin-left: 130px" onclick="location.href='http://127.0.0.1:8000/api/NeuralNetwork/download/'">downloadtest</button>
-</div>
-
-<ul class="nav nav-tabs" id="codeTab" style="margin: 0 auto;margin-top: 30px; width: 80%">
-  <li class="active"><a href="#Main" data-toggle="tab">Main.py</a></li>
-  <li><a href="#Model" data-toggle="tab">Model.py</a></li>
-  <li><a href="#Ops" data-toggle="tab">Ops.py</a></li>
-</ul>
-
-<div id="code_content" class="tab-content" style="width: 80%;margin: 0 auto">
-	<div class="tab-pane fade in active" id="Main">
-	    <pre id="main_code"></pre>
-	</div>
-	<div class="tab-pane fade" id="Model">
-        <pre id = "model_code"></pre>
-	</div>
-	<div class="tab-pane fade" id="Ops">
-        <pre id="ops_code"></pre>
-	</div>
-</div>
+    <div>
+        <button type="button" class="btn btn-warning" style="margin-top: 30px;margin-left: 130px"
+                onclick="downloadCode()">downloadtest
+        </button>
     </div>
+
+    <ul class="nav nav-tabs" id="codeTab" style="margin: 0 auto;margin-top: 30px; width: 80%">
+        <li class="active"><a href="#Main" data-toggle="tab">Main.py</a></li>
+        <li><a href="#Model" data-toggle="tab">Model.py</a></li>
+        <li><a href="#Ops" data-toggle="tab">Ops.py</a></li>
+    </ul>
+
+    <div id="code_content" class="tab-content" style="width: 80%;margin: 0 auto">
+        <div class="tab-pane fade in active" id="Main">
+            <pre id="main_code"></pre>
+        </div>
+        <div class="tab-pane fade" id="Model">
+            <pre id="model_code"></pre>
+        </div>
+        <div class="tab-pane fade" id="Ops">
+            <pre id="ops_code"></pre>
+        </div>
+    </div>
+</div>
 
 
 </body>
 
 <script>
     $('#codeTab a').click(function (e) {
-  e.preventDefault();
-  $(this).tab('show');
-  $("#"+$(this).attr("href"))
-})
+        e.preventDefault();
+        $(this).tab('show');
+        $("#" + $(this).attr("href"))
+    })
 </script>
 <script>
     $(document).ready(function () {
-        var code = eval('('+window.sessionStorage.getItem("code")+')');
-                for(var i=0;i<code["Main"].length;i++){
-                    $("#main_code").append(code["Main"][i]+"<br>");
-                }
-                for(var i=0;i<code["Model"].length;i++){
-                    $("#model_code").append(code["Model"][i]+"<br>");
-                }
-                for(var i=0;i<code["Ops"].length;i++){
-                   $("#ops_code").append(code["Ops"][i]+"<br>");
-                }
+        var code = eval('(' + window.sessionStorage.getItem("code") + ')');
+        for (var i = 0; i < code["Main"].length; i++) {
+            $("#main_code").append(code["Main"][i] + "<br>");
+        }
+        for (var i = 0; i < code["Model"].length; i++) {
+            $("#model_code").append(code["Model"][i] + "<br>");
+        }
+        for (var i = 0; i < code["Ops"].length; i++) {
+            $("#ops_code").append(code["Ops"][i] + "<br>");
+        }
     })
+</script>
+
+<script>
+    function downloadCode() {
+        var data = eval('(' + window.sessionStorage.getItem('code_print') + ')');
+        $.ajax({
+            type: "POST",
+            url: gobalConfig.base_url + 'api/NeuralNetwork/download/',
+            data: JSON.stringify(data),
+            contentType: 'application/json; charset=UTF-8',
+            beforeSend: function (XMLHttpRequest) {
+                var token = window.sessionStorage.getItem('token');
+                if (token != null) {
+                    XMLHttpRequest.setRequestHeader("Authorization", "JWT " + token)
+                }
+            },
+            success: function (response, status, request) {
+
+                    var form = $('<form method="POST" action="' + gobalConfig.base_url + 'api/NeuralNetwork/download/' + '">');
+                    $.each(data, function (k, v) {
+                        form.append($('<input type="hidden" name="' + k +
+                            '" value="' + v + '">'));
+                    });
+                    $('body').append(form);
+                    form.submit(); //自动提交
+                }
+
+        });
+    }
+
+    /*function downloadCode() {
+        data = eval('(' + window.sessionStorage.getItem('code_print') + ')');
+        $.ajax({
+        type: 'POST',
+        url: gobalConfig.base_url + 'api/NeuralNetwork/download/',
+        data: JSON.stringify(data),
+        contentType: 'application/json; charset=UTF-8',
+        beforeSend: function (XMLHttpRequest) {
+            var token = window.sessionStorage.getItem('token');
+            if (token != null) {
+                XMLHttpRequest.setRequestHeader("Authorization", "JWT " + token)
+            }
+        },
+        success: function (data_return, status, xhr) {
+
+        },
+        error: function (data_return) {
+            alert(data_return["responseText"])
+        }
+    });
+
+    }*/
 </script>

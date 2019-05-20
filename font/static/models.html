@@ -87,6 +87,12 @@
             type: 'DELETE',
             url: gobalConfig.base_url + 'api/NeuralNetwork/network/'+id,
             contentType: 'application/json; charset=UTF-8',
+            beforeSend: function (XMLHttpRequest) {
+                var token = window.sessionStorage.getItem('token');
+                if (token != null) {
+                    XMLHttpRequest.setRequestHeader("Authorization", "JWT " + token)
+                }
+            },
             success: function (data) {
                 location.reload()
             },
