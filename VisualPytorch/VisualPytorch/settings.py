@@ -185,4 +185,4 @@ JWT_AUTH = {
         'JWT_EXPIRATION_DELTA': datetime.timedelta(hours=10),
 }
 
-FILE_DIR = os.path.dirname(BASE_DIR) + r"\files"
+FILE_DIR = os.path.dirname(BASE_DIR) + "/files"
