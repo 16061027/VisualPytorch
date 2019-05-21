@@ -79,51 +79,15 @@
 <script>
     function downloadCode() {
         var data = eval('(' + window.sessionStorage.getItem('code_print') + ')');
-        $.ajax({
-            type: "POST",
-            url:'api/NeuralNetwork/download/',
-            data: JSON.stringify(data),
-            contentType: 'application/json; charset=UTF-8',
-            beforeSend: function (XMLHttpRequest) {
-                var token = window.sessionStorage.getItem('token');
-                if (token != null) {
-                    XMLHttpRequest.setRequestHeader("Authorization", "JWT " + token)
-                }
-            },
-            success: function (response, status, request) {
-
-                    var form = $('<form method="POST" action="' + 'api/NeuralNetwork/download/' + '">');
-                    $.each(data, function (k, v) {
-                        form.append($('<input type="hidden" name="' + k +
-                            '" value="' + v + '">'));
-                    });
-                    $('body').append(form);
-                    form.submit(); //自动提交
-                }
-
+        var form = $('<form method="POST" action="' + 'api/NeuralNetwork/download/' + '">');
+        $.each(data, function (k, v) {
+            var input = $('<input type="text">');
+            input.attr("name", k);
+            input.attr("value", v);
+            form.append(input)
+            //form.append($('<input type="text">'));
         });
+        $('body').append(form);
+        form.submit();
     }
-
-    /*function downloadCode() {
-        data = eval('(' + window.sessionStorage.getItem('code_print') + ')');
-        $.ajax({
-        type: 'POST',
-        url: gobalConfig.base_url + 'api/NeuralNetwork/download/',
-        data: JSON.stringify(data),
-        contentType: 'application/json; charset=UTF-8',
-        beforeSend: function (XMLHttpRequest) {
-            var token = window.sessionStorage.getItem('token');
-            if (token != null) {
-                XMLHttpRequest.setRequestHeader("Authorization", "JWT " + token)
-            }
-        },
-        success: function (data_return, status, xhr) {
-
-        },
-        error: function (data_return) {
-            alert(data_return["responseText"])
-        }
-    });
-
-    }*/
 </script>
