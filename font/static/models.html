@@ -51,7 +51,7 @@
         };
         $.ajax({
             type: 'GET',
-            url: gobalConfig.base_url + 'api/NeuralNetwork/network/?id=' + user_id,
+            url: 'api/NeuralNetwork/network/?id=' + user_id,
             data: JSON.stringify(data),
             contentType: 'application/json; charset=UTF-8',
             beforeSend: function (XMLHttpRequest) {
@@ -85,7 +85,7 @@
     function delete_model(id) {
         $.ajax({
             type: 'DELETE',
-            url: gobalConfig.base_url + 'api/NeuralNetwork/network/'+id,
+            url: 'api/NeuralNetwork/network/'+id,
             contentType: 'application/json; charset=UTF-8',
             beforeSend: function (XMLHttpRequest) {
                 var token = window.sessionStorage.getItem('token');

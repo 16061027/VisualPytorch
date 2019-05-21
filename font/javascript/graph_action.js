@@ -96,7 +96,7 @@ function translate_network() {
     console.log(data);
     $.ajax({
         type: 'POST',
-        url: gobalConfig.base_url + 'api/NeuralNetwork/getcode/',
+        url: 'api/NeuralNetwork/getcode/',
         data: JSON.stringify(data),
         contentType: 'application/json; charset=UTF-8',
         beforeSend: function (XMLHttpRequest) {
@@ -169,7 +169,7 @@ function save_network() {
         var net_id = query_object["id"];
         $.ajax({
             type: 'PUT',
-            url: gobalConfig.base_url + 'api/NeuralNetwork/network/' + net_id + '/',
+            url: 'api/NeuralNetwork/network/' + net_id + '/',
             data: JSON.stringify(data),
             contentType: 'application/json; charset=UTF-8',
             beforeSend: function (XMLHttpRequest) {
@@ -187,7 +187,7 @@ function save_network() {
     } else {
         $.ajax({
             type: 'POST',
-            url: gobalConfig.base_url + 'api/NeuralNetwork/network/',
+            url: 'api/NeuralNetwork/network/',
             data: JSON.stringify(data),
             contentType: 'application/json; charset=UTF-8',
             beforeSend: function (XMLHttpRequest) {

@@ -26,7 +26,7 @@ function login() {
 
     $.ajax({
         type: 'POST',
-        url: gobalConfig.base_url + 'api/user/login/',
+        url: 'api/user/login/',
         async:false,//note：这里ajax必须为同步请求，两个ajax必须先拿token,再拿用户信息
         data: JSON.stringify(data),
         contentType: 'application/json; charset=UTF-8',
@@ -42,7 +42,7 @@ function login() {
     $.ajax({
         type: 'GET',
         async:false,
-        url: gobalConfig.base_url + 'api/user/info/',
+        url: 'api/user/info/',
         beforeSend: function (XMLHttpRequest) {
             var token = window.sessionStorage.getItem('token');
             if (token != null) {
@@ -75,7 +75,7 @@ function register() {
 
     $.ajax({
         type: 'POST',
-        url: gobalConfig.base_url + 'api/user/register/',
+        url: 'api/user/register/',
         data: JSON.stringify(data),
         contentType: 'application/json; charset=UTF-8',
         success: function (data_return) {
