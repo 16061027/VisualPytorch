@@ -300,19 +300,19 @@
                 window.sessionStorage.setItem(id, "{\"element_wise_add_layer\":\"true\"}");
             }
             if (name == "view_layer") {
-                window.sessionStorage.setItem(id, "{\"shape\":\"\"}");
+                window.sessionStorage.setItem(id, "{\"shape\":\"1\"}");
             }
             if (name == "concatenate_layer") {
-                window.sessionStorage.setItem(id, "{\"dim\":\"\"}");
+                window.sessionStorage.setItem(id, "{\"dim\":\"1\"}");
             }
             if (name == "linear_layer") {
-                window.sessionStorage.setItem(id, "{\"in_channels\":\"\",\"out_channels\":\"\"}");
+                window.sessionStorage.setItem(id, "{\"in_channels\":\"1\",\"out_channels\":\"1\"}");
             }
             if (name == "conv1d_layer") {
-                window.sessionStorage.setItem(id, "{\"in_channels\":\"\",\"out_channels\":\"\",\"kernel_size\":\"\",\"stride\":\"1\",\"padding\":\"0\",\"activity\":\"None\",\"pool_way\":\"None\",\"pool_kernel_size\":\"\",\"pool_stride\":\"\",\"pool_padding\":\"0\"}");
+                window.sessionStorage.setItem(id, "{\"in_channels\":\"1\",\"out_channels\":\"1\",\"kernel_size\":\"1\",\"stride\":\"1\",\"padding\":\"0\",\"activity\":\"None\",\"pool_way\":\"None\",\"pool_kernel_size\":\"\",\"pool_stride\":\"\",\"pool_padding\":\"0\"}");
             }
             if (name == "conv2d_layer") {
-                window.sessionStorage.setItem(id, "{\"in_channels\":\"\",\"out_channels\":\"\",\"kernel_size\":\"\",\"stride\":\"1\",\"padding\":\"0\",\"activity\":\"None\",\"pool_way\":\"None\",\"pool_kernel_size\":\"\",\"pool_stride\":\"\",\"pool_padding\":\"0\"}");
+                window.sessionStorage.setItem(id, "{\"in_channels\":\"1\",\"out_channels\":\"1\",\"kernel_size\":\"1\",\"stride\":\"1\",\"padding\":\"0\",\"activity\":\"None\",\"pool_way\":\"None\",\"pool_kernel_size\":\"\",\"pool_stride\":\"\",\"pool_padding\":\"0\"}");
             }
             $("#" + id).bind("contextmenu", function () {
                 return false;
