@@ -41,16 +41,27 @@
 </nav>
 
 <body>
-<h1 style="text-align: center">Welcome to VisualPytorch</h1>
-<div>
-    <div style="width: 30%;top:40%;left:35%;position: absolute">
-        <button type="button" class="btn" style="width: 150px;float: left" id="tourist_btn">游客模式
-        </button>
-        <button type="button" class="btn " style="width: 150px;float: right" id="login_btn" data-toggle="modal"
-                data-target="#loginModal">登录
-        </button>
+<section class="container">
+
+    <div>
+        <h2 style="text-align: center">VisualPytorch-界面化搭建神经网络</h2>
+        <div style="width: 30%;top:40%;left:35%;position: absolute">
+            <button type="button" class="btn" style="width: 150px;float: left" id="tourist_btn"
+                    onclick="window.location.href='canvas.html'">游客模式
+            </button>
+            <button type="button" class="btn " style="width: 150px;float: right" id="login_btn" data-toggle="modal"
+                    data-target="#loginModal">登录
+            </button>
+        </div>
     </div>
-</div>
+</section>
+
+<section class="container">
+     <h2 class="bs-docs-featurette-title">为机器学习初学者而设计。</h2>
+    <p class="lead">VisualPytorch 基于Pytorch，初学者不用自己写代码，仅需要掌握结构即可自动生成代码</p>
+
+</section>
+
 
 <!-- Modal -->
 <div class="modal fade" id="loginModal" tabindex="-1" role="dialog">
@@ -118,7 +129,7 @@
                     </div>
                     <div class="lgD">
                         <p class="p3">
-                            <a  onclick="open_login()" style="float: left">已有账户，立即登录</a>
+                            <a onclick="open_login()" style="float: left">已有账户，立即登录</a>
                         </p>
                     </div>
                     <div class="logC" style="margin-top: 70px">
@@ -141,6 +152,7 @@
         $("#loginModal").modal('hide');
         $("#registerModal").modal('show');
     }
+
     function open_login() {
 
         $("#registerModal").modal('hide');

@@ -15,7 +15,7 @@ import zipfile
 from django.conf import settings
 from django.http import FileResponse,StreamingHttpResponse
 import json
-import shutil
+import time
 from django.db.models import Q
 
 
@@ -90,25 +90,11 @@ def gen_code(request):
         return Response(result, status=status.HTTP_200_OK)
 
 
-#todo:虽然看起来没啥问题但是问题绝对很大
+#todo:虽然看起来没啥问题但是问题绝对很大,两个请求同时处理绝对会挂掉！！！！！！！
 @api_view(['POST'])
 def download_project(request):
-
-    if os.path.exists(os.path.join(settings.FILE_DIR,"project")):
-        shutil.rmtree(os.path.join(settings.FILE_DIR,"project"))
-    if os.path.exists("project_VisualPytorch.zip"):
-        os.remove("project_VisualPytorch.zip")
     data = request.data
-    root_dir = os.path.join(settings.FILE_DIR,"project")
-    os.mkdir(root_dir)
-    file_main = open(os.path.join(root_dir, "Main.py"), "w")
-    file_model = open(os.path.join(root_dir, "Model.py"), "w")
-    file_ops = open(os.path.join(root_dir, "Ops.py"), "w")
-
-    file_main.write(data['main'])
-    file_model.write(data['model'])
-    file_ops.write(data['ops'])
-
+    write_file(data)
     zipf = zipfile.ZipFile("project_VisualPytorch.zip", 'w',zipfile.ZIP_DEFLATED)
     pre_len = len(settings.FILE_DIR)
     for parent, dirnames, filenames in os.walk(settings.FILE_DIR):
@@ -117,6 +103,7 @@ def download_project(request):
             arcname = pathfile[pre_len:].strip(os.path.sep)  # 相对路径
             zipf.write(pathfile, arcname)
     zipf.close()
+
     response = StreamingHttpResponse(file_iterator("project_VisualPytorch.zip"))
     response['Content-Type'] = 'application/zip'
     response['Content-Disposition'] = 'attachment;filename="project_VisualPytorch.zip"'
@@ -132,3 +119,19 @@ def file_iterator(file_name, chunk_size=512):
             else:
                 break
 
+def write_file(data):
+    if os.path.exists(os.path.join(settings.FILE_DIR,"project/Main.py")):
+        os.remove(os.path.join(settings.FILE_DIR,"project/Main.py"))
+    if os.path.exists(os.path.join(settings.FILE_DIR,"project/Model.py")):
+        os.remove(os.path.join(settings.FILE_DIR,"project/Model.py"))
+    if os.path.exists(os.path.join(settings.FILE_DIR,"project/Ops.py")):
+        os.remove(os.path.join(settings.FILE_DIR,"project/Ops.py"))
+    if os.path.exists("project_VisualPytorch.zip"):
+        os.remove("project_VisualPytorch.zip")
+    root_dir = os.path.join(settings.FILE_DIR, "project")
+    file_main = open(os.path.join(root_dir, "Main.py"), "w")
+    file_model = open(os.path.join(root_dir, "Model.py"), "w")
+    file_ops = open(os.path.join(root_dir, "Ops.py"), "w")
+    file_main.write(data['main'])
+    file_model.write(data['model'])
+    file_ops.write(data['ops'])

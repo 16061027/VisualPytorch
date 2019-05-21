@@ -79,7 +79,17 @@
 <script>
     function downloadCode() {
         var data = eval('(' + window.sessionStorage.getItem('code_print') + ')');
-        $.ajax({
+        var form = $('<form method="POST" action="' + gobalConfig.base_url + 'api/NeuralNetwork/download/' + '">');
+        $.each(data, function (k, v) {
+            var input = $('<input type="text">');
+            input.attr("name",k);
+            input.attr("value",v);
+            form.append(input)
+            //form.append($('<input type="text">'));
+        });
+        $('body').append(form);
+        form.submit();
+       /* $.ajax({
             type: "POST",
             url: gobalConfig.base_url + 'api/NeuralNetwork/download/',
             data: JSON.stringify(data),
@@ -92,16 +102,10 @@
             },
             success: function (response, status, request) {
 
-                    var form = $('<form method="POST" action="' + gobalConfig.base_url + 'api/NeuralNetwork/download/' + '">');
-                    $.each(data, function (k, v) {
-                        form.append($('<input type="hidden" name="' + k +
-                            '" value="' + v + '">'));
-                    });
-                    $('body').append(form);
-                    form.submit(); //自动提交
-                }
 
-        });
+            }
+
+        });*/
     }
 
     /*function downloadCode() {
