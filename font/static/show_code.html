@@ -81,7 +81,7 @@
         var data = eval('(' + window.sessionStorage.getItem('code_print') + ')');
         var form = $('<form method="POST" action="' + gobalConfig.base_url + 'api/NeuralNetwork/download/' + '">');
         $.each(data, function (k, v) {
-            var input = $('<input type="text">');
+            var input = $('<input type="hidden">');
             input.attr("name",k);
             input.attr("value",v);
             form.append(input)
