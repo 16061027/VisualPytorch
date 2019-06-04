@@ -20,8 +20,8 @@ exception defined as follows:
 
 import numpy as np
 import sys
-from model import Node, Vector, GLOB
-from exception import *
+from .model import Node, Vector, GLOB
+from .exception import *
 import queue
 
 #global parameters
@@ -534,115 +534,115 @@ def main_func(edge_record):
 
     return Main, Model, Ops
 
-test = {
-    "nets": {
-        "canvas_1": {
-            "name": "start",
-            "attribute": {
-                "start": "true"
-            },
-            "left": "350px",
-            "top": "163px"
-        },
-        "canvas_2": {
-            "name": "view_layer",
-            "attribute": {
-                "shape": "3"
-            },
-            "left": "325px",
-            "top": "307px"
-        },
-        "canvas_3": {
-            "name": "view_layer",
-            "attribute": {
-                "shape": "3"
-            },
-            "left": "325px",
-            "top": "307px"
-        },
-        "canvas_4": {
-            "name": "view_layer",
-            "attribute": {
-                "shape": "3"
-            },
-            "left": "325px",
-            "top": "307px"
-        },
-        "canvas_5": {
-            "name": "element_wise_add_layer",
-            "attribute": {
-                "shape": "3"
-            },
-            "left": "325px",
-            "top": "307px"
-        }
-    },
-    "nets_conn": [
-        {
-            "source": {
-                "id": "canvas_1",
-                "anchor_position": "Bottom"
-            },
-            "target": {
-                "id": "canvas_2",
-                "anchor_position": "Top"
-            }
-        },
-        {
-            "source": {
-                "id": "canvas_2",
-                "anchor_position": "Bottom"
-            },
-            "target": {
-                "id": "canvas_3",
-                "anchor_position": "Top"
-            }
-        },
-        {
-            "source": {
-                "id": "canvas_3",
-                "anchor_position": "Bottom"
-            },
-            "target": {
-                "id": "canvas_4",
-                "anchor_position": "Top"
-            }
-        },
-        {
-            "source": {
-                "id": "canvas_4",
-                "anchor_position": "Bottom"
-            },
-            "target": {
-                "id": "canvas_5",
-                "anchor_position": "Top"
-            }
-        },
-        {
-            "source": {
-                "id": "canvas_1",
-                "anchor_position": "Bottom"
-            },
-            "target": {
-                "id": "canvas_5",
-                "anchor_position": "Top"
-            }
-        },
+# test = {
+#     "nets": {
+#         "canvas_1": {
+#             "name": "start",
+#             "attribute": {
+#                 "start": "true"
+#             },
+#             "left": "350px",
+#             "top": "163px"
+#         },
+#         "canvas_2": {
+#             "name": "view_layer",
+#             "attribute": {
+#                 "shape": "3"
+#             },
+#             "left": "325px",
+#             "top": "307px"
+#         },
+#         "canvas_3": {
+#             "name": "view_layer",
+#             "attribute": {
+#                 "shape": "3"
+#             },
+#             "left": "325px",
+#             "top": "307px"
+#         },
+#         "canvas_4": {
+#             "name": "view_layer",
+#             "attribute": {
+#                 "shape": "3"
+#             },
+#             "left": "325px",
+#             "top": "307px"
+#         },
+#         "canvas_5": {
+#             "name": "element_wise_add_layer",
+#             "attribute": {
+#                 "shape": "3"
+#             },
+#             "left": "325px",
+#             "top": "307px"
+#         }
+#     },
+#     "nets_conn": [
+#         {
+#             "source": {
+#                 "id": "canvas_1",
+#                 "anchor_position": "Bottom"
+#             },
+#             "target": {
+#                 "id": "canvas_2",
+#                 "anchor_position": "Top"
+#             }
+#         },
+#         {
+#             "source": {
+#                 "id": "canvas_2",
+#                 "anchor_position": "Bottom"
+#             },
+#             "target": {
+#                 "id": "canvas_3",
+#                 "anchor_position": "Top"
+#             }
+#         },
+#         {
+#             "source": {
+#                 "id": "canvas_3",
+#                 "anchor_position": "Bottom"
+#             },
+#             "target": {
+#                 "id": "canvas_4",
+#                 "anchor_position": "Top"
+#             }
+#         },
+#         {
+#             "source": {
+#                 "id": "canvas_4",
+#                 "anchor_position": "Bottom"
+#             },
+#             "target": {
+#                 "id": "canvas_5",
+#                 "anchor_position": "Top"
+#             }
+#         },
+#         {
+#             "source": {
+#                 "id": "canvas_1",
+#                 "anchor_position": "Bottom"
+#             },
+#             "target": {
+#                 "id": "canvas_5",
+#                 "anchor_position": "Top"
+#             }
+#         },
 
-    ],
-    "static": {
-        "epoch": "1",
-        "learning_rate": "0.5",
-        "batch_size": "1"
-    }
-}
+#     ],
+#     "static": {
+#         "epoch": "1",
+#         "learning_rate": "0.5",
+#         "batch_size": "1"
+#     }
+# }
 
-Main, Model, Ops = main_func(test)
+# Main, Model, Ops = main_func(test)
 
-for m in Main:
-    print(m)
-for m in Model:
-    print(m)
-for m in Ops:
-    print(m)
+# for m in Main:
+#     print(m)
+# for m in Model:
+#     print(m)
+# for m in Ops:
+#     print(m)
 
