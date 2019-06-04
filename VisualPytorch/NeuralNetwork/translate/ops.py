@@ -447,6 +447,7 @@ def add_net_info(nets, nets_conn):
                 ret_state = GL.graph[node_id].data
             else:
                 ret_state = ret_state + ', ' + GL.graph[node_id].data
+    forward_func = np.append(forward_func, generate_n_tap(2) + '#return statement')
     ret_state = generate_n_tap(2) + 'return ' + ret_state
 
     return np.concatenate((init_func, np.append(forward_func, ret_state)))
