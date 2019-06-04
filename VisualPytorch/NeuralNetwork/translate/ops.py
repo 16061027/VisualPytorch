@@ -354,6 +354,7 @@ def add_concatenate_layer(init_func, forward_func, cur_id, out_data):
         #check shape
         array_of_inputs = array_of_inputs + ', ' + GL.graph[GL.graph[cur_id].fa[indx]].data      
     #check dim
+    np.append(forward_func, generate_n_tap(2) + '#concatenate layer')
     code = generate_n_tap(2) + out_data + ' = torch.cat((' + array_of_inputs + '), ' + str(GL.graph[cur_id].cat_dim) + ')'
 
     return init_func, np.append(forward_func, code)
@@ -369,6 +370,8 @@ def add_element_wise_add_layer(init_func, forward_func, cur_id, out_data):
         array_of_nodes = array_of_nodes + ', ' + GL.graph[GL.graph[cur_id].fa[indx]].data
 
     array_of_nodes = array_of_nodes + ']'
+
+    np.append(forward_func, generate_n_tap(2) + '#element_wise_add layer')
     code = generate_n_tap(2) + out_data + ' = element_wise_add(' + array_of_nodes + ')'
     forward_func = np.append(forward_func, code)
 
