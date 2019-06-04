@@ -107,7 +107,7 @@ def add_import_info():
 
 
 def add_init_info():
-    ans = np.array(['class NET(torch.nn.Module):', generate_n_tap(1) + 'def __init__(self):',
+    ans = np.array(['#NET defined here', 'class NET(torch.nn.Module):', generate_n_tap(1) + '#init function', generate_n_tap(1) + 'def __init__(self):',
                     generate_n_tap(2) + 'super(NET, self).__init__()'])
 
     return ans
@@ -142,6 +142,9 @@ def add_linear_to_init_forward(init, forward, in_data, out_data, node):
     in_c = str(node['attribute']['in_channels'])
     out_c = str(node['attribute']['out_channels'])
 
+    init_tmp = generate_n_tap(2) + '#linear layer'
+    init = np.append(init, init_tmp)
+
     init_tmp = generate_n_tap(2) + self_layer + ' = ' + GL.nn_linear + '(' + in_c + ', ' + out_c + ')'
     init = np.append(init, init_tmp)
 
@@ -163,7 +166,8 @@ def add_view_to_init_forward(init, forward, in_data, out_data, node):
     shape, shape_str = parse_shape(node['attribute']['shape'])
 
     #add shape checking of reshape layer  
-
+    forward_tmp = generate_n_tap(2) + '#reshape layer'
+    forward = np.append(forward, forward_tmp)
 
     forward_tmp = generate_n_tap(2) + out_data + ' = ' + in_data + GL.nn_view + '(' + shape_str + ')'
     forward = np.append(forward, forward_tmp)
@@ -196,6 +200,10 @@ def add_convlayer_to_init_forward(init, forward, in_data, out_data, node):
     forward_tmp = generate_n_tap(2) + out_data + ' = ' + self_layer + '(' + in_data + ')'
     forward = np.append(forward, forward_tmp)
     # add init
+
+    init_tmp = generate_n_tap(2) + '#convolution layer'
+    init = np.append(init, init_tmp)
+
     init_tmp = generate_n_tap(2) + self_layer + ' = ' + GL.nn_sequential + '('
     init = np.append(init, init_tmp)
 
