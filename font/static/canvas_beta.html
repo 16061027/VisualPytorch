@@ -17,7 +17,7 @@
     <link href="../css/layer.css" rel="stylesheet">
     <script type="text/javascript" src="../resources/jsplumb.min.js"></script>
     <script type="text/javascript" src="../javascript/graph_action.js"></script>
-    <script type="text/javascript" src="../javascript/layer_form.js"></script>
+    <script type="text/javascript" src="../javascript/layer_popover.js"></script>
     <script type="text/javascript" src="../javascript/base_service.js"></script>
 </head>
 
@@ -190,46 +190,9 @@
             </div>
 
         </div>
-        <div class="col-md-7" id="canvas">
+        <div class="col-md-9" id="canvas">
             <!--<div style="height:1000px;border:0.5px solid black;background:url(../img/grid.png) no-repeat;background-size:100%;opacity: .6">-->
             <div style="height:1000px;border:0.5px solid black">
-            </div>
-        </div>
-        <div class="col-md-2">
-            <div id="parameters"
-                 style="white-space: nowrap; color: rgb(112, 112, 112); text-align: left; cursor: default;">
-                <form class="form-horizontal hidden" role="form">
-                    <div class="form-group">
-                        <label class="col-sm-5 control-label">shape</label>
-                        <div class="col-sm-5">
-                            <input type="text" name='shape' class="form-control" placeholder="1">
-                        </div>
-                    </div>
-                </form>
-
-                <form class="form-horizontal hidden" role="form">
-                    <div class="form-group">
-                        <label class="col-sm-5 control-label">dim</label>
-                        <div class="col-sm-5">
-                            <input type="text" name='dim' class="form-control" placeholder="1">
-                        </div>
-                    </div>
-                </form>
-
-                <form class="form-horizontal hidden" role="form">
-                    <div class="form-group">
-                        <label class="col-sm-5 control-label">in_channels</label>
-                        <div class="col-sm-5">
-                            <input type="text" name='in_channels' class="form-control">
-                        </div>
-                        <label class="col-sm-5 control-label">out_channels</label>
-                        <div class="col-sm-5">
-                            <input type="text" name='out_channels' class="form-control">
-                        </div>
-                    </div>
-
-                </form>
-
             </div>
         </div>
     </div>
@@ -251,6 +214,7 @@
         connectionsDetachable: true,
 
     };
+
 </script>
 
 <script>
@@ -298,7 +262,7 @@
         }
     );
 
-    var no_popover = ["start", "element_wise_add_layer"];
+    var no_popover=["start","element_wise_add_layer"];
 
     $("#canvas").droppable({
         scope: "ss",
@@ -369,7 +333,7 @@
 
             var has_move = false;
             var has_down = false;
-            if (!no_popover.includes(name)) {
+            if(!no_popover.includes(name)) {
                 $("#" + id).bind({
                     mousedown: function (e) {
                         has_move = false;
@@ -378,20 +342,14 @@
                     },
                     mousemove: function (e) {
                         if (has_down) {
-
+                            $("#" + id).popover('hide');
                         }
                         has_move = true;
                         return;
                     },
                     mouseup: function (e) {
                         if (!has_move) {
-                            if(window.sessionStorage.hasOwnProperty("active_node")){
-                                $("#"+window.sessionStorage.getItem("active_node")).removeClass("selected");
-                            }
-                            window.sessionStorage.setItem("active_node", id);
-                            $("#"+id).addClass("selected");
-
-                            show_form(id, name);
+                            popover_show(id, name);
                         }
                         has_move = false;
                         has_down = false;
@@ -409,6 +367,44 @@
 
     });
 
+    function popover_show(id, name) {
+        popover_restart(name, id);
+        $("#" + id).popover('show');
+        if (name == "conv1d_layer") {
+            var data = eval('(' + window.sessionStorage.getItem(id) + ')');
+            $("#" + id + "activity").find("[value = \"" + data["activity"] + "\"]").attr("selected", "selected");
+            $("#" + id + "pool_way").find("[value = \"" + data["pool_way"] + "\"]").attr("selected", "selected");
+        }
+        if (name == "conv2d_layer") {
+            var data = eval('(' + window.sessionStorage.getItem(id) + ')');
+            $("#" + id + "activity").find("[value = \"" + data["activity"] + "\"]").attr("selected", "selected");
+            $("#" + id + "pool_way").find("[value = \"" + data["pool_way"] + "\"]").attr("selected", "selected");
+        }
+        $("[name='pool_way']").bind('change', function () {
+            if ($(this).val() == 'None') {
+                $(this).parent().parent().find("[name='pool_kernel_size']").attr("disabled", true);
+                $(this).parent().parent().find("[name='pool_stride']").attr("disabled", true);
+                $(this).parent().parent().find("[name='pool_padding']").attr("disabled", true);
+            }
+            else {
+                $(this).parent().parent().find("[name='pool_kernel_size']").removeAttr("disabled");
+                $(this).parent().parent().find("[name='pool_stride']").removeAttr("disabled");
+                $(this).parent().parent().find("[name='pool_padding']").removeAttr("disabled");
+            }
+        })
+
+    }
+
+    function popover_restart(name, id) {
+        $("#" + id).popover({
+            placement: "right",
+            content: get_content(name, id),
+            html: true
+        });
+        $("#" + id).on('hidden.bs.popover', function () {
+            $("#" + id).popover('destroy');
+        });
+    }
 </script>
 <script>
     $(document).ready(function () {
@@ -509,58 +505,6 @@
         }
     }
 </script>
-
-<script>
-    function show_form(id, name) {
-        $("#parameters").children().remove();
-        $("#parameters").append(get_content(name, id));
-        if (name == "conv1d_layer") {
-            var data = eval('(' + window.sessionStorage.getItem(id) + ')');
-            $("#" + id + "activity").find("[value = \"" + data["activity"] + "\"]").attr("selected", "selected");
-            $("#" + id + "pool_way").find("[value = \"" + data["pool_way"] + "\"]").attr("selected", "selected");
-        }
-        if (name == "conv2d_layer") {
-            var data = eval('(' + window.sessionStorage.getItem(id) + ')');
-            $("#" + id + "activity").find("[value = \"" + data["activity"] + "\"]").attr("selected", "selected");
-            $("#" + id + "pool_way").find("[value = \"" + data["pool_way"] + "\"]").attr("selected", "selected");
-        }
-        $("[name='pool_way']").bind('change', function () {
-            if ($(this).val() == 'None') {
-                $(this).parent().parent().find("[name='pool_kernel_size']").attr("disabled", true);
-                $(this).parent().parent().find("[name='pool_stride']").attr("disabled", true);
-                $(this).parent().parent().find("[name='pool_padding']").attr("disabled", true);
-            }
-            else {
-                $(this).parent().parent().find("[name='pool_kernel_size']").removeAttr("disabled");
-                $(this).parent().parent().find("[name='pool_stride']").removeAttr("disabled");
-                $(this).parent().parent().find("[name='pool_padding']").removeAttr("disabled");
-            }
-        });
-
-        $("#parameters").find("input,select").change(function () {
-            switch ($("#form"+id).attr("name")){
-                case "view_layer":
-                    save_attr_view_layer_form(id);
-                    break;
-                case "concatenate_layer":
-                    save_attr_concatenate_layer_form(id);
-                    break;
-                case "linear_layer":
-                    save_attr_linear_layer_form(id);
-                    break;
-                case "conv1d_layer":
-                    save_attr_conv1d_layer_form(id);
-                    break;
-                case "conv2d_layer":
-                    save_attr_conv2d_layer_from(id);
-                    break;
-                default:
-                    return;
-            }
-        })
-    }
-</script>
-
 
 
 </html>
