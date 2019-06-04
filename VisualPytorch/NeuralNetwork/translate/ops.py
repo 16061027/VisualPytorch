@@ -441,7 +441,7 @@ def add_net_info(nets, nets_conn):
     return np.concatenate((init_func, np.append(forward_func, ret_state)))
 
 def add_element_add_to_Ops(Ops):
-    tmp = ['def element_wise_add(inputs):', 
+    tmp = ['#function called in Main.py or Model.py', 'def element_wise_add(inputs):', 
             generate_n_tap(1) + 'ans = inputs[0]', 
             generate_n_tap(1) + 'for indx in range(1, len(inputs)):', 
             generate_n_tap(2) + 'ans.add_(inputs[indx])', 
