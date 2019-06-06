@@ -4,6 +4,10 @@
     .navbar-inverse .navbar-nav>li>a{
         color: white ;
     }
+    .navbar-inverse .navbar-nav>li>a:hover{
+        text-decoration: underline;
+        font-weight: bolder;
+    }
     .navbar-inverse .navbar-nav>.open>a:hover{
         background-color: #ce8500;
     }
@@ -25,10 +29,10 @@
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-left">
-                <li ><a href="canvas.html" >VisualPytorch</a></li>
-                <li ><a href="help.html" >帮助</a></li>
+                <li ><a href="canvas.html" id = "header_vs">VisualPytorch</a></li>
+                <li ><a href="help.html" id = "header_help">帮助</a></li>
                 <!--<li ><a href="statistics.html">统计</a></li>-->
-                <li ><a href="contact_us.html">联系我们</a></li>
+                <li ><a href="contact_us.html" id="header_contact">联系我们</a></li>
 
                 <!--
                 <li><a onclick="jump_to_user_index('esfan')">Query</a></li>
@@ -145,6 +149,27 @@
         </div>
     </div>
 </div>
+
+<script>
+    //alert(window.location.pathname)
+    var now_pos=window.location.pathname;
+    if(now_pos=="/VisualPytorch/font/static/canvas.html"
+        ||now_pos=="/VisualPytorch/font/static/canvas0.html"
+        ||now_pos=="/VisualPytorch/font/static/feedback.html"
+        ||now_pos=="/VisualPytorch/font/static/models.html"
+        ||now_pos=="/VisualPytorch/font/static/question.html"
+        ||now_pos=="/VisualPytorch/font/static/show_code.html"
+        ||now_pos=="/VisualPytorch/font/static/statistics.html"
+        ||now_pos=="/VisualPytorch/font/static/test.html"){
+        $("#header_vs").css({"text-decoration":"underline","font-weight":"bolder"});
+    }
+    else if(now_pos=="/VisualPytorch/font/static/help.html"){
+        $("#header_help").css({"text-decoration":"underline","font-weight":"bolder"});
+    }
+    else if(now_pos=="/VisualPytorch/font/static/contact_us.html"){
+        $("#header_contact").css({"text-decoration":"underline","font-weight":"bolder"});
+    }
+</script>
 
 <script>
     $(function () {
