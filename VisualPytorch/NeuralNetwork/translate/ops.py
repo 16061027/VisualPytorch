@@ -107,7 +107,7 @@ def add_import_info():
 
 
 def add_init_info():
-    ans = np.array(['class NET(torch.nn.Module):', generate_n_tap(1) + 'def __init__(self):',
+    ans = np.array(['#NET defined here', 'class NET(torch.nn.Module):', generate_n_tap(1) + '#init function', generate_n_tap(1) + 'def __init__(self):',
                     generate_n_tap(2) + 'super(NET, self).__init__()'])
 
     return ans
@@ -142,6 +142,9 @@ def add_linear_to_init_forward(init, forward, in_data, out_data, node):
     in_c = str(node['attribute']['in_channels'])
     out_c = str(node['attribute']['out_channels'])
 
+    init_tmp = generate_n_tap(2) + '#linear layer'
+    init = np.append(init, init_tmp)
+
     init_tmp = generate_n_tap(2) + self_layer + ' = ' + GL.nn_linear + '(' + in_c + ', ' + out_c + ')'
     init = np.append(init, init_tmp)
 
@@ -163,7 +166,8 @@ def add_view_to_init_forward(init, forward, in_data, out_data, node):
     shape, shape_str = parse_shape(node['attribute']['shape'])
 
     #add shape checking of reshape layer  
-
+    forward_tmp = generate_n_tap(2) + '#reshape layer'
+    forward = np.append(forward, forward_tmp)
 
     forward_tmp = generate_n_tap(2) + out_data + ' = ' + in_data + GL.nn_view + '(' + shape_str + ')'
     forward = np.append(forward, forward_tmp)
@@ -196,6 +200,10 @@ def add_convlayer_to_init_forward(init, forward, in_data, out_data, node):
     forward_tmp = generate_n_tap(2) + out_data + ' = ' + self_layer + '(' + in_data + ')'
     forward = np.append(forward, forward_tmp)
     # add init
+
+    init_tmp = generate_n_tap(2) + '#convolution layer'
+    init = np.append(init, init_tmp)
+
     init_tmp = generate_n_tap(2) + self_layer + ' = ' + GL.nn_sequential + '('
     init = np.append(init, init_tmp)
 
@@ -346,6 +354,7 @@ def add_concatenate_layer(init_func, forward_func, cur_id, out_data):
         #check shape
         array_of_inputs = array_of_inputs + ', ' + GL.graph[GL.graph[cur_id].fa[indx]].data      
     #check dim
+    forward_func = np.append(forward_func, generate_n_tap(2) + '#concatenate layer')
     code = generate_n_tap(2) + out_data + ' = torch.cat((' + array_of_inputs + '), ' + str(GL.graph[cur_id].cat_dim) + ')'
 
     return init_func, np.append(forward_func, code)
@@ -361,6 +370,8 @@ def add_element_wise_add_layer(init_func, forward_func, cur_id, out_data):
         array_of_nodes = array_of_nodes + ', ' + GL.graph[GL.graph[cur_id].fa[indx]].data
 
     array_of_nodes = array_of_nodes + ']'
+
+    forward_func = np.append(forward_func, generate_n_tap(2) + '#element_wise_add layer')
     code = generate_n_tap(2) + out_data + ' = element_wise_add(' + array_of_nodes + ')'
     forward_func = np.append(forward_func, code)
 
@@ -436,12 +447,13 @@ def add_net_info(nets, nets_conn):
                 ret_state = GL.graph[node_id].data
             else:
                 ret_state = ret_state + ', ' + GL.graph[node_id].data
+    forward_func = np.append(forward_func, generate_n_tap(2) + '#return statement')
     ret_state = generate_n_tap(2) + 'return ' + ret_state
 
     return np.concatenate((init_func, np.append(forward_func, ret_state)))
 
 def add_element_add_to_Ops(Ops):
-    tmp = ['def element_wise_add(inputs):', 
+    tmp = ['#function called in Main.py or Model.py', 'def element_wise_add(inputs):', 
             generate_n_tap(1) + 'ans = inputs[0]', 
             generate_n_tap(1) + 'for indx in range(1, len(inputs)):', 
             generate_n_tap(2) + 'ans.add_(inputs[indx])', 
