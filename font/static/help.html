@@ -126,6 +126,16 @@
                 <div id="doc-sidebar">
                     <ul class="nav nav-tabs nav-stacked">
                         <li class="active">
+                            <a href="#section-0">快速入门</a>
+                            <ul class="nav">
+                                <li><a href="#section-0-1">界面介绍</a></li>
+                                <li><a href="#section-0-2">组件框</a></li>
+                                <li><a href="#section-0-3">生成和下载代码</a></li>
+                                <li><a href="#section-0-4">保存代码</a></li>
+                                <li><a href="#section-0-5">一个简单的例子</a></li>
+                            </ul>
+                        </li>
+                        <li>
                             <a href="#section-1">使用说明</a>
                             <ul class="nav">
                                 <li><a href="#section-1-1">概述</a></li>
@@ -190,6 +200,29 @@
         </div>
         <div id='readme' class="col-xs-12 col-md-8 col-lg-9">
             <article class='markdown-body'>
+                <h1 id="section-0">快速入门</h1>
+                <h2 id="section-0-1">界面介绍</h2>
+                <p>首先打开网址，进入网站的首页。网站有游客游览模式和用户登录模式，建议先注册登录一个账号，也是十分简便的啦，因为这样可以使用更多的功能。</p>
+                <p>页面头部有三个选项，分别为VisualPytorch, 帮助和联系我们，VisualPytorch就是主页面，可以进行模型的搭建，帮助页面是本网站的简单教程以及相关知识的讲解，在联系我们界面，可以给我们反馈你在使用过程中的遇到的问题，帮助我们进步。</p>
+                <p>
+                    <img src='../img/登录注册_转.gif' width="800" height="380"></p>
+                <h2 id="section-0-2">组件框</h2>
+                <p>在VisualPytorch界面左侧有可选择的网络层，这些层就是用来搭建神经网络模型的基本组件，在网络层的下面还有训练参数配置，主要用于确定模型的全局训练参数。下面给大家简单展示一下如何拖拽和删除这些组件框，以及组件框参数的位置。</p>
+                <p>
+                    <img src='../img/组件框_转.gif' width="800" height="380"></p>
+                <h2 id="section-0-3">生成和下载代码</h2>
+                <p>在VisualPytorch界面左上角有生成代码按钮，当你搭建好自己的神经网络模型之后，就可以点击这个按钮，然后会跳转到代码页面，你也就可以看到生成的代码啦，然后再点击下载代码，就可以把代码下载到本地，畅快的玩耍一番啦。</p>
+                 <p>
+                <img src='../img/生成和下载代码_转.gif' width="800" height="380"></p>
+                <h2 id="section-0-4">保存代码</h2>
+                <p>考虑到也许后续还要用自己搭建过的模型，所以我们实现了保存模型这一功能（贴心的团队，有木有），当你搭建好一个模型之后，可以直接选择保存，然后模型就会保存到你的账号啦，下次你登录还可以查看自己之前的模型。</p>
+                <p>
+                     <img src='../img/保存代码_转.gif' width="800" height="380"></p>
+                <h2 id="section-0-5">一个简单的例子</h2>
+                <p>这里我将会搭建一个简单的卷积神经网络CNN，分别有reshape层，一维卷积层，二维卷积层和全连接层。首先我们把相关的网络层拖入到画布中，然后分别设置各个层的参数，紧接着我们去设置一下训练参数，最后我们可以点击生成代码，一个简单的CNN就搭建完成啦，是不是十分简单呀。</p>
+                 <p>
+                    <img src='../img/CNN2_转.gif' width="800" height="380"></p>
+
                 <h1 id="section-1">使用说明</h1>
                 <h2 id="section-1-1">概述</h2>
                 <p>我们的网站旨在利用清晰的可视化模型来帮助热爱deep learning的你快速搭建想搭建的模型。</p>
@@ -1904,7 +1937,6 @@ Variable containing:
                 <h1 id="section-3">说明</h1>
                 <p>本教程部分参考了<a href="https://pytorch-cn.readthedocs.io/zh/latest/">PyTorch中文手册</a>和<a
                         href="https://pytorch.org/docs/stable/index.html">PyTorch官方文档</a>，如果想要更详细深入了解的请访问该手册和文档。</p>
-
             </article>
         </div>
     </div>
