@@ -278,10 +278,18 @@ function save_attr_conv1d_layer(button) {
     //todo:加入更精确的正则判断
     form.find("[name='input_error']").remove();
     var reg = /^\s*[1-9]\d*\s*$/;
+    var reg_zero = /^\s*\d+\s*$/;
     var flag = true;
-    var check_array = (padding.val()=="0")?[in_channels, out_channels, kernel_size, stride]:[in_channels, out_channels, kernel_size, stride, padding];
-    check_array.forEach(function (value, index, array) {
+    var check_array1 = (pool_way=="None")?[in_channels, out_channels, kernel_size, stride]:[in_channels, out_channels, kernel_size, stride,pool_kernel_size,pool_stride];
+    check_array1.forEach(function (value, index, array) {
         if (!reg.test(value.val())) {
+            value.after("<p name='input_error' class='alert_font'>输入不合法</p>");
+            flag = false;
+        }
+    });
+    var check_array2 = (pool_way=="None")?[padding]:[padding,pool_padding];
+    check_array2.forEach(function (value, index, array) {
+        if (!reg_zero.test(value.val())) {
             value.after("<p name='input_error' class='alert_font'>输入不合法</p>");
             flag = false;
         }
@@ -314,10 +322,18 @@ function save_attr_conv2d_layer(button) {
     //todo:加入更精确的正则判断
     form.find("[name='input_error']").remove();
     var reg = /^\s*[1-9]\d*\s*$/;
+    var reg_zero = /^\s*\d+\s*$/;
     var flag = true;
-     var check_array = (padding.val()=="0")?[in_channels, out_channels, kernel_size, stride]:[in_channels, out_channels, kernel_size, stride, padding];
-    check_array.forEach(function (value, index, array) {
+    var check_array1 = (pool_way=="None")?[in_channels, out_channels, kernel_size, stride]:[in_channels, out_channels, kernel_size, stride,pool_kernel_size,pool_stride];
+    check_array1.forEach(function (value, index, array) {
         if (!reg.test(value.val())) {
+            value.after("<p name='input_error' class='alert_font'>输入不合法</p>");
+            flag = false;
+        }
+    });
+    var check_array2 = (pool_way=="None")?[padding]:[padding,pool_padding];
+    check_array2.forEach(function (value, index, array) {
+        if (!reg_zero.test(value.val())) {
             value.after("<p name='input_error' class='alert_font'>输入不合法</p>");
             flag = false;
         }
@@ -406,10 +422,18 @@ function save_attr_conv1d_layer_form(id) {
     //todo:加入更精确的正则判断
     form.find("[name='input_error']").remove();
     var reg = /^\s*[1-9]\d*\s*$/;
+    var reg_zero = /^\s*\d+\s*$/;
     var flag = true;
-    var check_array = (padding.val()=="0")?[in_channels, out_channels, kernel_size, stride]:[in_channels, out_channels, kernel_size, stride, padding];
-    check_array.forEach(function (value, index, array) {
+    var check_array1 = (pool_way=="None")?[in_channels, out_channels, kernel_size, stride]:[in_channels, out_channels, kernel_size, stride,pool_kernel_size,pool_stride];
+    check_array1.forEach(function (value, index, array) {
         if (!reg.test(value.val())) {
+            value.after("<p name='input_error' class='alert_font'>输入不合法</p>");
+            flag = false;
+        }
+    });
+    var check_array2 = (pool_way=="None")?[padding]:[padding,pool_padding];
+    check_array2.forEach(function (value, index, array) {
+        if (!reg_zero.test(value.val())) {
             value.after("<p name='input_error' class='alert_font'>输入不合法</p>");
             flag = false;
         }
@@ -441,17 +465,22 @@ function save_attr_conv2d_layer_from(id) {
     //todo:加入更精确的正则判断
     form.find("[name='input_error']").remove();
     var reg = /^\s*[1-9]\d*\s*$/;
+    var reg_zero = /^\s*\d+\s*$/;
     var flag = true;
-     var check_array = (padding.val()=="0")?[in_channels, out_channels, kernel_size, stride]:[in_channels, out_channels, kernel_size, stride, padding];
-    check_array.forEach(function (value, index, array) {
+    var check_array1 = (pool_way=="None")?[in_channels, out_channels, kernel_size, stride]:[in_channels, out_channels, kernel_size, stride,pool_kernel_size,pool_stride];
+    check_array1.forEach(function (value, index, array) {
         if (!reg.test(value.val())) {
             value.after("<p name='input_error' class='alert_font'>输入不合法</p>");
             flag = false;
         }
     });
-    if (!flag) {
-        return;
-    }
+    var check_array2 = (pool_way=="None")?[padding]:[padding,pool_padding];
+    check_array2.forEach(function (value, index, array) {
+        if (!reg_zero.test(value.val())) {
+            value.after("<p name='input_error' class='alert_font'>输入不合法</p>");
+            flag = false;
+        }
+    });
     //var activity = form.find("[name = \"activity\"]").val();
     //var pool_way = form.find("[name = \"pool_way\"]").val();
     window.sessionStorage.setItem(id, "{\"in_channels\":\"" + in_channels.val() + "\", \"out_channels\":\"" + out_channels.val() + "\", \"kernel_size\":\"" + kernel_size.val() + "\", " +
