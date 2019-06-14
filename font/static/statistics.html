@@ -38,18 +38,18 @@
         </div>
     </form>
     <h3>单日访问量统计</h3>
-   <table class="table">
-       <thead>
-       <tr>
-           <th>序号</th>
-           <th>日期</th>
-           <th>访问量</th>
-       </tr>
-       </thead>
-       <tbody id = "day_count">
-       </tbody>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>序号</th>
+            <th>日期</th>
+            <th>访问量</th>
+        </tr>
+        </thead>
+        <tbody id="day_count">
+        </tbody>
 
-   </table>
+    </table>
 </div>
 
 </body>
@@ -60,21 +60,27 @@
             type: 'GET',
             url: gobalConfig.base_url + 'api/journal/statistics/',
             contentType: 'application/json; charset=UTF-8',
+            beforeSend: function (XMLHttpRequest) {
+                var token = window.sessionStorage.getItem('token');
+                if (token != null) {
+                    XMLHttpRequest.setRequestHeader("Authorization", "JWT " + token)
+                }
+            },
             success: function (data) {
                 $("#visit_count").text(data["visit_count"]);
                 $("#network_api_count").text(data["network_api_count"]);
                 var list = data["date_count_list"];
-                for(var i=0;i<list.length;i++){
-                     $("#day_count").append(
-                         "<tr><th scope=\"row\">"+(i+1).toString()+"</th>" +
-                         "<td>"+list[i]["day"]+"</td>" +
-                         "<td>"+list[i]["count"].toString()+"</td></tr>"
-                     )
+                for (var i = 0; i < list.length; i++) {
+                    $("#day_count").append(
+                        "<tr><th scope=\"row\">" + (i + 1).toString() + "</th>" +
+                        "<td>" + list[i]["day"] + "</td>" +
+                        "<td>" + list[i]["count"].toString() + "</td></tr>"
+                    )
                 }
             },
-            error:function (data_return) {
-            alert(data_return["responseText"])
-        }
+            error: function (data_return) {
+                alert(data_return["responseText"])
+            }
         })
 
     })
