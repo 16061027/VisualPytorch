@@ -5,7 +5,6 @@ Copyright @ 2019 buaa_huluwa. All rights reserved.
 
 View more, visit our team's home page: https://home.cnblogs.com/u/1606-huluwa/
 
-
 exception defined as follows:
 	A:
 	B:
@@ -20,8 +19,8 @@ exception defined as follows:
 
 import numpy as np
 import sys
-from .model import Node, Vector, GLOB
-from .exception import *
+from model import Node, Vector, GLOB
+from exception import *
 import queue
 
 #global parameters
@@ -365,15 +364,17 @@ def add_element_wise_add_layer(init_func, forward_func, cur_id, out_data):
     if len(GL.graph[cur_id].fa) == 0:
         raise ModelError('element wise layer has no inputs')
     
-    array_of_nodes = '[' + GL.graph[GL.graph[cur_id].fa[0]].data
+    array_of_nodes = [GL.graph[GL.graph[cur_id].fa[0]].data]
     for indx in range(1, len(GL.graph[cur_id].fa)):
-        array_of_nodes = array_of_nodes + ', ' + GL.graph[GL.graph[cur_id].fa[indx]].data
+        array_of_nodes.append(GL.graph[GL.graph[cur_id].fa[indx]].data)
 
-    array_of_nodes = array_of_nodes + ']'
 
     forward_func = np.append(forward_func, generate_n_tap(2) + '#element_wise_add layer')
-    code = generate_n_tap(2) + out_data + ' = element_wise_add(' + array_of_nodes + ')'
-    forward_func = np.append(forward_func, code)
+    code = [generate_n_tap(2) + out_data + ' = ' + array_of_nodes[0]]
+    for indx in range(1, len(array_of_nodes)):
+        code.append(generate_n_tap(2) + out_data + '.add_(' + array_of_nodes[indx] + ')')
+
+    forward_func = np.concatenate((forward_func, code)
 
     return init_func, forward_func
 
