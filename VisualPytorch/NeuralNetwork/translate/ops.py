@@ -69,7 +69,7 @@ def add_static_info(Main, glob):
 
     Main = np.concatenate((Main, tmp))
 
-    names = {'epoch': '1', 'optimizer': 'torch.optim.Adam', 'learning_rate': '0.5', \
+    names = {'epoch': '1', 'learning_rate': '0.5', \
              'batch_size': '1', 'data_dir': 'None', 'data_set': 'None', 'train': 'True'}
 
     for name in names:
@@ -368,7 +368,6 @@ def add_element_wise_add_layer(init_func, forward_func, cur_id, out_data):
     for indx in range(1, len(GL.graph[cur_id].fa)):
         array_of_nodes.append(GL.graph[GL.graph[cur_id].fa[indx]].data)
 
-
     forward_func = np.append(forward_func, generate_n_tap(2) + '#element_wise_add layer')
     code = [generate_n_tap(2) + out_data + ' = ' + array_of_nodes[0]]
     for indx in range(1, len(array_of_nodes)):
@@ -377,7 +376,6 @@ def add_element_wise_add_layer(init_func, forward_func, cur_id, out_data):
     forward_func = np.concatenate((forward_func, code)
 
     return init_func, forward_func
-
 
 def make_graph(nets, nets_conn, init_func, forward_func):
    #error not ok
