@@ -19,8 +19,8 @@ exception defined as follows:
 
 import numpy as np
 import sys
-from model import Node, Vector, GLOB
-from exception import *
+from .model import Node, Vector, GLOB
+from .exception import *
 import queue
 
 #global parameters
@@ -103,7 +103,6 @@ def add_import_info():
     ans = np.array(['', '#standard library', "import os", '', '#third-party library', "import torch", "import numpy", "import torchvision", '', ''])
 
     return ans, ans, ans
-
 
 def add_init_info():
     ans = np.array(['#NET defined here', 'class NET(torch.nn.Module):', generate_n_tap(1) + '#init function', generate_n_tap(1) + 'def __init__(self):',
@@ -373,7 +372,7 @@ def add_element_wise_add_layer(init_func, forward_func, cur_id, out_data):
     for indx in range(1, len(array_of_nodes)):
         code.append(generate_n_tap(2) + out_data + '.add_(' + array_of_nodes[indx] + ')')
 
-    forward_func = np.concatenate((forward_func, code)
+    forward_func = np.concatenate((forward_func, code))
 
     return init_func, forward_func
 
@@ -498,9 +497,11 @@ def generate_train_codes():
                   '', 
     	          '#load your own dataset and normalize', '', '',
                   '', 
-                  '#you can add some functions for visualization here or you can ignore them', 
-                  '', 
-                  '', 
+                  '#optimizer', 
+                  'opt_net = torch.optim.Adam(net.parameters(), lr=0.0002, betas=(0.5, 0.999), weight_decay=0.00001)',
+                  'loss_func = torch.nn.CrossEntropyLoss()', 
+                  '', '', '', 
+                  '#you can add some functions for visualization here or you can ignore them', '', '', 
                   '', 
                   '#training and testing, you can modify these codes as you expect', 
                   'for epo in range(epoch):', 
@@ -644,4 +645,3 @@ def main_func(edge_record):
 #     print(m)
 # for m in Ops:
 #     print(m)
-
