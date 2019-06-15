@@ -5,7 +5,6 @@ Copyright @ 2019 buaa_huluwa. All rights reserved.
 
 View more, visit our team's home page: https://home.cnblogs.com/u/1606-huluwa/
 
-
 exception defined as follows:
 	A:
 	B:
@@ -70,7 +69,7 @@ def add_static_info(Main, glob):
 
     Main = np.concatenate((Main, tmp))
 
-    names = {'epoch': '1', 'optimizer': 'torch.optim.Adam', 'learning_rate': '0.5', \
+    names = {'epoch': '1', 'learning_rate': '0.5', \
              'batch_size': '1', 'data_dir': 'None', 'data_set': 'None', 'train': 'True'}
 
     for name in names:
@@ -104,7 +103,6 @@ def add_import_info():
     ans = np.array(['', '#standard library', "import os", '', '#third-party library', "import torch", "import numpy", "import torchvision", '', ''])
 
     return ans, ans, ans
-
 
 def add_init_info():
     ans = np.array(['#NET defined here', 'class NET(torch.nn.Module):', generate_n_tap(1) + '#init function', generate_n_tap(1) + 'def __init__(self):',
@@ -365,18 +363,18 @@ def add_element_wise_add_layer(init_func, forward_func, cur_id, out_data):
     if len(GL.graph[cur_id].fa) == 0:
         raise ModelError('element wise layer has no inputs')
     
-    array_of_nodes = '[' + GL.graph[GL.graph[cur_id].fa[0]].data
+    array_of_nodes = [GL.graph[GL.graph[cur_id].fa[0]].data]
     for indx in range(1, len(GL.graph[cur_id].fa)):
-        array_of_nodes = array_of_nodes + ', ' + GL.graph[GL.graph[cur_id].fa[indx]].data
-
-    array_of_nodes = array_of_nodes + ']'
+        array_of_nodes.append(GL.graph[GL.graph[cur_id].fa[indx]].data)
 
     forward_func = np.append(forward_func, generate_n_tap(2) + '#element_wise_add layer')
-    code = generate_n_tap(2) + out_data + ' = element_wise_add(' + array_of_nodes + ')'
-    forward_func = np.append(forward_func, code)
+    code = [generate_n_tap(2) + out_data + ' = ' + array_of_nodes[0]]
+    for indx in range(1, len(array_of_nodes)):
+        code.append(generate_n_tap(2) + out_data + '.add_(' + array_of_nodes[indx] + ')')
+
+    forward_func = np.concatenate((forward_func, code))
 
     return init_func, forward_func
-
 
 def make_graph(nets, nets_conn, init_func, forward_func):
    #error not ok
@@ -499,9 +497,11 @@ def generate_train_codes():
                   '', 
     	          '#load your own dataset and normalize', '', '',
                   '', 
-                  '#you can add some functions for visualization here or you can ignore them', 
-                  '', 
-                  '', 
+                  '#optimizer', 
+                  'opt_net = torch.optim.Adam(net.parameters(), lr=0.0002, betas=(0.5, 0.999), weight_decay=0.00001)',
+                  'loss_func = torch.nn.CrossEntropyLoss()', 
+                  '', '', '', 
+                  '#you can add some functions for visualization here or you can ignore them', '', '', 
                   '', 
                   '#training and testing, you can modify these codes as you expect', 
                   'for epo in range(epoch):', 
@@ -645,4 +645,3 @@ def main_func(edge_record):
 #     print(m)
 # for m in Ops:
 #     print(m)
-
