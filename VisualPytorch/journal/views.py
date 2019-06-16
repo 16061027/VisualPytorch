@@ -3,6 +3,7 @@ from journal.models import *
 from django.db.models import *
 from journal.serializers import *
 from NeuralNetwork.models import *
+from user.models import *
 from BaseApiView.views import BaseApiView as APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -58,6 +59,7 @@ class Statistics(APIView):
             vist_count = UserIp.objects.aggregate(Sum('count'))
             date_count_list = DayCount.objects.all()
             network_api_count = Network.objects.count()
+            user_count = User.objects.count()
             date_count_list_serializer = DayCountSerializer(date_count_list, many=True)
         except BaseException:
             return Response({"error": "some error happened"}, status=status.HTTP_400_BAD_REQUEST)
@@ -66,5 +68,6 @@ class Statistics(APIView):
             "visit_count": vist_count['count__sum'],
             "date_count_list": date_count_list_serializer.data,
             "network_api_count": network_api_count,
+            "user_count":user_count
         }
         return Response(data, status=status.HTTP_200_OK)
