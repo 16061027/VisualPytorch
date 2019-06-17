@@ -501,6 +501,10 @@ def generate_copyright_information(flag):
 
 def generate_train_codes():
     ans = np.array(['',
+        	      '#initialize a NET object', 
+                  'net = NET()',
+                  '#print net architecture', 
+                  'print(net)', 
     	          '', 
                   '#download dataset', 
                   'DOWNLOAD_MNIST = False', 
@@ -525,11 +529,6 @@ def generate_train_codes():
                   "optimizer = torch.optim.Adam(net.parameters(), lr=0.001)", 
                   "loss_func = torch.nn.CrossEntropyLoss()   ", '', '', 
                   "from matplotlib import cm", '', 
-
-    	          '#initialize a NET object', 
-                  'net = NET()',
-                  '#print net architecture', 
-                  'print(net)', 
                   '',  
                   '#training and testing, you can modify these codes as you expect', 
                   'for epo in range(epoch):', 
