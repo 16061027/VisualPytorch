@@ -100,7 +100,7 @@ def generate_variable_name(layer_name):
 
 
 def add_import_info():
-    ans = np.array(['', '#standard library', "import os", '', '#third-party library', "import torch", "import numpy", "import torchvision", '', ''])
+    ans = np.array(['', '#standard library', "import os", '', '#third-party library', "import torch", "import numpy", "import torchvision", '', 'import torch.utils.data as Data', 'import matplotlib.pyplot as plt', ''])
 
     return ans, ans, ans
 
@@ -184,13 +184,25 @@ def add_conv_layer_para(init, node):
 		init = np.append(init, generate_one_conv_layer_para(para, node['attribute'][para]))
 
 	return init
+
 def add_activity_pooling(init, node):
-	activity_pooling = ['activity', 'pool_way']
-	for attr in activity_pooling:
-			if node['attribute'][attr] != 'None':
-				init_tmp = generate_n_tap(3) + node['attribute'][attr] + '(),'
-				init = np.append(init, init_tmp)
-	return init
+    activity_pooling = ['activity', 'pool_way']
+    pool_para = ['pool_kernel_size', 'pool_stride', 'pool_padding']
+    pool_para_id = {'pool_kernel_size':'kernel_size', 'pool_stride':'stride', 'pool_padding':'padding'}
+    for attr in activity_pooling:
+        if node['attribute'][attr] != 'None':
+            init_tmp = generate_n_tap(3) + node['attribute'][attr] + '(', 
+            if attr == 'pool_way':
+                flag = False 
+                for para in pool_para:
+                    if para in node['attribute'].keys():
+                        if flag:
+                            init_tmp = init_tmp + ', '
+                        flag = True
+                        init_tmp = init_tmp + pool_para_id[para] + ' = ' + node['attribute'][para]
+            init_tmp = init_tmp + '),'
+            init = np.append(init, init_tmp)
+    return init
 
 def add_convlayer_to_init_forward(init, forward, in_data, out_data, node):
     self_layer = generate_layer_name(node['name'])
@@ -476,7 +488,7 @@ def generate_copyright_information(flag):
 
     tmp = np.array([])
     if flag == 'Main':
-        tmp = np.array(["'''", none, copy_right, none, view_more, none, none, declaration, none, Main_py, none, "'''"])
+        tmp = np.array(["'''", none, copy_right, none, view_more, none, none, declaration, none, Main_py, none, "Note: Codes about Trainging and Testing are suggested for reference only", none, "'''"])
 
     if flag == 'Model':
         tmp = np.array(["'''", none, declaration, none, Model_py, none, "'''"])
@@ -489,22 +501,57 @@ def generate_copyright_information(flag):
 def generate_train_codes():
     ans = np.array(['',
     	          '', 
+                  '#download dataset', 
+                  'DOWNLOAD_MNIST = False', 
+                  '', 
+                  '# Mnist digits dataset', 
+                  "if not(os.path.exists('./mnist/')) or not os.listdir('./mnist/'):", 
+                  '    # not mnist dir or mnist is empyt dir', 
+                  '    DOWNLOAD_MNIST = True', 
+                  'train_data = torchvision.datasets.MNIST(', "    root='./mnist/',", '    train=True, ',
+                  "    transform=torchvision.transforms.ToTensor(), ", 
+                  '', 
+                  "    download=DOWNLOAD_MNIST,", 
+                  ")", '', '',  
+                  "# Data Loader for easy mini-batch return in training, the image batch shape will be (50, 1, 28, 28)", 
+                  "train_loader = Data.DataLoader(dataset=train_data, batch_size=batch_size, shuffle=True)", '', 
+                  '#test_data', 
+                  "test_data = torchvision.datasets.MNIST(root='./mnist/', train=False)", 
+                  "test_x = torch.unsqueeze(test_data.test_data, dim=1).type(torch.FloatTensor)[:50]/255. ", 
+                  "test_y = test_data.test_labels[:50]", 
+                  "", '', 
+                  '#OPTIMIZER', 
+                  "optimizer = torch.optim.Adam(net.parameters(), lr=0.001)", 
+                  "loss_func = torch.nn.CrossEntropyLoss()   ", '', '', 
+                  "from matplotlib import cm", '', 
+
     	          '#initialize a NET object', 
                   'net = NET()',
                   '#print net architecture', 
                   'print(net)', 
                   '',  
-                  '', 
-    	          '#load your own dataset and normalize', '', '',
-                  '', 
-                  '#optimizer', 
-                  'opt_net = torch.optim.Adam(net.parameters(), lr=0.0002, betas=(0.5, 0.999), weight_decay=0.00001)',
-                  'loss_func = torch.nn.CrossEntropyLoss()', 
-                  '', '', '', 
-                  '#you can add some functions for visualization here or you can ignore them', '', '', 
-                  '', 
                   '#training and testing, you can modify these codes as you expect', 
                   'for epo in range(epoch):', 
+                  "    for step, (b_x, b_y) in enumerate(train_loader): ", 
+                  "        output = net(b_x)[0] ", 
+                  "        loss = loss_func(output, b_y)", 
+                  "        optimizer.zero_grad() ", 
+                  "        loss.backward() ", 
+                  "        optimizer.step() ", 
+                  '', 
+                  '        #print', 
+                  "        if step % 50 == 0:", 
+                  "            test_output, last_layer = net(test_x)", 
+                  "            pred_y = torch.max(test_output, 1)[1].data.numpy()", 
+                  "            accuracy = float((pred_y == test_y.data.numpy()).astype(int).sum()) / float(test_y.size(0))", 
+                  "            print('Epoch: ', epo, '| train loss: %.4f' % loss.data.numpy(), '| test accuracy: %.2f' % accuracy)", 
+                  '', 
+                  '', 
+                  "# print 50 predictions from test data", 
+                  "test_output, _ = net(test_x[:50])", 
+                  "pred_y = torch.max(test_output, 1)[1].data.numpy()", 
+                  "print(pred_y, 'prediction number')", 
+                  "print(test_y[:50].numpy(), 'real number')", 
                   '', 
                   ''
     	])
