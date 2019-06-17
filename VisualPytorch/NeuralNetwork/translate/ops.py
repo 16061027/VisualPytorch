@@ -191,7 +191,7 @@ def add_activity_pooling(init, node):
     pool_para_id = {'pool_kernel_size':'kernel_size', 'pool_stride':'stride', 'pool_padding':'padding'}
     for attr in activity_pooling:
         if node['attribute'][attr] != 'None':
-            init_tmp = generate_n_tap(3) + node['attribute'][attr] + '(', 
+            init_tmp = generate_n_tap(3) + node['attribute'][attr] + '('
             if attr == 'pool_way':
                 flag = False 
                 for para in pool_para:
@@ -200,7 +200,8 @@ def add_activity_pooling(init, node):
                             init_tmp = init_tmp + ', '
                         flag = True
                         init_tmp = init_tmp + pool_para_id[para] + ' = ' + node['attribute'][para]
-            init_tmp = init_tmp + '),'
+            print("type", type(init_tmp))
+            init_tmp = init_tmp + "),"
             init = np.append(init, init_tmp)
     return init
 
@@ -683,6 +684,7 @@ def main_func(edge_record):
 #         "batch_size": "1"
 #     }
 # }
+# test = {'nets': {'canvas_1': {'name': 'start', 'attribute': {'start': 'true'}, 'left': '81px', 'top': '164px'}, 'canvas_2': {'name': 'conv1d_layer', 'attribute': {'in_channels': '1', 'out_channels': '1', 'kernel_size': '1', 'stride': '1', 'padding': '0', 'activity': 'torch.nn.Relu', 'pool_way': 'torch.nn.MaxPool1d', 'pool_kernel_size': '21', 'pool_stride': '3', 'pool_padding': '0'}, 'left': '135px', 'top': '350px'}}, 'nets_conn': [{'source': {'id': 'canvas_1', 'anchor_position': 'Bottom'}, 'target': {'id': 'canvas_2', 'anchor_position': 'Top'}}], 'static': {'epoch': '1', 'learning_rate': '0.5', 'batch_size': '1'}}
 
 # Main, Model, Ops = main_func(test)
 
