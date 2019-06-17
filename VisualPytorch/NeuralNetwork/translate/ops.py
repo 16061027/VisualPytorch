@@ -552,7 +552,9 @@ def generate_train_codes():
                   '', 
                   '', 
                   "# print 50 predictions from test data", 
-                  "test_output, _ = net(test_x[:50])", 
+                  "test_output = net(test_x[:50])", 
+                  "if str(type(test_output)) == "<class 'tuple'>": "
+                  "    test_output = test_output[0]", 
                   "pred_y = torch.max(test_output, 1)[1].data.numpy()", 
                   "print(pred_y, 'prediction number')", 
                   "print(test_y[:50].numpy(), 'real number')", 
