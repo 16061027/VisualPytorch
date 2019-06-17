@@ -59,23 +59,22 @@ function get_content(name, parid) {
 
             "                        <select id=\"" + parid + "activity\" class=\"form-control\">\n" +
             "                            <option value=\"None\">None</option>\n" +
-            "                            <option value=\"torch.nn.functional.relu\">relu</option>\n" +
-            "                            <option value=\"torch.nn.functional.leaky_relu\">leaky_relu</option>\n" +
-            "                            <option value=\"torch.nn.functional.sigmoid\">sigmoid</option>\n" +
-            "                            <option value=\"torch.nn.functional.tanh\">tanh</option>\n" +
-            "                            <option value=\"torch.nn.functional.softmax\">softmax</option>\n" +
+    "                            <option value=\"torch.nn.Relu\">relu</option>\n" +
+    "                            <option value=\"torch.nn.LeakyRelu\">leaky_relu</option>\n" +
+    "                            <option value=\"torch.nn.Sigmoid\">sigmoid</option>\n" +
+    "                            <option value=\"torch.nn.Tanh\">tanh</option>\n" +
             "                        </select>" +
 
             "                    <label class=\"control-label\">pool_way</label>" +
 
             "                        <select id=\"" + parid + "pool_way\" name='pool_way' class=\"form-control\">\n" +
-            "                            <option value=\"None\">None</option>\n" +
-            "                            <option value=\"torch.nn.functional.max_pool1d\">max_pool1d</option>\n" +
-            "                            <option value=\"torch.nn.functional.max_pool2d\">max_pool2d</option>\n" +
-            "                            <option value=\"torch.nn.functional.max_pool3d\">max_pool3d</option>\n" +
-            "                            <option value=\"torch.nn.AvgPool1d\">AvgPool1d</option>\n" +
-            "                            <option value=\"torch.nn.AvgPool2d\">AvgPool2d</option>\n" +
-            "                            <option value=\"torch.nn.AvgPool3d\">AvgPool3d</option>\n" +
+    "                            <option value=\"None\">None</option>\n" +
+    "                            <option value=\"torch.nn.MaxPool1d\">max_pool1d</option>\n" +
+    "                            <option value=\"torch.nn.MaxPool2d\">max_pool2d</option>\n" +
+    "                            <option value=\"torch.nn.MaxPool3d\">max_pool3d</option>\n" +
+    "                            <option value=\"torch.nn.AvgPool1d\">AvgPool1d</option>\n" +
+    "                            <option value=\"torch.nn.AvgPool2d\">AvgPool2d</option>\n" +
+    "                            <option value=\"torch.nn.AvgPool3d\">AvgPool3d</option>\n" +
             "                        </select>" +
 
             "                    <label class=\"col-sm-6 control-label\">pool_kernel_size</label>" +
@@ -120,23 +119,23 @@ function get_content(name, parid) {
 
             "                        <select id=\"" + parid + "activity\" class=\"form-control\">\n" +
             "                            <option value=\"None\">None</option>\n" +
-            "                            <option value=\"torch.nn.functional.relu\">relu</option>\n" +
-            "                            <option value=\"torch.nn.functional.leaky_relu\">leaky_relu</option>\n" +
-            "                            <option value=\"torch.nn.functional.sigmoid\">sigmoid</option>\n" +
-            "                            <option value=\"torch.nn.functional.tanh\">tanh</option>\n" +
-            "                            <option value=\"torch.nn.functional.softmax\">softmax</option>\n" +
+    "                            <option value=\"torch.nn.Relu\">relu</option>\n" +
+    "                            <option value=\"torch.nn.LeakyRelu\">leaky_relu</option>\n" +
+    "                            <option value=\"torch.nn.Sigmoid\">sigmoid</option>\n" +
+    "                            <option value=\"torch.nn.Tanh\">tanh</option>\n" +
             "                        </select>" +
 
             "                    <label class=\"control-label\">pool_way</label>" +
 
             "                        <select id=\"" + parid + "pool_way\" name='pool_way' class=\"form-control\">\n" +
             "                            <option value=\"None\">None</option>\n" +
-            "                            <option value=\"torch.nn.functional.max_pool1d\">max_pool1d</option>\n" +
-            "                            <option value=\"torch.nn.functional.max_pool2d\">max_pool2d</option>\n" +
-            "                            <option value=\"torch.nn.functional.max_pool3d\">max_pool3d</option>\n" +
-            "                            <option value=\"torch.nn.AvgPool1d\">AvgPool1d</option>\n" +
-            "                            <option value=\"torch.nn.AvgPool2d\">AvgPool2d</option>\n" +
-            "                            <option value=\"torch.nn.AvgPool3d\">AvgPool3d</option>\n" +
+"                            <option value=\"None\">None</option>\n" +
+    "                            <option value=\"torch.nn.MaxPool1d\">max_pool1d</option>\n" +
+    "                            <option value=\"torch.nn.MaxPool2d\">max_pool2d</option>\n" +
+    "                            <option value=\"torch.nn.MaxPool3d\">max_pool3d</option>\n" +
+    "                            <option value=\"torch.nn.AvgPool1d\">AvgPool1d</option>\n" +
+    "                            <option value=\"torch.nn.AvgPool2d\">AvgPool2d</option>\n" +
+    "                            <option value=\"torch.nn.AvgPool3d\">AvgPool3d</option>\n" +
             "                        </select>" +
 
             "                    <label class=\"col-sm-6 control-label\">pool_kernel_size</label>" +
