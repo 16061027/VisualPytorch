@@ -59,8 +59,8 @@ function get_content(name, parid) {
 
             "                        <select id=\"" + parid + "activity\" class=\"form-control\">\n" +
             "                            <option value=\"None\">None</option>\n" +
-    "                            <option value=\"torch.nn.ReLu\">relu</option>\n" +
-    "                            <option value=\"torch.nn.LeakyReLu\">leaky_relu</option>\n" +
+    "                            <option value=\"torch.nn.ReLU\">relu</option>\n" +
+    "                            <option value=\"torch.nn.LeakyReLU\">leaky_relu</option>\n" +
     "                            <option value=\"torch.nn.Sigmoid\">sigmoid</option>\n" +
     "                            <option value=\"torch.nn.Tanh\">tanh</option>\n" +
             "                        </select>" +
@@ -119,8 +119,8 @@ function get_content(name, parid) {
 
             "                        <select id=\"" + parid + "activity\" class=\"form-control\">\n" +
             "                            <option value=\"None\">None</option>\n" +
-    "                            <option value=\"torch.nn.ReLu\">relu</option>\n" +
-    "                            <option value=\"torch.nn.LeakyReLu\">leaky_relu</option>\n" +
+    "                            <option value=\"torch.nn.ReLU\">relu</option>\n" +
+    "                            <option value=\"torch.nn.LeakyReLU\">leaky_relu</option>\n" +
     "                            <option value=\"torch.nn.Sigmoid\">sigmoid</option>\n" +
     "                            <option value=\"torch.nn.Tanh\">tanh</option>\n" +
             "                        </select>" +
