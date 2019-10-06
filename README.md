@@ -1,6 +1,6 @@
 
-###该项目已停止更新，新进开发转移至https://github.com/mahaoxiang822/VisualPytorch
-###如有疑问请email 464365439@qq.com
+### 该项目已停止更新，新进开发转移至https://github.com/mahaoxiang822/VisualPytorch
+### 如有疑问请email 464365439@qq.com
 
 # VisualPytorch
 
